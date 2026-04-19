@@ -661,6 +661,69 @@ body{
 [data-theme="dark"] .sl-checkers{background:rgba(30,92,53,.12);border-color:rgba(30,92,53,.25)}
 [data-theme="dark"] .sl-foodlovers{background:rgba(26,92,90,.12);border-color:rgba(26,92,90,.25)}
 
+/* ── SHOPPING LIST EDIT (add / remove) ── */
+.row-del{
+  background:none;border:none;cursor:pointer;
+  color:var(--ink5);font-size:18px;line-height:1;font-weight:300;
+  padding:0 2px 0 8px;flex-shrink:0;
+  opacity:0;transition:opacity .15s,color .15s;
+  -webkit-tap-highlight-color:transparent;
+  font-family:var(--sans);
+}
+@media(hover:hover){.check-row:hover .row-del{opacity:1}}
+@media(hover:none){.row-del{opacity:.55}}
+.row-del:hover,.row-del:focus{color:var(--rust2);opacity:1;outline:none}
+.check-row[data-custom] .row-del{opacity:.55}
+
+.add-item-row{padding:8px 1.25rem 10px;border-top:1px dashed var(--border)}
+.add-item-btn{
+  display:flex;align-items:center;gap:6px;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--sans);font-size:12px;font-weight:500;
+  color:var(--ink4);letter-spacing:.03em;
+  padding:5px 0;transition:color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.add-item-btn:hover{color:var(--gold)}
+.add-item-form{
+  display:none;gap:6px;flex-wrap:wrap;align-items:center;padding:4px 0;
+}
+.add-item-form.open{display:flex}
+.add-name-inp,.add-price-inp{
+  background:var(--paper);border:1px solid var(--border2);
+  border-radius:var(--rsm);padding:8px 10px;
+  font-family:var(--sans);font-size:13px;color:var(--ink);
+  outline:none;transition:border-color .15s;
+}
+.add-name-inp{flex:1;min-width:130px}
+.add-price-inp{width:84px}
+.add-name-inp:focus,.add-price-inp:focus{border-color:var(--gold)}
+.add-ok-btn{
+  background:var(--gold);border:none;border-radius:var(--rsm);
+  padding:8px 14px;font-family:var(--sans);font-size:12px;font-weight:600;
+  color:#fff;cursor:pointer;white-space:nowrap;transition:background .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.add-ok-btn:hover{background:var(--gold2)}
+.add-x-btn{
+  background:none;border:1px solid var(--border2);border-radius:var(--rsm);
+  padding:8px 10px;font-family:var(--sans);font-size:12px;
+  color:var(--ink4);cursor:pointer;transition:all .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.add-x-btn:hover{border-color:var(--ink3);color:var(--ink3)}
+.shop-reset-link{
+  display:inline-block;font-size:11px;color:var(--ink5);
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px;
+  margin-left:auto;padding:2px 0;
+  font-family:var(--sans);background:none;border:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.shop-reset-link:hover{color:var(--ink3)}
+[data-theme="dark"] .add-name-inp,[data-theme="dark"] .add-price-inp{
+  background:var(--mode-bg3);border-color:var(--mode-border2);
+}
+
 </style>
 </head>
 <body>
@@ -4254,9 +4317,214 @@ function toggleCat(id) {
 // ── Checklist ──────────────────────────────────────────────────────────────
 function toggleCheck(row) { row.classList.toggle('done'); }
 
+// ── Shopping list: add / remove items ──────────────────────────────────────
+var SHOP_KEY = 'mealplan_shop_v1';
+var shopState = { deleted:[], added:{} };
+
+function _saveShop() {
+  try { localStorage.setItem(SHOP_KEY, JSON.stringify(shopState)); } catch(e){}
+}
+function _loadShop() {
+  try {
+    var raw = localStorage.getItem(SHOP_KEY);
+    if (raw) shopState = JSON.parse(raw);
+    if (!shopState.deleted) shopState.deleted = [];
+    if (!shopState.added)   shopState.added   = {};
+  } catch(e) { shopState = { deleted:[], added:{} }; }
+}
+
+function _fadeRemove(row) {
+  row.style.transition = 'opacity .18s, max-height .28s .05s, padding .28s .05s';
+  row.style.overflow   = 'hidden';
+  row.style.maxHeight  = row.offsetHeight + 'px';
+  row.style.opacity    = '0';
+  setTimeout(function(){ row.style.maxHeight='0'; row.style.paddingTop='0'; row.style.paddingBottom='0'; }, 30);
+  setTimeout(function(){ if (row.parentNode) row.parentNode.removeChild(row); }, 340);
+}
+
+function removeItem(row, catId, isCustom) {
+  if (isCustom) {
+    if (shopState.added[catId])
+      shopState.added[catId] = shopState.added[catId].filter(function(i){ return i.id !== row.getAttribute('data-id'); });
+  } else {
+    var id = row.getAttribute('data-id');
+    if (id && shopState.deleted.indexOf(id) === -1) shopState.deleted.push(id);
+  }
+  _saveShop();
+  _fadeRemove(row);
+}
+
+function _makeDelBtn(row, catId, isCustom) {
+  var btn = document.createElement('button');
+  btn.className    = 'row-del';
+  btn.title        = 'Remove item';
+  btn.innerHTML    = '&times;';
+  btn.setAttribute('aria-label','Remove item');
+  btn.onclick      = function(e){ e.stopPropagation(); removeItem(row, catId, isCustom); };
+  return btn;
+}
+
+function _makeCheckRow(catId, id, label, price, isCustom) {
+  var row = document.createElement('div');
+  row.className = 'check-row';
+  row.setAttribute('data-id', id);
+  if (isCustom) row.setAttribute('data-custom','1');
+  row.onclick = function(){ toggleCheck(row); };
+
+  var box = document.createElement('div');
+  box.className = 'check-box';
+  box.innerHTML = '<svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg>';
+
+  var lbl = document.createElement('span');
+  lbl.className = 'check-label';
+  lbl.textContent = label;
+
+  var pr = document.createElement('span');
+  pr.className = 'check-price';
+  pr.textContent = price || '';
+
+  row.appendChild(box);
+  row.appendChild(lbl);
+  row.appendChild(pr);
+  row.appendChild(_makeDelBtn(row, catId, isCustom));
+  return row;
+}
+
+function showAddForm(catId) {
+  var wrap = document.getElementById('add-row-' + catId);
+  if (!wrap) return;
+  wrap.querySelector('.add-item-btn').style.display  = 'none';
+  var form = wrap.querySelector('.add-item-form');
+  form.classList.add('open');
+  form.querySelector('.add-name-inp').focus();
+}
+function cancelAdd(catId) {
+  var wrap = document.getElementById('add-row-' + catId);
+  if (!wrap) return;
+  wrap.querySelector('.add-item-btn').style.display = '';
+  var form = wrap.querySelector('.add-item-form');
+  form.classList.remove('open');
+  form.querySelector('.add-name-inp').value  = '';
+  form.querySelector('.add-price-inp').value = '';
+}
+function commitAdd(catId) {
+  var wrap = document.getElementById('add-row-' + catId);
+  if (!wrap) return;
+  var nameInp  = wrap.querySelector('.add-name-inp');
+  var priceInp = wrap.querySelector('.add-price-inp');
+  var label    = nameInp.value.trim();
+  if (!label) { nameInp.focus(); return; }
+  var price    = priceInp.value.trim();
+  var id       = 'custom-' + catId + '-' + Date.now();
+
+  var cat    = document.getElementById('cat-' + catId);
+  var addRow = document.getElementById('add-row-' + catId);
+  var newRow = _makeCheckRow(catId, id, label, price, true);
+  cat.insertBefore(newRow, addRow);
+
+  if (!shopState.added[catId]) shopState.added[catId] = [];
+  shopState.added[catId].push({ id:id, label:label, price:price });
+  _saveShop();
+  cancelAdd(catId);
+}
+
+function _buildAddRow(catId) {
+  var wrap  = document.createElement('div');
+  wrap.className = 'add-item-row';
+  wrap.id        = 'add-row-' + catId;
+
+  // "Add item" button
+  var btn = document.createElement('button');
+  btn.className = 'add-item-btn';
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>&nbsp; Add item';
+  btn.onclick = function(){ showAddForm(catId); };
+
+  // Inline form
+  var form = document.createElement('div');
+  form.className = 'add-item-form';
+
+  var nameInp = document.createElement('input');
+  nameInp.className   = 'add-name-inp';
+  nameInp.placeholder = 'Item name…';
+  nameInp.type        = 'text';
+  nameInp.onkeydown   = function(e){ if(e.key==='Enter') commitAdd(catId); if(e.key==='Escape') cancelAdd(catId); };
+
+  var priceInp = document.createElement('input');
+  priceInp.className   = 'add-price-inp';
+  priceInp.placeholder = '~R0';
+  priceInp.type        = 'text';
+  priceInp.onkeydown   = function(e){ if(e.key==='Enter') commitAdd(catId); if(e.key==='Escape') cancelAdd(catId); };
+
+  var okBtn = document.createElement('button');
+  okBtn.className   = 'add-ok-btn';
+  okBtn.textContent = 'Add';
+  okBtn.onclick     = function(){ commitAdd(catId); };
+
+  var xBtn = document.createElement('button');
+  xBtn.className   = 'add-x-btn';
+  xBtn.textContent = '✕';
+  xBtn.onclick     = function(){ cancelAdd(catId); };
+
+  form.appendChild(nameInp);
+  form.appendChild(priceInp);
+  form.appendChild(okBtn);
+  form.appendChild(xBtn);
+  wrap.appendChild(btn);
+  wrap.appendChild(form);
+  return wrap;
+}
+
+function resetShopList() {
+  if (!confirm('Restore all removed items and clear custom items?')) return;
+  shopState = { deleted:[], added:{} };
+  _saveShop();
+  location.reload();
+}
+
+function initShopList() {
+  _loadShop();
+  document.querySelectorAll('.shop-items').forEach(function(cat) {
+    var catId = cat.id.replace('cat-','');
+
+    // Assign data-ids and inject delete buttons into existing rows
+    cat.querySelectorAll('.check-row').forEach(function(row, idx) {
+      var id = catId + '-' + idx;
+      row.setAttribute('data-id', id);
+      row.appendChild(_makeDelBtn(row, catId, false));
+      if (shopState.deleted.indexOf(id) > -1) row.style.display = 'none';
+    });
+
+    // Restore custom added items
+    if (shopState.added[catId]) {
+      shopState.added[catId].forEach(function(item) {
+        var row = _makeCheckRow(catId, item.id, item.label, item.price, true);
+        cat.appendChild(row);
+      });
+    }
+
+    // Inject Add-item row + Reset link
+    var addRow = _buildAddRow(catId);
+    cat.appendChild(addRow);
+  });
+
+  // Inject "Reset list" link into both shopping page intros
+  ['shop','w2-shop'].forEach(function(pageId) {
+    var bar = document.querySelector('#' + pageId + ' .section-title-bar + p');
+    if (!bar) return;
+    var rst = document.createElement('button');
+    rst.className   = 'shop-reset-link';
+    rst.textContent = 'Restore removed items';
+    rst.onclick     = resetShopList;
+    bar.style.display = 'flex';
+    bar.style.alignItems = 'center';
+    bar.appendChild(rst);
+  });
+}
+
 // ── Init ───────────────────────────────────────────────────────────────────
 document.querySelectorAll('.shop-items').forEach(function(el){ el.classList.add('open'); });
 document.querySelectorAll('.chevron').forEach(function(el){ el.classList.add('open'); });
+document.addEventListener('DOMContentLoaded', initShopList);
 </script>
 </body>
 </html>
