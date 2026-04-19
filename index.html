@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weekly Meal Plan — Family of 4</title>
 
 <style>
@@ -156,8 +156,9 @@ body{
 }
 
 /* ── STICKY NAV ── */
+.sticky-top{position:sticky;top:0;z-index:200}
 .sticky-nav{
-  position:sticky;top:0;z-index:200;
+  position:static;
   background:var(--mode-nav-bg);
   border-bottom:1px solid rgba(184,136,42,.2);
   backdrop-filter:blur(12px);
@@ -500,6 +501,19 @@ body{
   .rcard-body{padding:1rem 1.1rem 1.4rem}
   .hero{padding:3rem 1rem 2.5rem}
   .page-header{margin-bottom:1.5rem}
+  .check-row{padding:12px 1rem}
+  .nav-btn{padding:.85rem .85rem .75rem}
+  .shop-table td{padding:8px .8rem}
+  .total-bar{padding:1.1rem 1.2rem}
+}
+@media(max-width:480px){
+  .week-label{display:none}
+  .week-switcher-inner{gap:8px}
+  .week-btn{padding:.45rem .65rem;font-size:10.5px;letter-spacing:.07em}
+  .theme-toggle{padding:.35rem .65rem;font-size:10.5px}
+  .rcard-svg{height:180px}
+  .nutrition-grid{grid-template-columns:1fr}
+  .tips-grid{grid-template-columns:1fr}
 }
 
 /* ── WEEK SWITCHER ── */
@@ -508,7 +522,7 @@ body{
   border-bottom:1px solid rgba(184,136,42,.15);
   padding:.6rem 1rem;
   display:flex;align-items:center;justify-content:space-between;
-  gap:1rem;max-width:100%;
+  gap:1rem;max-width:100%;overflow:hidden;
   transition:background .3s;
 }
 .week-switcher-inner{
@@ -548,6 +562,7 @@ body{
   white-space:nowrap;
   transition:all .2s;
   flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
 }
 .theme-toggle:hover{background:rgba(184,136,42,.25)}
 /* price accuracy note */
@@ -608,7 +623,7 @@ body{
 <!-- HERO -->
 <header class="hero">
   <div class="hero-inner">
-    <span class="hero-eye">Makro &nbsp;·&nbsp; Weekly Grocery Plan &nbsp;·&nbsp; April 2026</span>
+    <span class="hero-eye">Makro &nbsp;·&nbsp; Weekly Grocery Plan &nbsp;·&nbsp; Apr–May 2026</span>
     <h1>A Week of <em>Good Food</em><br>for the Whole House</h1>
     <div class="hero-rule"></div>
     <p class="hero-sub">4 people &nbsp;·&nbsp; 21 recipes &nbsp;·&nbsp; Vegetarian mains &nbsp;·&nbsp; Meat add-ons for CJ</p>
@@ -621,7 +636,8 @@ body{
   </div>
 </header>
 
-<!-- STICKY NAV -->
+<!-- STICKY NAV + WEEK SWITCHER wrapped so both stay fixed at top -->
+<div class="sticky-top">
 <nav class="sticky-nav">
   <div class="nav-scroll" id="main-nav">
     <button class="nav-btn on" onclick="navTo('mon',this)">Monday</button>
@@ -639,11 +655,12 @@ body{
 <div class="week-switcher">
   <div class="week-switcher-inner">
     <span class="week-label">Week</span>
-    <button class="week-btn on" onclick="switchWeek(1,this)">Week 1 &nbsp;·&nbsp; 21 Apr</button>
-    <button class="week-btn" onclick="switchWeek(2,this)">Week 2 &nbsp;·&nbsp; 28 Apr</button>
+    <button class="week-btn on" onclick="switchWeek(1,this)">Week 1 &nbsp;·&nbsp; 28 Apr</button>
+    <button class="week-btn" onclick="switchWeek(2,this)">Week 2 &nbsp;·&nbsp; 5 May</button>
     <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">☀️ Light</button>
   </div>
 </div>
+</div><!-- /sticky-top -->
 
 <div class="main">
 <div class="week-block on" id="w1">
