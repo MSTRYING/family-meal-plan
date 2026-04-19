@@ -508,8 +508,8 @@ body{
 }
 @media(max-width:480px){
   .week-label{display:none}
-  .week-switcher-inner{gap:8px}
-  .week-btn{padding:.45rem .65rem;font-size:10.5px;letter-spacing:.07em}
+  .week-switcher-inner{gap:5px}
+  .week-btn{padding:.4rem .4rem;font-size:9.5px;letter-spacing:.04em}
   .theme-toggle{padding:.35rem .65rem;font-size:10.5px}
   .rcard-svg{height:180px}
   .nutrition-grid{grid-template-columns:1fr}
@@ -527,17 +527,17 @@ body{
 }
 .week-switcher-inner{
   max-width:1080px;margin:0 auto;width:100%;
-  display:flex;align-items:center;gap:12px;
+  display:flex;align-items:center;gap:8px;
 }
 .week-btn{
-  flex:1;padding:.5rem 1rem;
+  flex:1;padding:.5rem .7rem;
   border:1px solid rgba(184,136,42,.3);border-radius:30px;
   background:transparent;cursor:pointer;
-  font-family:var(--sans);font-size:11px;font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--sans);font-size:10.5px;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;
   color:var(--mode-nav-btn);
   transition:all .2s;-webkit-tap-highlight-color:transparent;
-  white-space:nowrap;
+  white-space:nowrap;min-width:0;
 }
 .week-btn.on{
   background:var(--gold);border-color:var(--gold);
@@ -724,6 +724,231 @@ body{
   background:var(--mode-bg3);border-color:var(--mode-border2);
 }
 
+/* ── CART COUNTER + ACTION BAR ── */
+.shop-actions{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin:.6rem 0 1.1rem;
+}
+.cart-counter{
+  flex:1;display:flex;align-items:baseline;gap:8px;min-width:0;
+}
+.cart-amount{
+  font-family:var(--serif);font-size:1.35rem;font-weight:300;color:var(--gold2);
+  white-space:nowrap;
+}
+.cart-tally{font-size:11.5px;color:var(--ink5);white-space:nowrap}
+.shop-action-btns{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.btn-wa{
+  display:flex;align-items:center;gap:5px;
+  background:#25D366;border:none;border-radius:var(--rsm);
+  padding:.45rem .85rem;
+  font-family:var(--sans);font-size:11.5px;font-weight:600;
+  color:#fff;cursor:pointer;white-space:nowrap;
+  transition:background .15s;-webkit-tap-highlight-color:transparent;
+}
+.btn-wa:hover{background:#1ebe5a}
+.btn-print{
+  display:flex;align-items:center;gap:5px;
+  background:var(--paper3);border:1px solid var(--border2);border-radius:var(--rsm);
+  padding:.45rem .85rem;
+  font-family:var(--sans);font-size:11.5px;font-weight:600;
+  color:var(--ink3);cursor:pointer;white-space:nowrap;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.btn-print:hover{border-color:var(--ink3);color:var(--ink)}
+[data-theme="dark"] .btn-print{background:var(--mode-bg3);border-color:var(--mode-border2)}
+
+/* ── PRICE CONFIRM BOX ── */
+.pc-box{
+  display:none;flex-wrap:wrap;align-items:center;gap:6px;
+  padding:10px 1.25rem;
+  background:rgba(184,136,42,.07);
+  border-left:3px solid var(--gold);
+  border-bottom:1px solid var(--border);
+  animation:fadeUp .15s ease;
+}
+.pc-hint{font-size:11.5px;color:var(--ink4);width:100%;margin-bottom:2px}
+.pc-box input{
+  background:var(--paper);border:1px solid var(--border2);border-radius:var(--rsm);
+  padding:7px 10px;font-family:var(--sans);font-size:13px;color:var(--ink);
+  outline:none;transition:border-color .15s;
+}
+.pc-box input:focus{border-color:var(--gold)}
+.pc-lbl{flex:1;min-width:120px}
+.pc-price{width:90px}
+.pc-save-btn{
+  background:var(--gold);border:none;border-radius:var(--rsm);
+  padding:7px 14px;font-family:var(--sans);font-size:12px;font-weight:600;
+  color:#fff;cursor:pointer;transition:background .15s;
+  -webkit-tap-highlight-color:transparent;white-space:nowrap;
+}
+.pc-save-btn:hover{background:var(--gold2)}
+.pc-skip-btn{
+  background:none;border:1px solid var(--border2);border-radius:var(--rsm);
+  padding:7px 10px;font-family:var(--sans);font-size:12px;color:var(--ink4);
+  cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.pc-skip-btn:hover{color:var(--ink3);border-color:var(--ink3)}
+[data-theme="dark"] .pc-box{background:rgba(184,136,42,.1)}
+[data-theme="dark"] .pc-box input{background:var(--mode-bg3);border-color:var(--mode-border2)}
+
+/* ── ACTUAL PRICE BADGE ── */
+.actual-badge{
+  background:rgba(30,58,107,.1);color:var(--blue);
+  border:1px solid rgba(30,58,107,.2);
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 7px;border-radius:20px;margin-left:4px;vertical-align:middle;
+}
+[data-theme="dark"] .actual-badge{background:rgba(100,140,220,.12);color:#7fa8e8;border-color:rgba(100,140,220,.25)}
+
+/* ── MEAL RATINGS ── */
+.recipe-footer{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding-top:.9rem;border-top:1px solid var(--border);margin-top:.9rem;
+}
+.rating-btns{display:flex;gap:6px}
+.rating-btn{
+  background:none;border:1px solid var(--border2);border-radius:30px;
+  padding:5px 12px;font-size:13px;cursor:pointer;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;font-family:var(--sans);
+}
+.rating-btn:hover{border-color:var(--gold);background:rgba(184,136,42,.07)}
+.rating-btn.up.active{background:rgba(30,92,53,.12);border-color:var(--green2)}
+.rating-btn.down.active{background:rgba(139,58,26,.1);border-color:var(--rust2)}
+.rating-label{font-size:12px;color:var(--ink5);font-family:var(--sans)}
+
+/* ── SERVING SCALER ── */
+.scaler-row{
+  display:flex;align-items:center;gap:8px;
+  width:100%;margin-top:6px;
+}
+.scaler-label{font-size:12px;color:var(--ink4);font-family:var(--sans)}
+.scaler-btn{
+  width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--border2);background:var(--paper3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:15px;line-height:1;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;color:var(--ink3);
+}
+.scaler-btn:hover:not(:disabled){border-color:var(--gold);background:rgba(184,136,42,.09)}
+.scaler-btn:disabled{opacity:.35;cursor:default}
+.scaler-count{
+  font-family:var(--serif);font-size:1.1rem;color:var(--ink);
+  min-width:22px;text-align:center;
+}
+.scaler-banner{
+  background:rgba(184,136,42,.09);border-left:3px solid var(--gold);
+  border-radius:0 var(--rsm) var(--rsm) 0;
+  padding:7px 12px;font-size:12.5px;color:var(--amber);
+  margin:.75rem 0;line-height:1.55;display:none;
+}
+.scaler-banner.visible{display:block}
+[data-theme="dark"] .scaler-banner{background:rgba(184,136,42,.14)}
+
+/* ── RECIPE NOTES ── */
+.note-callout{
+  background:rgba(26,18,9,.04);border:1px dashed var(--border2);
+  border-radius:var(--rsm);padding:10px 14px;
+  font-size:13px;color:var(--ink3);line-height:1.65;
+  margin-top:.75rem;cursor:pointer;white-space:pre-wrap;
+  display:none;transition:background .15s;
+}
+.note-callout.visible{display:block}
+.note-callout:hover{background:rgba(26,18,9,.07)}
+.note-textarea{
+  width:100%;background:var(--paper);border:1px solid var(--border2);
+  border-radius:var(--rsm);padding:10px 12px;
+  font-family:var(--sans);font-size:13px;color:var(--ink);
+  line-height:1.65;resize:vertical;min-height:72px;
+  outline:none;transition:border-color .15s;margin-top:.75rem;display:none;
+}
+.note-textarea:focus{border-color:var(--gold)}
+.note-textarea.visible{display:block}
+.note-toggle-btn{
+  background:none;border:none;cursor:pointer;
+  font-family:var(--sans);font-size:11.5px;color:var(--ink5);
+  padding:0;display:flex;align-items:center;gap:4px;margin-top:6px;
+  -webkit-tap-highlight-color:transparent;transition:color .15s;
+}
+.note-toggle-btn:hover{color:var(--ink3)}
+[data-theme="dark"] .note-callout{background:rgba(245,239,230,.04);border-color:var(--mode-border2)}
+[data-theme="dark"] .note-textarea{background:var(--mode-bg3);border-color:var(--mode-border2)}
+
+/* ── PANTRY TOGGLE ── */
+.row-pantry{
+  background:none;border:none;cursor:pointer;
+  color:var(--ink5);font-size:14px;line-height:1;
+  padding:0 0 0 4px;flex-shrink:0;
+  opacity:0;transition:opacity .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+@media(hover:hover){.check-row:hover .row-pantry{opacity:.7}}
+@media(hover:none){.row-pantry{opacity:.5}}
+.check-row.pantry .row-pantry{opacity:1;filter:saturate(1.5)}
+.check-row.pantry{background:rgba(30,92,53,.04)}
+.check-row.pantry .check-label{color:var(--ink5)}
+.pantry-tag{
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 6px;border-radius:20px;margin-left:6px;
+  background:rgba(30,92,53,.1);color:var(--green2);border:1px solid rgba(30,92,53,.2);
+  display:none;vertical-align:middle;
+}
+.check-row.pantry .pantry-tag{display:inline}
+
+/* ── ACTUAL PRICE BADGE ── */
+.actual-badge{
+  background:rgba(30,58,107,.1);color:var(--blue);
+  border:1px solid rgba(30,58,107,.2);
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 7px;border-radius:20px;margin-left:4px;vertical-align:middle;
+}
+[data-theme="dark"] .actual-badge{background:rgba(100,140,220,.12);color:#7fa8e8;border-color:rgba(100,140,220,.25)}
+
+/* ── PROTEIN TRACKER CHIPS ── */
+.prot-chip{
+  border:1px solid var(--border2);border-radius:20px;padding:4px 10px;
+  font-size:12px;cursor:pointer;background:var(--paper);color:var(--ink3);
+  font-family:var(--sans);transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.prot-chip:hover{border-color:var(--green2);background:rgba(30,92,53,.06)}
+.prot-chip.active{background:rgba(30,92,53,.1);border-color:var(--green2)}
+
+/* ── WEEK 3 / 4 MEAL PLACEHOLDER ── */
+.meal-block .rcard>div:first-child{
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;border-radius:var(--rsm) var(--rsm) 0 0;
+}
+
+/* ── LUNCHBOX BUILDER SELECT ── */
+.lb-sel{
+  width:100%;border:1px solid var(--border2);border-radius:6px;
+  padding:5px 8px;font-size:12px;font-family:var(--sans);
+  background:var(--paper);color:var(--ink);cursor:pointer;
+}
+[data-theme="dark"] .lb-sel{background:var(--mode-bg3);border-color:var(--mode-border2)}
+
+/* ── PRINT STYLESHEET ── */
+@media print{
+  .hero,.sticky-top,.week-block:not(.on),.shop-actions,.add-item-row,
+  .row-del,.split-shop,.tips-grid,.shop-notice,.price-accuracy,
+  .pc-box,.tip-card{display:none!important}
+  .week-block.on .page:not(.on){display:none!important}
+  body{background:#fff!important;color:#111!important}
+  .shop-items{display:block!important;overflow:visible!important}
+  .check-row.done{opacity:.4}
+  .check-row.done .check-label{text-decoration:line-through}
+  .check-box{border:1.5px solid #999!important;background:none!important;border-radius:3px}
+  .check-row.done .check-box{background:#aaa!important}
+  .shop-card{border:1px solid #ddd!important;box-shadow:none!important;break-inside:avoid;margin-bottom:.6rem}
+  .shop-card-header{background:#f6f6f6!important;border-bottom:1px solid #ddd!important}
+  .retailer-tag{border:1px solid #bbb!important;color:#444!important;background:#eee!important}
+  .total-bar{background:#222!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .main{padding:0!important;max-width:100%!important}
+  .section-title-bar{border-color:#ddd!important}
+  .chevron,.shop-card-header svg:last-child{display:none!important}
+  @page{margin:1.5cm}
+}
+
 </style>
 </head>
 <body>
@@ -765,6 +990,8 @@ body{
     <span class="week-label">Week</span>
     <button class="week-btn on" onclick="switchWeek(1,this)">Week 1 &nbsp;·&nbsp; 28 Apr</button>
     <button class="week-btn" onclick="switchWeek(2,this)">Week 2 &nbsp;·&nbsp; 5 May</button>
+    <button class="week-btn" onclick="switchWeek(3,this)">Week 3 &nbsp;·&nbsp; 12 May</button>
+    <button class="week-btn" onclick="switchWeek(4,this)">Week 4 &nbsp;·&nbsp; 19 May</button>
     <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">☀️ Light</button>
   </div>
 </div>
@@ -4260,6 +4487,10 @@ body{
 
 </div><!-- /main w2 -->
 </div><!-- /w2 -->
+
+<div class="week-block" id="w3"></div><!-- /w3 — populated by JS -->
+<div class="week-block" id="w4"></div><!-- /w4 — populated by JS -->
+
 </div><!-- /main -->
 
 <script>
@@ -4314,12 +4545,88 @@ function toggleCat(id) {
   if (chev) chev.classList.toggle('open', open);
 }
 
-// ── Checklist ──────────────────────────────────────────────────────────────
-function toggleCheck(row) { row.classList.toggle('done'); }
+// ── Checklist + price confirm ───────────────────────────────────────────────
+var _confirmTarget = null; // currently open confirm row
+
+function toggleCheck(row) {
+  row.classList.toggle('done');
+  var id = row.getAttribute('data-id');
+  if (id) {
+    if (row.classList.contains('done')) {
+      if (shopState.checked.indexOf(id) === -1) shopState.checked.push(id);
+      _showPriceConfirm(row);
+    } else {
+      shopState.checked = shopState.checked.filter(function(i){ return i !== id; });
+      _hidePriceConfirm();
+    }
+    _saveShop();
+    var pg = row.closest ? row.closest('.page') : null;
+    if (pg) _updateCartTotal(pg.id);
+  }
+}
+
+function _showPriceConfirm(row) {
+  _hidePriceConfirm();
+  _confirmTarget = row;
+  var box = document.getElementById('pc-box');
+  if (!box) return;
+  var id    = row.getAttribute('data-id');
+  var saved = shopState.prices && shopState.prices[id];
+  var lbl   = saved ? saved.label : (row.querySelector('.check-label') ? row.querySelector('.check-label').textContent : '');
+  var price = saved ? saved.price : (row.querySelector('.check-price') ? row.querySelector('.check-price').textContent.replace(/VERIFIED|est/gi,'').trim() : '');
+  box.querySelector('.pc-lbl').value   = lbl;
+  box.querySelector('.pc-price').value = price;
+  // insert box after row
+  row.parentNode.insertBefore(box, row.nextSibling);
+  box.style.display = 'flex';
+  box.querySelector('.pc-price').select();
+}
+
+function _hidePriceConfirm() {
+  var box = document.getElementById('pc-box');
+  if (box) box.style.display = 'none';
+  _confirmTarget = null;
+}
+
+function savePriceConfirm() {
+  var box = document.getElementById('pc-box');
+  if (!box || !_confirmTarget) { _hidePriceConfirm(); return; }
+  var newLbl   = box.querySelector('.pc-lbl').value.trim();
+  var newPrice = box.querySelector('.pc-price').value.trim();
+  var id       = _confirmTarget.getAttribute('data-id');
+  if (!shopState.prices) shopState.prices = {};
+  if (newLbl || newPrice) {
+    shopState.prices[id] = { label: newLbl, price: newPrice };
+    _applyRowPrice(_confirmTarget, newLbl, newPrice);
+    _saveShop();
+    var pg = _confirmTarget.closest ? _confirmTarget.closest('.page') : null;
+    if (pg) _updateCartTotal(pg.id);
+  }
+  _hidePriceConfirm();
+}
+
+function _applyRowPrice(row, label, price) {
+  if (label) {
+    var lbl = row.querySelector('.check-label');
+    if (lbl) lbl.textContent = label;
+  }
+  if (price) {
+    var pr = row.querySelector('.check-price');
+    if (pr) {
+      // Keep only the new price, replace any old badge
+      pr.innerHTML = '';
+      pr.appendChild(document.createTextNode(price + ' '));
+      var badge = document.createElement('span');
+      badge.className = 'price-source actual-badge';
+      badge.textContent = 'ACTUAL';
+      pr.appendChild(badge);
+    }
+  }
+}
 
 // ── Shopping list: add / remove items ──────────────────────────────────────
 var SHOP_KEY = 'mealplan_shop_v1';
-var shopState = { deleted:[], added:{} };
+var shopState = { deleted:[], added:{}, checked:[], prices:{} };
 
 function _saveShop() {
   try { localStorage.setItem(SHOP_KEY, JSON.stringify(shopState)); } catch(e){}
@@ -4330,7 +4637,9 @@ function _loadShop() {
     if (raw) shopState = JSON.parse(raw);
     if (!shopState.deleted) shopState.deleted = [];
     if (!shopState.added)   shopState.added   = {};
-  } catch(e) { shopState = { deleted:[], added:{} }; }
+    if (!shopState.checked) shopState.checked = [];
+    if (!shopState.prices)  shopState.prices  = {};
+  } catch(e) { shopState = { deleted:[], added:{}, checked:[], prices:{} }; }
 }
 
 function _fadeRemove(row) {
@@ -4474,57 +4783,968 @@ function _buildAddRow(catId) {
   return wrap;
 }
 
+// ── Cart total ─────────────────────────────────────────────────────────────
+function _parsePrice(el) {
+  if (!el) return 0;
+  var t = el.textContent || '';
+  var m = t.match(/R\s*(\d+(?:[.,]\d+)?)/i);
+  return m ? parseFloat(m[1].replace(',','.')) : 0;
+}
+
+function _updateCartTotal(pageId) {
+  var page = document.getElementById(pageId);
+  if (!page) return;
+  var counter = document.getElementById('cart-' + pageId);
+  if (!counter) return;
+  var all  = Array.from(page.querySelectorAll('.check-row')).filter(function(r){ return r.style.display !== 'none'; });
+  var done = all.filter(function(r){ return r.classList.contains('done'); });
+  var total = 0;
+  done.forEach(function(r){ total += _parsePrice(r.querySelector('.check-price')); });
+  counter.querySelector('.cart-amount').textContent = 'R\u202f' + Math.round(total).toLocaleString('en-ZA');
+  counter.querySelector('.cart-tally').textContent  = done.length + '\u202fof\u202f' + all.length + ' checked';
+}
+
+// ── WhatsApp share ─────────────────────────────────────────────────────────
+function shareShopList(pageId) {
+  var page = document.getElementById(pageId);
+  if (!page) return;
+  var lines = ['\uD83D\uDED2 *Shopping list \u2014 Family Meal Plan*\n'];
+  page.querySelectorAll('.shop-card').forEach(function(card) {
+    var titleEl = card.querySelector('.shop-card-title');
+    if (!titleEl) return;
+    var items = [];
+    card.querySelectorAll('.check-row').forEach(function(row) {
+      if (row.style.display === 'none') return;
+      var lbl = row.querySelector('.check-label');
+      var pr  = row.querySelector('.check-price');
+      if (!lbl) return;
+      var tick = row.classList.contains('done') ? '\u2705' : '\u2B1C';
+      var prTxt = pr ? pr.textContent.replace(/VERIFIED|ACTUAL|est/gi,'').replace(/\s+/g,' ').trim() : '';
+      items.push(tick + ' ' + lbl.textContent.trim() + (prTxt ? '  ' + prTxt : ''));
+    });
+    if (items.length) {
+      lines.push('\n*' + titleEl.textContent.trim() + '*');
+      lines = lines.concat(items);
+    }
+  });
+  window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
+}
+
+// ── Reset ──────────────────────────────────────────────────────────────────
 function resetShopList() {
-  if (!confirm('Restore all removed items and clear custom items?')) return;
-  shopState = { deleted:[], added:{} };
+  if (!confirm('Reset list? This restores removed items, clears custom items and saved prices.')) return;
+  shopState = { deleted:[], added:{}, checked:[], prices:{} };
   _saveShop();
   location.reload();
 }
 
+// ── Init ───────────────────────────────────────────────────────────────────
 function initShopList() {
   _loadShop();
+
+  // Build the shared price-confirm box (injected once, moved around as needed)
+  var pcBox = document.createElement('div');
+  pcBox.id        = 'pc-box';
+  pcBox.className = 'pc-box';
+  pcBox.style.display = 'none';
+  pcBox.innerHTML =
+    '<span class="pc-hint">Actual item &amp; price paid:</span>' +
+    '<input class="pc-lbl"   type="text" placeholder="Item name"/>' +
+    '<input class="pc-price" type="text" placeholder="~R0"/>' +
+    '<button class="pc-save-btn" onclick="savePriceConfirm()">Save</button>' +
+    '<button class="pc-skip-btn" onclick="_hidePriceConfirm()">Skip</button>';
+  document.body.appendChild(pcBox);
+
   document.querySelectorAll('.shop-items').forEach(function(cat) {
     var catId = cat.id.replace('cat-','');
 
-    // Assign data-ids and inject delete buttons into existing rows
+    // Assign data-ids, inject delete buttons, restore state for existing rows
     cat.querySelectorAll('.check-row').forEach(function(row, idx) {
       var id = catId + '-' + idx;
       row.setAttribute('data-id', id);
       row.appendChild(_makeDelBtn(row, catId, false));
-      if (shopState.deleted.indexOf(id) > -1) row.style.display = 'none';
+      if (shopState.deleted.indexOf(id) > -1) { row.style.display = 'none'; return; }
+      // Restore saved actual price/label
+      if (shopState.prices[id]) _applyRowPrice(row, shopState.prices[id].label, shopState.prices[id].price);
+      // Restore checked state
+      if (shopState.checked.indexOf(id) > -1) row.classList.add('done');
     });
 
     // Restore custom added items
     if (shopState.added[catId]) {
       shopState.added[catId].forEach(function(item) {
         var row = _makeCheckRow(catId, item.id, item.label, item.price, true);
+        if (shopState.checked.indexOf(item.id) > -1) row.classList.add('done');
         cat.appendChild(row);
       });
     }
 
-    // Inject Add-item row + Reset link
-    var addRow = _buildAddRow(catId);
-    cat.appendChild(addRow);
+    cat.appendChild(_buildAddRow(catId));
   });
 
-  // Inject "Reset list" link into both shopping page intros
-  ['shop','w2-shop'].forEach(function(pageId) {
-    var bar = document.querySelector('#' + pageId + ' .section-title-bar + p');
-    if (!bar) return;
-    var rst = document.createElement('button');
-    rst.className   = 'shop-reset-link';
-    rst.textContent = 'Restore removed items';
-    rst.onclick     = resetShopList;
-    bar.style.display = 'flex';
-    bar.style.alignItems = 'center';
-    bar.appendChild(rst);
+  // Inject action bar (cart counter + WhatsApp + Print + Reset) into each shopping page
+  [{id:'shop', lbl:'Week 1'}, {id:'w2-shop', lbl:'Week 2'}].forEach(function(cfg) {
+    var page = document.getElementById(cfg.id);
+    if (!page) return;
+
+    // Find "Full shopping list" title bar
+    var listBar = null;
+    page.querySelectorAll('.section-title-bar').forEach(function(b){
+      if (b.textContent.indexOf('Full shopping') > -1) listBar = b;
+    });
+    if (!listBar) return;
+
+    // Action bar div
+    var bar = document.createElement('div');
+    bar.className = 'shop-actions';
+
+    // Cart counter
+    var ctr = document.createElement('div');
+    ctr.className = 'cart-counter';
+    ctr.id = 'cart-' + cfg.id;
+    ctr.innerHTML = '<span class="cart-amount">R\u202f0</span><span class="cart-tally">0\u202fof\u202f0 checked</span>';
+
+    // Buttons
+    var btns = document.createElement('div');
+    btns.className = 'shop-action-btns';
+
+    var waBtn = document.createElement('button');
+    waBtn.className = 'btn-wa';
+    waBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share';
+    waBtn.onclick = function(){ shareShopList(cfg.id); };
+
+    var printBtn = document.createElement('button');
+    printBtn.className = 'btn-print';
+    printBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print';
+    printBtn.onclick = function(){ window.print(); };
+
+    var rstBtn = document.createElement('button');
+    rstBtn.className = 'btn-print shop-reset-link';
+    rstBtn.textContent = 'Reset';
+    rstBtn.onclick = resetShopList;
+
+    btns.appendChild(waBtn);
+    btns.appendChild(printBtn);
+    btns.appendChild(rstBtn);
+    bar.appendChild(ctr);
+    bar.appendChild(btns);
+    listBar.parentNode.insertBefore(bar, listBar.nextSibling);
+
+    _updateCartTotal(cfg.id);
   });
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
 document.querySelectorAll('.shop-items').forEach(function(el){ el.classList.add('open'); });
 document.querySelectorAll('.chevron').forEach(function(el){ el.classList.add('open'); });
 document.addEventListener('DOMContentLoaded', initShopList);
+
+// ══════════════════════════════════════════════════════════════════════
+// RECIPE FEATURES — ratings · notes · scaler · pantry
+// ══════════════════════════════════════════════════════════════════════
+var RCP_KEY = 'mealplan_rcp_v1';
+var rcpState = { ratings:{}, notes:{}, scalers:{}, pantry:[] };
+function _saveRcp(){ try{ localStorage.setItem(RCP_KEY, JSON.stringify(rcpState)); }catch(e){} }
+function _loadRcp(){
+  try{
+    var raw = localStorage.getItem(RCP_KEY);
+    if(raw) rcpState = JSON.parse(raw);
+    if(!rcpState.ratings) rcpState.ratings={};
+    if(!rcpState.notes)   rcpState.notes={};
+    if(!rcpState.scalers) rcpState.scalers={};
+    if(!rcpState.pantry)  rcpState.pantry=[];
+  }catch(e){ rcpState={ ratings:{}, notes:{}, scalers:{}, pantry:[] }; }
+}
+
+// ── Ratings ────────────────────────────────────────────────────────────
+function _injectRating(body, id){
+  var footer = document.createElement('div');
+  footer.className = 'recipe-footer';
+  var lbl = document.createElement('span');
+  lbl.className = 'rating-label';
+  lbl.style.flex = '1';
+  var upBtn = document.createElement('button');
+  upBtn.className = 'rating-btn up';
+  upBtn.innerHTML = '👍 Loved it';
+  var downBtn = document.createElement('button');
+  downBtn.className = 'rating-btn down';
+  downBtn.innerHTML = '👎 Skip it';
+  function applyRatingUI(val){
+    upBtn.classList.toggle('active', val===1);
+    downBtn.classList.toggle('active', val===-1);
+    if(val===1){ lbl.textContent='⭐ Family favourite!'; lbl.style.color='var(--green2)'; }
+    else if(val===-1){ lbl.textContent='⏭ Skip next time'; lbl.style.color='var(--rust2)'; }
+    else{ lbl.textContent=''; }
+  }
+  applyRatingUI(rcpState.ratings[id]);
+  upBtn.onclick = function(){
+    rcpState.ratings[id] = rcpState.ratings[id]===1 ? undefined : 1;
+    if(!rcpState.ratings[id]) delete rcpState.ratings[id];
+    applyRatingUI(rcpState.ratings[id]); _saveRcp();
+  };
+  downBtn.onclick = function(){
+    rcpState.ratings[id] = rcpState.ratings[id]===-1 ? undefined : -1;
+    if(!rcpState.ratings[id]) delete rcpState.ratings[id];
+    applyRatingUI(rcpState.ratings[id]); _saveRcp();
+  };
+  footer.appendChild(lbl); footer.appendChild(upBtn); footer.appendChild(downBtn);
+  body.appendChild(footer);
+}
+
+// ── Scaler ─────────────────────────────────────────────────────────────
+function _scaleText(text, factor){
+  if(factor===1) return text;
+  return text.replace(/\b(\d+(?:\.\d+)?)/g, function(_,n){
+    var v = parseFloat(n) * factor;
+    if(v===0.5) return '½';
+    if(v===0.25) return '¼';
+    if(v===0.75) return '¾';
+    if(v===1.5) return '1½';
+    if(Number.isInteger(v)) return v;
+    return Math.round(v*10)/10;
+  });
+}
+function _injectScaler(block, id){
+  var chipsEl = block.querySelector('.rcard-chips');
+  var ingList = block.querySelector('.ing-list');
+  if(!chipsEl || !ingList) return;
+  var base = 4, servesChip = null;
+  chipsEl.querySelectorAll('.chip').forEach(function(c){
+    if(/serves/i.test(c.textContent)){ servesChip=c; base=parseInt(c.textContent.match(/\d+/)||[4])||4; }
+  });
+  var origTexts = [];
+  ingList.querySelectorAll('li').forEach(function(li){ origTexts.push(li.textContent); });
+  var cur = rcpState.scalers[id] || base;
+
+  var row = document.createElement('div');
+  row.className = 'scaler-row';
+  var minBtn = document.createElement('button'); minBtn.className='scaler-btn'; minBtn.textContent='−';
+  var cntEl  = document.createElement('span');  cntEl.className='scaler-count'; cntEl.textContent=cur;
+  var plusBtn= document.createElement('button'); plusBtn.className='scaler-btn'; plusBtn.textContent='+';
+  var sLbl   = document.createElement('span');  sLbl.className='scaler-label'; sLbl.textContent=' servings';
+  var banner = document.createElement('div');   banner.className='scaler-banner';
+
+  function applyScale(n){
+    cur = Math.max(1,Math.min(12,n));
+    cntEl.textContent = cur;
+    rcpState.scalers[id] = cur; _saveRcp();
+    if(servesChip) servesChip.textContent = 'Serves '+cur;
+    var f = cur/base;
+    ingList.querySelectorAll('li').forEach(function(li,i){ if(origTexts[i]) li.textContent=_scaleText(origTexts[i],f); });
+    minBtn.disabled = cur<=1; plusBtn.disabled = cur>=12;
+    if(cur!==base){
+      banner.classList.add('visible');
+      banner.innerHTML = 'Scaled to <strong>'+cur+'</strong> servings (original: '+base+'). &nbsp;<button onclick="this.closest(\'.scaler-banner\').classList.remove(\'visible\');var b=this.closest(\'.rcard-body\');b&&b._resetScale&&b._resetScale()" style="font-size:11px;background:none;border:none;color:var(--rust2);cursor:pointer;padding:0;font-family:var(--sans)">↩ Reset</button>';
+    } else { banner.classList.remove('visible'); }
+  }
+  block.querySelector('.rcard-body')._resetScale = function(){ applyScale(base); };
+  minBtn.onclick = function(){ applyScale(cur-1); };
+  plusBtn.onclick= function(){ applyScale(cur+1); };
+
+  row.appendChild(minBtn); row.appendChild(cntEl); row.appendChild(plusBtn); row.appendChild(sLbl);
+  chipsEl.after(row); row.after(banner);
+  if(cur!==base) setTimeout(function(){ applyScale(cur); },50);
+}
+
+// ── Recipe notes ────────────────────────────────────────────────────────
+function _injectNote(body, id){
+  var saved = rcpState.notes[id]||'';
+  var callout = document.createElement('div'); callout.className='note-callout';
+  if(saved){ callout.textContent=saved; callout.classList.add('visible'); }
+  var ta = document.createElement('textarea'); ta.className='note-textarea';
+  ta.placeholder='📝 Family note… e.g. "Less chilli next time", "Miguel loved this"';
+  ta.rows=3; ta.value=saved;
+  var saveBtn = document.createElement('button');
+  saveBtn.style.cssText='margin-top:6px;font-size:12px;background:var(--gold);color:#fff;border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-weight:600;font-family:var(--sans)';
+  saveBtn.textContent='Save note';
+  var cancelBtn = document.createElement('button');
+  cancelBtn.style.cssText='margin-top:6px;margin-left:6px;font-size:12px;background:none;border:1px solid var(--border2);border-radius:6px;padding:4px 14px;cursor:pointer;color:var(--ink4);font-family:var(--sans)';
+  cancelBtn.textContent='Cancel';
+  var editWrap = document.createElement('div');
+  editWrap.style.cssText='display:none;padding:8px 0 4px';
+  editWrap.appendChild(ta);
+  var btnRow = document.createElement('div');
+  btnRow.appendChild(saveBtn); btnRow.appendChild(cancelBtn);
+  editWrap.appendChild(btnRow);
+
+  var toggleBtn = document.createElement('button');
+  toggleBtn.className='note-toggle-btn';
+  toggleBtn.textContent = saved ? '📝 Note saved — tap to edit' : '📝 Add note';
+
+  toggleBtn.onclick = function(){
+    var editing = editWrap.style.display!=='none';
+    if(editing){ editWrap.style.display='none'; ta.value=rcpState.notes[id]||''; }
+    else{ editWrap.style.display='block'; callout.classList.remove('visible'); ta.focus(); }
+  };
+  saveBtn.onclick = function(){
+    var val = ta.value.trim();
+    rcpState.notes[id]=val; _saveRcp();
+    callout.textContent=val;
+    if(val){ callout.classList.add('visible'); toggleBtn.textContent='📝 Note saved — tap to edit'; }
+    else { callout.classList.remove('visible'); toggleBtn.textContent='📝 Add note'; }
+    editWrap.style.display='none';
+  };
+  cancelBtn.onclick = function(){ ta.value=rcpState.notes[id]||''; editWrap.style.display='none'; };
+
+  body.appendChild(toggleBtn);
+  body.appendChild(callout);
+  body.appendChild(editWrap);
+}
+
+// ── Pantry toggle ───────────────────────────────────────────────────────
+function togglePantry(row, itemId){
+  var has = row.classList.contains('pantry');
+  if(has){
+    row.classList.remove('pantry');
+    rcpState.pantry = rcpState.pantry.filter(function(i){ return i!==itemId; });
+  } else {
+    row.classList.add('pantry');
+    if(rcpState.pantry.indexOf(itemId)===-1) rcpState.pantry.push(itemId);
+    row.classList.remove('done');
+    shopState.checked = shopState.checked.filter(function(i){ return i!==itemId; });
+    _saveShop();
+    _hidePriceConfirm();
+  }
+  _saveRcp();
+  var pg = row.closest ? row.closest('.page') : null;
+  if(pg) _updateCartTotal(pg.id);
+}
+
+// Override _updateCartTotal to exclude pantry items
+_updateCartTotal = function(pageId){
+  var page = document.getElementById(pageId); if(!page) return;
+  var counter = document.getElementById('cart-'+pageId); if(!counter) return;
+  var all  = Array.from(page.querySelectorAll('.check-row')).filter(function(r){ return r.style.display!=='none' && !r.classList.contains('pantry'); });
+  var done = all.filter(function(r){ return r.classList.contains('done'); });
+  var total=0; done.forEach(function(r){ total+=_parsePrice(r.querySelector('.check-price')); });
+  counter.querySelector('.cart-amount').textContent='R\u202f'+Math.round(total).toLocaleString('en-ZA');
+  counter.querySelector('.cart-tally').textContent=done.length+'\u202fof\u202f'+all.length+' checked';
+};
+
+function _injectPantryBtn(row, itemId){
+  var tag = document.createElement('span'); tag.className='pantry-tag'; tag.textContent='HAVE';
+  var btn = document.createElement('button'); btn.className='row-pantry';
+  btn.title='Already have this — exclude from total'; btn.innerHTML='🏠';
+  btn.onclick = function(e){ e.stopPropagation(); togglePantry(row,itemId); };
+  // Insert before del button (last child)
+  var delBtn = row.querySelector('.row-del');
+  if(delBtn){ row.insertBefore(tag,delBtn); row.insertBefore(btn,delBtn); }
+  else { row.appendChild(tag); row.appendChild(btn); }
+  if(rcpState.pantry.indexOf(itemId)>-1) row.classList.add('pantry');
+}
+
+// ── Main recipe init ────────────────────────────────────────────────────
+function initRecipes(){
+  _loadRcp();
+  document.querySelectorAll('.meal-block').forEach(function(block,idx){
+    var body = block.querySelector('.rcard-body'); if(!body) return;
+    var id = 'meal-'+idx;
+    _injectScaler(block,id);
+    _injectRating(body,id);
+    _injectNote(body,id);
+  });
+  // Pantry buttons run after initShopList (check-rows already have data-ids)
+  document.querySelectorAll('.check-row').forEach(function(row){
+    var itemId = row.getAttribute('data-id');
+    if(itemId) _injectPantryBtn(row,itemId);
+  });
+}
+document.addEventListener('DOMContentLoaded', initRecipes);
+
+// ══════════════════════════════════════════════════════════════════════
+// CJ'S PROTEIN TRACKER
+// ══════════════════════════════════════════════════════════════════════
+var PROT_KEY = 'mealplan_prot_v1';
+var protState = {}; // { 'YYYY-MM-DD': { mealId: g, ... } }
+function _saveProt(){ try{ localStorage.setItem(PROT_KEY,JSON.stringify(protState)); }catch(e){} }
+function _loadProt(){ try{ var r=localStorage.getItem(PROT_KEY); if(r) protState=JSON.parse(r); }catch(e){} }
+
+var CJ_MEALS = [
+  { id:'b1', label:'Scrambled eggs (2)', g:13 },{ id:'b2', label:'Poached eggs (2)', g:13 },
+  { id:'b3', label:'PB toast (thick)', g:10 },{ id:'b4', label:'Oats + milk', g:9 },
+  { id:'b5', label:'French toast (2sl)', g:12 },{ id:'b6', label:'Egg muffins (2)', g:14 },
+  { id:'b7', label:'Baked beans on toast', g:12 },
+  { id:'l1', label:'PB sandwich', g:9 },{ id:'l2', label:'Cheese sandwich', g:11 },
+  { id:'l3', label:'PB + cheese', g:18 },{ id:'l4', label:'Egg mayo roll', g:14 },
+  { id:'d1', label:'Chicken breast 150g', g:47 },{ id:'d2', label:'Chicken thigh 150g', g:35 },
+  { id:'d3', label:'Beef mince 150g', g:37 },{ id:'d4', label:'Boerewors 100g', g:18 },
+  { id:'d5', label:'Beef burger patty', g:22 },{ id:'d6', label:'Lamb chop 120g', g:28 },
+  { id:'d7', label:'Prawns 100g', g:24 },{ id:'d8', label:'Eggs ×3 (dinner)', g:19 },
+  { id:'s1', label:'Greek yoghurt 200g', g:20 },{ id:'s2', label:'Cottage cheese 100g', g:11 },
+  { id:'s3', label:'Milk 200ml', g:7 },{ id:'s4', label:'Cheese slice 30g', g:8 },
+  { id:'s5', label:'Mixed nuts 30g', g:5 }
+];
+
+function _buildProteinTracker(page){
+  _loadProt();
+  var today = new Date().toISOString().slice(0,10);
+  if(!protState[today]) protState[today]={};
+
+  var section = document.createElement('div');
+  section.style.cssText='margin:1.5rem 0;';
+
+  var titleBar = document.createElement('p');
+  titleBar.className='section-title-bar';
+  titleBar.textContent="CJ's Daily Protein Tracker — 100g Target";
+  section.appendChild(titleBar);
+
+  var card = document.createElement('div');
+  card.className='shop-card';
+  card.style.marginBottom='0';
+
+  var inner = document.createElement('div');
+  inner.style.cssText='padding:1rem 1.25rem';
+
+  // Date selector
+  var dateRow = document.createElement('div');
+  dateRow.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap';
+  var dateLbl = document.createElement('span');
+  dateLbl.style.cssText='font-size:12px;color:var(--ink4);font-family:var(--sans)';
+  dateLbl.textContent='Tracking:';
+  var dateInp = document.createElement('input');
+  dateInp.type='date'; dateInp.value=today;
+  dateInp.style.cssText='border:1px solid var(--border2);border-radius:6px;padding:4px 8px;font-size:13px;font-family:var(--sans);background:var(--paper);color:var(--ink);cursor:pointer';
+  dateRow.appendChild(dateLbl); dateRow.appendChild(dateInp);
+  inner.appendChild(dateRow);
+
+  // Progress bar
+  var barWrap = document.createElement('div');
+  barWrap.style.cssText='background:var(--paper3);border-radius:99px;height:22px;overflow:hidden;margin-bottom:.5rem;position:relative';
+  var barFill = document.createElement('div');
+  barFill.style.cssText='height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green2),#2D9B5A);transition:width .35s ease;width:0%';
+  barWrap.appendChild(barFill);
+  var barLbl = document.createElement('span');
+  barLbl.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:#fff;letter-spacing:.04em;text-shadow:0 1px 2px rgba(0,0,0,.3)';
+  barWrap.appendChild(barLbl);
+  inner.appendChild(barWrap);
+
+  var totalLbl = document.createElement('p');
+  totalLbl.style.cssText='font-size:13px;color:var(--ink3);margin-bottom:1rem;font-family:var(--sans)';
+  inner.appendChild(totalLbl);
+
+  function refreshBar(d){
+    var log = protState[d]||{};
+    var total = Object.keys(log).reduce(function(s,k){ return s+(log[k]||0); },0);
+    var pct = Math.min(100, Math.round(total/100*100));
+    barFill.style.width=pct+'%';
+    barFill.style.background = total>=100 ? 'linear-gradient(90deg,#1e5c35,#2D9B5A)' : total>=70 ? 'linear-gradient(90deg,var(--gold),#c8902a)' : 'linear-gradient(90deg,var(--rust2),#c0572a)';
+    barLbl.textContent=total+'g / 100g';
+    totalLbl.textContent= total>=100 ? '🎯 Target hit! '+total+'g today — great work CJ.' : total>=70 ? '💪 '+total+'g — almost there! Need '+(100-total)+'g more.' : '⚡ '+total+'g logged so far today. Keep going!';
+    // Update checkboxes
+    section.querySelectorAll('.prot-chip').forEach(function(chip){
+      var mid = chip.getAttribute('data-mid');
+      chip.classList.toggle('active',!!(log[mid]));
+    });
+  }
+
+  dateInp.onchange = function(){ refreshBar(dateInp.value); };
+
+  // Meal groups
+  var groups = [
+    { label:'🍳 Breakfast', ids:['b1','b2','b3','b4','b5','b6','b7'] },
+    { label:'🥪 Lunch', ids:['l1','l2','l3','l4'] },
+    { label:'🍽 Dinner', ids:['d1','d2','d3','d4','d5','d6','d7','d8'] },
+    { label:'🥛 Snacks / extras', ids:['s1','s2','s3','s4','s5'] }
+  ];
+
+  groups.forEach(function(grp){
+    var grpLbl = document.createElement('p');
+    grpLbl.style.cssText='font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink5);margin:.8rem 0 .4rem;font-family:var(--sans)';
+    grpLbl.textContent = grp.label;
+    inner.appendChild(grpLbl);
+
+    var chipRow = document.createElement('div');
+    chipRow.style.cssText='display:flex;flex-wrap:wrap;gap:6px;';
+
+    grp.ids.forEach(function(mid){
+      var meal = CJ_MEALS.find(function(m){ return m.id===mid; });
+      if(!meal) return;
+      var chip = document.createElement('button');
+      chip.className='prot-chip';
+      chip.setAttribute('data-mid',mid);
+      chip.style.cssText='border:1px solid var(--border2);border-radius:20px;padding:4px 10px;font-size:12px;cursor:pointer;background:var(--paper);color:var(--ink3);font-family:var(--sans);transition:all .15s;-webkit-tap-highlight-color:transparent';
+      chip.innerHTML=meal.label+' <strong style="color:var(--green2)">+'+meal.g+'g</strong>';
+      chip.onclick=function(){
+        var d=dateInp.value;
+        if(!protState[d]) protState[d]={};
+        if(protState[d][mid]){ delete protState[d][mid]; chip.style.background=''; chip.style.borderColor=''; }
+        else { protState[d][mid]=meal.g; chip.style.background='rgba(30,92,53,.1)'; chip.style.borderColor='var(--green2)'; }
+        _saveProt(); refreshBar(d);
+      };
+      chipRow.appendChild(chip);
+    });
+    inner.appendChild(chipRow);
+  });
+
+  var resetBtn = document.createElement('button');
+  resetBtn.style.cssText='margin-top:1rem;font-size:11px;color:var(--ink5);background:none;border:none;cursor:pointer;padding:0;font-family:var(--sans)';
+  resetBtn.textContent='↩ Clear today\'s log';
+  resetBtn.onclick=function(){ var d=dateInp.value; protState[d]={}; _saveProt(); refreshBar(d); };
+  inner.appendChild(resetBtn);
+
+  card.appendChild(inner);
+  section.appendChild(card);
+
+  // Insert before last nut-card section
+  var titleBars = page.querySelectorAll('.section-title-bar');
+  var insertRef = titleBars[titleBars.length-1];
+  if(insertRef) page.insertBefore(section, insertRef);
+  else page.appendChild(section);
+
+  refreshBar(today);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// LUNCHBOX SWAP BUILDER
+// ══════════════════════════════════════════════════════════════════════
+var LB_KEY = 'mealplan_lb_v1';
+var lbState = {}; // { pageId: { person: filling } }
+function _saveLb(){ try{ localStorage.setItem(LB_KEY,JSON.stringify(lbState)); }catch(e){} }
+function _loadLb(){ try{ var r=localStorage.getItem(LB_KEY); if(r) lbState=JSON.parse(r); }catch(e){} }
+
+var LB_OPTIONS = {
+  sarah:['Cheese & tomato on white','Salad sandwich (lettuce/cucumber/cheddar)','Egg mayo on white','Cream cheese & avo','Chocolate spread (Friday treat)','Ham & cheese','Tuna mayo','Caprese (mozzarella + tomato)'],
+  cj:['PB & banana on white','PB only (thick)','PB + cheese slice','Chocolate spread (Friday treat)','Egg mayo + cheese','Peanut butter + honey','Double PB (extra protein day)'],
+  miguel:['Hummus & roast veg wrap','Cream cheese & cucumber wrap','Chicken & avo wrap','Falafel wrap','Caprese baguette','Lentil soup (flask)','Leftovers in flask','Cheese & tomato toastie'],
+  niki:['Cream cheese & avo on rye','Hummus & carrot wrap','Egg salad sandwich','Smashed avo on rye','Cucumber & feta roll','Leftovers in flask','Tomato & basil bruschetta','Greek yoghurt + fruit + nuts (snack plate)']
+};
+
+function _buildLunchboxBuilder(dayPage){
+  _loadLb();
+  var pid = dayPage.id;
+  if(!lbState[pid]) lbState[pid]={};
+
+  var section = document.createElement('div');
+  section.style.cssText='margin-top:1.5rem;';
+
+  var titleBar = document.createElement('p');
+  titleBar.className='section-title-bar';
+  titleBar.textContent='🎒 Lunchbox Builder — swap fillings for each person';
+  section.appendChild(titleBar);
+
+  var grid = document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1rem';
+
+  var people = [
+    {key:'sarah', label:'👧 Sarah', color:'rgba(139,58,26,.08)'},
+    {key:'cj',    label:'🧒 CJ',    color:'rgba(30,92,53,.07)'},
+    {key:'miguel',label:'👨 Miguel', color:'rgba(30,58,107,.07)'},
+    {key:'niki',  label:'👩 Niki',   color:'rgba(184,136,42,.08)'}
+  ];
+
+  people.forEach(function(p){
+    var card = document.createElement('div');
+    card.style.cssText='background:'+p.color+';border:1px solid var(--border);border-radius:var(--rsm);padding:10px 12px';
+    var lbl = document.createElement('p');
+    lbl.style.cssText='font-weight:700;font-size:13px;margin-bottom:6px;color:var(--ink2)';
+    lbl.textContent=p.label;
+    var sel = document.createElement('select');
+    sel.style.cssText='width:100%;border:1px solid var(--border2);border-radius:6px;padding:5px 8px;font-size:12px;font-family:var(--sans);background:var(--paper);color:var(--ink);cursor:pointer';
+    LB_OPTIONS[p.key].forEach(function(opt){
+      var o=document.createElement('option'); o.value=opt; o.textContent=opt; sel.appendChild(o);
+    });
+    if(lbState[pid][p.key]) sel.value=lbState[pid][p.key];
+    sel.onchange=function(){ lbState[pid][p.key]=sel.value; _saveLb(); };
+    card.appendChild(lbl); card.appendChild(sel);
+    grid.appendChild(card);
+  });
+
+  var shareBtn = document.createElement('button');
+  shareBtn.style.cssText='font-size:12px;background:var(--green2);color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-family:var(--sans);font-weight:600;margin-top:4px';
+  shareBtn.innerHTML='📤 Share lunchbox plan via WhatsApp';
+  shareBtn.onclick=function(){
+    var lines=['🎒 *Lunchbox plan — '+pid.replace(/-/,' ')+'*\n'];
+    people.forEach(function(p){ lines.push('• *'+p.label+'*: '+(lbState[pid][p.key]||LB_OPTIONS[p.key][0])); });
+    window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');
+  };
+
+  section.appendChild(grid);
+  section.appendChild(shareBtn);
+  dayPage.appendChild(section);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// WEEKS 3 & 4 — ROLLING PLANNER
+// ══════════════════════════════════════════════════════════════════════
+var WEEK_BANK = {
+  w3:{
+    label:'Week 3', dates:'12–18 May',
+    days:[
+      { id:'w3-mon', nav:'Mon', date:'Mon 12 May', meals:[
+        { type:'Breakfast', name:'Banana Smoothie Bowl', time:'Prep 5 min', desc:'Blend 2 frozen bananas with a splash of milk until thick. Top with sliced fresh banana, a handful of rolled oats, a tablespoon of peanut butter and a drizzle of honey. Quick, filling and zero cooking.', ing:['2 frozen bananas','½ cup milk','2 tbsp rolled oats','2 tbsp peanut butter','1 tbsp honey','Fresh fruit to top'], method:['Blend frozen bananas and milk until thick and creamy.','Pour into bowls.','Top with oats, fresh banana, peanut butter drizzle and honey.','Add any extra fruit on hand.'] },
+        { type:'Lunch', name:'Chickpea Buddha Bowl', time:'Prep 10 min', desc:'A nourishing bowl of roasted chickpeas on a base of rice with avocado, shredded carrots, cucumber and a lemon-tahini drizzle. CJ gets a chicken thigh on the side.', ing:['1 can chickpeas, drained','2 cups cooked rice','2 avocados','2 carrots, grated','1 cucumber, sliced','Lemon juice, olive oil, salt'], method:['Rinse and pat-dry chickpeas. Season with cumin and salt. Pan-fry 5 min until golden.','Divide rice into bowls.','Top with chickpeas, avo, carrot, cucumber.','Dress with lemon juice and olive oil.'] },
+        { type:'Dinner', name:'Veggie Fried Rice', time:'Cook 15 min', desc:'A fast wok-tossed fried rice with egg, peas, carrots and soy sauce. Uses leftover rice for best results — day-old rice fries up crispier. CJ gets pan-fried chicken strips on the side.', ing:['3 cups day-old cooked rice','4 eggs','1 cup frozen peas','2 carrots, diced','3 tbsp soy sauce','2 tbsp sesame oil','3 spring onions'], method:['Heat oil in a large pan or wok on high.','Stir-fry carrots 2 min, add peas.','Push veg aside, scramble eggs.','Add rice, stir-fry 3–4 min until slightly crispy.','Splash in soy sauce and sesame oil. Toss well.','Garnish with spring onion.'] }
+      ]},
+      { id:'w3-tue', nav:'Tue', date:'Tue 13 May', meals:[
+        { type:'Breakfast', name:'Avocado Toast with Feta', time:'Prep 5 min', desc:'Smashed avo seasoned with lemon, chilli flakes and salt on toasted sourdough. Crumbled feta on top for a salty, creamy contrast. A café favourite at home-cooked prices.', ing:['2 ripe avocados','4 slices sourdough bread','80g feta, crumbled','1 lemon, juiced','Chilli flakes, salt, pepper'], method:['Toast bread. Halve and scoop avocados.','Mash with lemon juice, salt and pepper.','Spread generously on toast.','Top with crumbled feta and a pinch of chilli flakes.'] },
+        { type:'Lunch', name:'Cheese & Tomato Toasties', time:'Cook 8 min', desc:'Classic South African toasted cheese. Two slices of white bread, cheddar and sliced tomato pressed in a toasted sandwich maker. Serve with a simple green salad.', ing:['8 slices white bread','200g cheddar, sliced','3 tomatoes, sliced','Butter','Mixed salad leaves to serve'], method:['Butter one side of each bread slice.','Layer cheddar and tomato between two slices (butter out).','Toast in sandwich press or pan until golden and melted.','Serve hot with salad.'] },
+        { type:'Dinner', name:'Creamy Pasta Primavera', time:'Cook 20 min', desc:'Penne tossed in a light cream sauce with courgettes, cherry tomatoes, peas and parmesan. Vegetarian comfort food that comes together in 20 minutes. CJ gets grilled chicken strips on the side.', ing:['400g penne','2 courgettes, sliced','1 cup cherry tomatoes','1 cup frozen peas','150ml cream','50g parmesan, grated','2 garlic cloves','Olive oil, salt, pepper'], method:['Cook pasta per packet. Reserve ½ cup pasta water.','Sauté garlic in olive oil, add courgettes 3 min.','Add tomatoes and peas 2 min.','Pour in cream, simmer 2 min. Add parmesan.','Toss drained pasta in sauce, loosen with pasta water if needed.','Season and serve.'] }
+      ]},
+      { id:'w3-wed', nav:'Wed', date:'Wed 14 May', meals:[
+        { type:'Breakfast', name:'Bircher Muesli', time:'Prep 5 min + overnight', desc:'Rolled oats soaked overnight in apple juice with grated apple, plain yoghurt and a sprinkle of cinnamon. Top with banana and honey in the morning. Prep the night before for a zero-effort breakfast.', ing:['2 cups rolled oats','1½ cups apple juice','1 cup plain yoghurt','2 apples, grated','1 tsp cinnamon','Honey and banana to serve'], method:['Combine oats, apple juice, yoghurt, grated apple and cinnamon.','Stir well, cover and refrigerate overnight.','In the morning, loosen with a splash of milk if needed.','Top with sliced banana and honey.'] },
+        { type:'Lunch', name:'Butternut & Red Lentil Soup', time:'Cook 30 min', desc:'A warming, naturally sweet soup that blends roasted butternut with red lentils, cumin and coconut milk. Serve with crusty bread. Makes 6 portions — leftovers go in flasks for school tomorrow.', ing:['1 large butternut, peeled and cubed','1 cup red lentils','1 can coconut milk','1 onion, diced','2 tsp cumin','1L vegetable stock','Bread to serve'], method:['Sweat onion in oil 5 min. Add cumin 1 min.','Add butternut, lentils and stock. Simmer 20 min.','Stir in coconut milk.','Blend until smooth. Season well.','Serve with bread.'] },
+        { type:'Dinner', name:'Halloumi & Vegetable Tray Bake', time:'Cook 30 min', desc:'One-pan roasted peppers, courgettes, cherry tomatoes and onions topped with golden slices of pan-fried halloumi. Serve on a bed of herbed couscous or rice. CJ gets chicken pieces roasted alongside.', ing:['250g halloumi, sliced','3 bell peppers, chunked','2 courgettes, chunked','1 cup cherry tomatoes','1 red onion, wedged','Olive oil, oregano, salt','Couscous or rice to serve'], method:['Preheat oven 200°C. Toss veg in oil, oregano, salt.','Spread on a large tray. Roast 20 min.','Meanwhile pan-fry halloumi slices 2 min per side.','Lay halloumi over veg, return to oven 5 min.','Serve over couscous or rice.'] }
+      ]},
+      { id:'w3-thu', nav:'Thu', date:'Thu 15 May', meals:[
+        { type:'Breakfast', name:'Egg Muffins (Batch Cook)', time:'Cook 20 min', desc:'Mini frittatas baked in a muffin tin. Whisk 8 eggs with diced peppers, spinach, cheddar and seasoning. Bake 18 min. Makes 12 — eat 2–3 each, store leftovers for tomorrow morning.', ing:['8 large eggs','1 red pepper, diced','1 cup baby spinach','80g cheddar, grated','Salt, pepper','Butter for greasing'], method:['Preheat oven 180°C. Grease a 12-cup muffin tin.','Whisk eggs well, season generously.','Stir in pepper, spinach and cheddar.','Pour into cups ¾ full.','Bake 18–20 min until just set. Serve warm.'] },
+        { type:'Lunch', name:'Egg Mayo Rolls', time:'Prep 10 min', desc:'Hard-boiled eggs mashed with a good spoonful of mayo, a pinch of mustard and salt. Piled into fresh white rolls with sliced tomato and iceberg lettuce. Simple, filling and always a hit.', ing:['8 eggs, hard-boiled','3 tbsp mayonnaise','1 tsp mustard','Salt and pepper','4 bread rolls','Tomato and lettuce'], method:['Boil eggs 9 min, cool and peel.','Mash eggs with mayo, mustard, salt and pepper.','Halve rolls, fill generously.','Layer with tomato and lettuce.'] },
+        { type:'Dinner', name:'Mushroom & Potato Bake', time:'Cook 35 min', desc:'Sliced potatoes layered with sautéed mushrooms, onion and a creamy cheese sauce, baked until golden and bubbling. A comforting oven bake that feeds the whole family. CJ gets a lamb chop alongside.', ing:['1kg potatoes, thinly sliced','400g mushrooms, sliced','1 onion, sliced','150ml cream','100g cheddar, grated','2 garlic cloves','Olive oil, thyme, salt'], method:['Preheat oven 190°C. Sauté onion and garlic 3 min. Add mushrooms 4 min.','Layer half the potato in a greased baking dish.','Top with mushroom mix, pour over cream, add remaining potato.','Top with cheddar.','Bake 35 min until golden and potato is tender.'] }
+      ]},
+      { id:'w3-fri', nav:'Fri', date:'Fri 16 May', meals:[
+        { type:'Breakfast', name:'Warm Oats with Stewed Apple', time:'Cook 8 min', desc:'Steel-cut or rolled oats cooked in milk until creamy. Top with apples simmered in butter, brown sugar and cinnamon — like apple crumble for breakfast. A warming Friday treat.', ing:['2 cups rolled oats','3 cups milk','2 apples, peeled and diced','1 tbsp butter','1 tbsp brown sugar','1 tsp cinnamon'], method:['Cook oats in milk 5–6 min, stirring, until creamy.','In a small pan melt butter, add apple, sugar, cinnamon.','Cook 4 min until apple is soft.','Top oats with stewed apple and serve.'] },
+        { type:'Lunch', name:'Leftovers / Flask Soup', time:'Prep 5 min', desc:'Finish the butternut soup from Wednesday (frozen portions) reheated in flasks for school. Adults use any leftover fridge items for wraps. Great way to clear out the week before the weekend shop.', ing:['Leftover butternut soup','Bread rolls','Any remaining salad veg','Cheese or cold cuts for adults'], method:['Reheat soup until steaming.','Pour into pre-warmed flasks.','Pack rolls separately for dunking.','Adults: assemble wraps with whatever is in the fridge.'] },
+        { type:'Dinner', name:'Black Bean Tacos with Salsa', time:'Cook 15 min', desc:'Spiced black beans with cumin, chilli and garlic piled into warm taco shells with shredded cheese, diced tomato, avocado and sour cream. CJ gets pan-fried boerewors sliced alongside.', ing:['2 cans black beans, drained','2 tsp cumin, 1 tsp chilli powder','3 garlic cloves','8 taco shells or tortillas','2 avocados','3 tomatoes, diced','100g cheddar, grated','Sour cream or plain yoghurt'], method:['Fry garlic in oil 1 min. Add beans, cumin and chilli.','Mash half the beans, stir well. Cook 5 min.','Warm shells in a dry pan or oven.','Fill with bean mixture, cheese, tomato and avo.','Top with sour cream and serve.'] }
+      ]},
+      { id:'w3-sat', nav:'Sat', date:'Sat 17 May', meals:[
+        { type:'Breakfast', name:'Family Pancakes', time:'Cook 20 min', desc:'Light, fluffy buttermilk pancakes stacked high. Serve with butter and maple syrup, or fresh banana and yoghurt for a slightly healthier take. A proper weekend breakfast the whole family looks forward to.', ing:['2 cups flour','2 cups buttermilk (or milk + squeeze of lemon)','2 eggs','2 tbsp sugar','1 tsp baking powder, 1 tsp bicarb','Pinch of salt','Butter and syrup to serve'], method:['Whisk dry ingredients. Whisk wet separately.','Fold wet into dry until just combined — lumps are fine.','Heat a pan with a little butter, medium heat.','Ladle batter, cook until bubbles appear on surface, flip.','Stack and serve with butter and syrup.'] },
+        { type:'Lunch', name:'Braaivleis / Braai Sides Spread', time:'Cook 30 min', desc:'A casual Saturday braai or oven-roast spread. Assorted veg (peppers, corn, mushrooms) on the braai or in the oven. Serve with potato wedges, a green salad and fresh rolls. CJ gets boerewors or chicken pieces.', ing:['Assorted veg for braai: peppers, corn, mushrooms','Potato wedges, seasoned with olive oil and salt','Fresh rolls','Green salad','CJ: boerewors or chicken pieces'], method:['Prep veg and toss in olive oil, salt, herbs.','Braai or roast veg 20 min.','CJ: braai boerewors or chicken alongside.','Serve with rolls and salad.'] },
+        { type:'Dinner', name:'Creamy Tomato & Lentil Dhal', time:'Cook 30 min', desc:'Red lentils simmered in a spiced tomato and coconut milk base — warming, protein-rich and filling. Serve with basmati rice and warm naan or roti. CJ gets pan-fried chicken thighs on the side.', ing:['2 cups red lentils, rinsed','1 can coconut milk','1 can chopped tomatoes','1 onion, diced','3 garlic cloves','1 tbsp curry powder','2 tsp cumin, 1 tsp turmeric','Basmati rice to serve'], method:['Fry onion and garlic 5 min. Add spices 1 min.','Add lentils, tomatoes and coconut milk.','Simmer 20–22 min until lentils are soft.','Season well. Serve over rice with flatbread.'] }
+      ]},
+      { id:'w3-sun', nav:'Sun', date:'Sun 18 May', meals:[
+        { type:'Breakfast', name:'Avocado & Poached Eggs on Toast', time:'Cook 8 min', desc:'Two perfectly poached eggs on smashed avocado toast with a sprinkle of chilli flakes, sea salt and a squeeze of lemon. The weekend slow-breakfast classic done right at home.', ing:['8 eggs','4 ripe avocados','4 slices thick sourdough','1 lemon','Chilli flakes, sea salt, black pepper','White wine vinegar for poaching'], method:['Bring a deep pan of water to a gentle simmer. Add a splash of vinegar.','Toast bread.','Swirl water, drop in eggs, poach 3–3.5 min.','Mash avo with lemon, salt and pepper.','Spread on toast, top with eggs, chilli flakes and sea salt.'] },
+        { type:'Lunch', name:'Greek-Style Roast Veg Salad', time:'Cook 25 min', desc:'Roasted peppers, courgettes, red onion and cherry tomatoes tossed with olives, feta and a lemon-oregano dressing. Serve with warm pita bread. A light but satisfying Sunday lunch.', ing:['3 peppers, chunked','2 courgettes, chunked','1 red onion, wedged','1 cup cherry tomatoes','100g feta','½ cup olives','Lemon, olive oil, oregano, salt','Pita bread to serve'], method:['Roast veg at 200°C for 20 min until soft and charred.','Cool slightly, toss with olives, feta and dressing.','Serve with warmed pita.'] },
+        { type:'Dinner', name:'Thai Peanut Noodles', time:'Cook 15 min', desc:'Rice noodles tossed in a creamy peanut-soy-lime sauce with shredded carrot, cucumber, spring onion and sesame seeds. Ready in 15 minutes. CJ gets strips of pan-fried chicken stirred through his portion.', ing:['300g rice noodles','3 tbsp peanut butter','2 tbsp soy sauce','1 lime, juiced','1 tsp sesame oil','1 tbsp honey','2 carrots, grated','1 cucumber, julienned','Spring onion, sesame seeds'], method:['Cook noodles per packet. Drain and rinse.','Whisk together peanut butter, soy, lime, sesame oil and honey with 3 tbsp warm water.','Toss noodles in sauce.','Top with carrot, cucumber, spring onion and sesame seeds.'] }
+      ]}
+    ],
+    shop:{
+      total:'~R1,650', note:'Many pantry staples carry over from weeks 1–2. Main new costs: fresh produce, dairy top-up, halloumi, peanut noodles.',
+      cats:[
+        { icon:'🥦', title:'Fresh produce', total:'~R280', items:['Bananas ×8 — ~R22','Apples ×6 — ~R30','Avocados ×6 — ~R60','Cherry tomatoes 500g — ~R25','Courgettes ×4 — ~R30','Bell peppers ×5 — ~R42','Butternut ×1 large — ~R28','Mushrooms 500g — ~R38','Cucumber ×2 — ~R20','Carrots 1 kg — ~R22','Baby spinach 100g — ~R18','Limes ×2 — ~R14','Red onion ×3 — ~R18','Garlic bulb — ~R12'] },
+        { icon:'🥛', title:'Dairy and eggs', total:'~R340', items:['Eggs 18-pack ×2 — ~R150','Full-cream milk 2L ×2 — ~R58','Cheddar 500g — ~R95','Feta 200g — ~R45','Halloumi 250g — ~R75','Plain yoghurt 1 kg — ~R45','Cream 200ml — ~R40','Butter 250g — ~R38'] },
+        { icon:'🌾', title:'Dry goods', total:'~R210', items:['Rice noodles 250g — ~R22','Penne 500g — ~R18','Red lentils 500g — ~R30','Black beans ×2 cans — ~R36','Taco shells 12-pack — ~R40','Tortilla wraps 8-pack — ~R35','Rolled oats 1 kg — ~R30','Apple juice 1L — ~R22','Pita bread 6-pack — ~R28'] },
+        { icon:'🧂', title:'Sauces and pantry', total:'~R95', items:['Soy sauce 250ml — ~R22 (if needed)','Sesame oil 250ml — ~R38 (if needed)','Peanut butter 800g — R79.95 VERIFIED (top up)','Coconut milk ×1 can — ~R28'] },
+        { icon:'🥩', title:'Meat — CJ only', total:'~R220', items:['Chicken breasts/thighs 1 kg — ~R80','Boerewors 500g — ~R75','Lamb chop ×1 per CJ — ~R55'] }
+      ]
+    }
+  },
+  w4:{
+    label:'Week 4', dates:'19–25 May',
+    days:[
+      { id:'w4-mon', nav:'Mon', date:'Mon 19 May', meals:[
+        { type:'Breakfast', name:'Scrambled Eggs with Spinach & Toast', time:'Prep 2 min · Cook 6 min', desc:'Soft, buttery scrambled eggs folded with wilted baby spinach, served on thick-cut toast. Quick, nourishing and protein-rich — the dependable Monday morning breakfast.', ing:['8 eggs','2 tbsp butter','1 cup baby spinach','4 tbsp milk','4 slices bread, toasted','Salt and pepper'], method:['Whisk eggs and milk, season well.','Melt butter in pan. Wilt spinach 1 min.','Add eggs, stir gently on low until just set.','Serve on toast immediately.'] },
+        { type:'Lunch', name:'Hummus & Roast Veg Wraps', time:'Prep 8 min', desc:'Large flour tortillas spread with hummus and filled with leftover roasted veg from the week, shredded carrot, baby spinach and a sprinkle of feta. CJ gets a separate chicken wrap.', ing:['4 large flour tortillas','200g hummus (store-bought)','Leftover roasted veg (or fresh peppers, carrot, spinach)','80g feta, crumbled','Lemon juice, salt'], method:['Spread hummus generously over each tortilla.','Layer with veg, spinach and feta.','Squeeze over lemon juice. Roll tightly and slice.'] },
+        { type:'Dinner', name:'Vegetable Curry with Basmati Rice', time:'Cook 25 min', desc:'A fragrant curry of potatoes, chickpeas, spinach and tomatoes in a spiced coconut tomato base. Served with fluffy basmati rice. One of the most budget-friendly and nutritious dinners possible. CJ gets chicken thighs in the sauce.', ing:['2 cans chickpeas, drained','2 potatoes, cubed','1 can chopped tomatoes','1 can coconut milk','1 onion, diced','3 garlic cloves','2 tbsp curry powder','1 tsp each cumin, turmeric','Basmati rice to serve'], method:['Fry onion and garlic 5 min. Add spices 1 min.','Add potato, tomatoes and coconut milk. Simmer 15 min.','Add chickpeas and spinach. Cook 5 min more.','Season well. Serve over basmati rice.'] }
+      ]},
+      { id:'w4-tue', nav:'Tue', date:'Tue 20 May', meals:[
+        { type:'Breakfast', name:'Oats with Berry Compote', time:'Cook 8 min', desc:'Creamy stovetop oats topped with a quick frozen-berry compote made from frozen mixed berries simmered with a spoon of honey. Looks and tastes impressive with minimal effort.', ing:['2 cups rolled oats','3 cups milk','1 cup frozen berries','1 tbsp honey','1 tsp vanilla','Pinch of salt'], method:['Cook oats in milk 5–6 min until creamy.','Simmer berries with honey and 2 tbsp water 3–4 min until jammy.','Spoon over oats and serve.'] },
+        { type:'Lunch', name:'Stuffed Mushrooms', time:'Cook 20 min', desc:'Large portobello mushrooms filled with a mixture of cream cheese, garlic, spinach and cheddar, then baked until golden. Serve with crusty bread and a side salad. Simple but impressive.', ing:['8 large portobello mushrooms','200g cream cheese','1 cup baby spinach, chopped','80g cheddar, grated','3 garlic cloves, minced','Salt, pepper, thyme','Bread to serve'], method:['Preheat oven 200°C. Remove mushroom stalks and chop.','Mix cream cheese, spinach, garlic, cheddar and chopped stalks. Season.','Fill mushroom caps generously.','Bake 18 min until cheese is bubbly. Serve with bread.'] },
+        { type:'Dinner', name:'Sweet Potato & Black Bean Tacos', time:'Cook 25 min', desc:'Roasted sweet potato cubes and spiced black beans piled into warm taco shells with avocado crema, shredded lettuce and a tomato salsa. Colourful, filling and completely vegetarian.', ing:['2 sweet potatoes, cubed','1 can black beans','8 taco shells','2 avocados','2 tomatoes, diced','Lime juice, cumin, chilli flakes','Lettuce, sour cream'], method:['Roast sweet potato at 200°C for 20 min with cumin, olive oil and salt.','Season beans with chilli and cumin, heat 3 min.','Mash avo with lime juice for crema.','Warm shells. Fill with sweet potato, beans, tomato salsa, crema and lettuce.'] }
+      ]},
+      { id:'w4-wed', nav:'Wed', date:'Wed 21 May', meals:[
+        { type:'Breakfast', name:'Smoothie Bowl — Tropical', time:'Prep 5 min', desc:'Blended mango, banana and pineapple (use frozen fruit) poured thick into bowls and topped with coconut flakes, sliced kiwi, granola and a drizzle of honey. Zero cooking, maximum colour.', ing:['2 frozen bananas','1 cup frozen mango chunks','½ cup coconut milk','Toppings: coconut flakes, granola, fresh fruit, honey'], method:['Blend bananas, mango and coconut milk until thick.','Pour into bowls.','Add toppings and serve immediately.'] },
+        { type:'Lunch', name:'Egg Salad Sandwiches', time:'Prep 10 min', desc:'Classic creamy egg salad on fresh bread. Hard-boiled eggs mashed with mayo, a little Dijon and spring onion, served on brown or white bread with lettuce. Simple, filling and economical.', ing:['8 eggs, hard-boiled','3 tbsp mayo','1 tsp Dijon mustard','3 spring onions, sliced','8 bread slices','Lettuce, salt and pepper'], method:['Boil and peel eggs. Mash or chop.','Mix with mayo, mustard and spring onion. Season well.','Spread on bread with lettuce.'] },
+        { type:'Dinner', name:'Pasta Arrabbiata with Garlic Bread', time:'Cook 20 min', desc:'A fiery, garlicky tomato pasta sauce — simple and punchy. Penne in a tomato base with plenty of garlic and chilli. Served with a buttery garlic bread. CJ gets chicken meatballs or strips on the side.', ing:['400g penne','2 cans chopped tomatoes','6 garlic cloves, sliced','2 tsp chilli flakes','Olive oil','Parmesan to serve','1 baguette, garlic butter for bread'], method:['Fry garlic and chilli in plenty of olive oil 2 min.','Add tomatoes. Simmer 15 min until rich.','Cook pasta and toss in sauce.','Grill garlic bread until golden.','Serve with parmesan.'] }
+      ]},
+      { id:'w4-thu', nav:'Thu', date:'Thu 22 May', meals:[
+        { type:'Breakfast', name:'Avocado, Egg & Tomato on Toast', time:'Cook 6 min', desc:'Fried or poached eggs on smashed avocado toast with sliced tomato, fresh black pepper and sea salt. The reliable go-to that never disappoints.', ing:['8 eggs','4 ripe avocados','3 tomatoes, sliced','4 slices thick bread','Lemon juice, salt, pepper, chilli flakes'], method:['Toast bread and smash avo with lemon, salt and pepper.','Fry or poach eggs to your liking.','Assemble: avo base, egg on top, tomato alongside.','Season with chilli flakes and sea salt.'] },
+        { type:'Lunch', name:'Rice Cakes with Peanut Butter & Banana', time:'Prep 2 min', desc:'A quick, no-cook lunch. Rice cakes spread with peanut butter and topped with sliced banana and a drizzle of honey. Pack alongside apple slices, a cheese slice and carrot sticks for a full lunch spread.', ing:['12 rice cakes','4 tbsp peanut butter','2 bananas, sliced','1 tbsp honey','Cheese slices, apple, carrot sticks alongside'], method:['Spread rice cakes with peanut butter.','Top with banana slices and a honey drizzle.','Serve with cheese, apple and carrot alongside.'] },
+        { type:'Dinner', name:'Chickpea & Spinach Stew', time:'Cook 20 min', desc:'A warming, one-pot stew of chickpeas, wilted spinach and tomatoes in a gently spiced tomato broth. Ready in 20 minutes. Serve with crusty bread or over rice. Endlessly adaptable — add feta or a squeeze of lemon to finish.', ing:['2 cans chickpeas, drained','1 bag baby spinach (200g)','1 can chopped tomatoes','1 onion, diced','4 garlic cloves','1 tsp cumin, 1 tsp paprika','Olive oil, lemon juice, bread or rice'], method:['Fry onion and garlic 5 min in olive oil.','Add spices 1 min, then tomatoes. Simmer 8 min.','Add chickpeas, cook 5 min.','Stir in spinach until wilted. Finish with lemon juice.','Serve with bread or rice.'] }
+      ]},
+      { id:'w4-fri', nav:'Fri', date:'Fri 23 May', meals:[
+        { type:'Breakfast', name:'French Toast with Berry Compote', time:'Cook 10 min', desc:'Thick slices of bread dipped in a vanilla egg custard and fried until golden. Served with the berry compote from Tuesday (use leftovers or make fresh). A Friday treat the whole family loves.', ing:['8 thick bread slices','4 eggs','½ cup milk','1 tsp vanilla','1 tbsp sugar','Butter for frying','Berry compote or honey to serve'], method:['Whisk eggs, milk, vanilla and sugar.','Dip bread slices thoroughly.','Fry in butter on medium heat 2 min per side until golden.','Serve with berry compote or honey.'] },
+        { type:'Lunch', name:'Leftovers Wrap Spread', time:'Prep 5 min', desc:'Clear out the fridge: wrap any leftover chickpea stew, roast veg or other fridge finds into tortillas with hummus, cheese and salad. A Friday ritual that wastes nothing and needs no cooking.', ing:['4 large tortillas','Leftover stew, veg or proteins','Hummus, cheese, lettuce','Lemon juice'], method:['Spread tortillas with hummus.','Fill with warmed leftovers, fresh salad and cheese.','Roll tightly. Done.'] },
+        { type:'Dinner', name:'Shakshuka for Everyone', time:'Cook 20 min', desc:'Eggs poached directly in a rich, spiced tomato and pepper sauce. Serve with warm bread for scooping. A one-pan dinner with extraordinary flavour and zero effort. CJ gets sausages cooked alongside.', ing:['8 eggs','2 cans chopped tomatoes','2 red peppers, diced','1 onion, diced','3 garlic cloves','1 tsp cumin, 1 tsp paprika, ½ tsp chilli','Olive oil, bread to serve'], method:['Fry onion, peppers and garlic in oil 6 min.','Add spices 1 min, then tomatoes. Simmer 8 min.','Make 8 wells in sauce. Crack in eggs.','Cover and simmer 6–8 min until whites set.','Serve from the pan with warm bread.'] }
+      ]},
+      { id:'w4-sat', nav:'Sat', date:'Sat 24 May', meals:[
+        { type:'Breakfast', name:'Full Cooked Breakfast', time:'Cook 20 min', desc:'The full spread: fried or scrambled eggs, baked beans on toast, grilled tomatoes and sautéed mushrooms. CJ gets sausages or bacon. A proper Saturday morning feast for the whole family.', ing:['8 eggs','1 can baked beans','4 large tomatoes, halved','400g mushrooms, sliced','Butter, salt, pepper','CJ: 4 sausages or 4 rashers bacon','Toast or thick bread'], method:['Grill tomatoes cut-side up until soft.','Sauté mushrooms in butter with salt.','Fry sausages/bacon if making.','Scramble or fry eggs.','Heat beans.','Serve everything together with toast.'] },
+        { type:'Lunch', name:'Roast Chicken Salad Wraps (CJ) / Caprese Baguette', time:'Prep 15 min', desc:'CJ gets a full wrap with roast chicken strips (from the braai or oven), avo and lettuce. The family gets sliced baguette with fresh mozzarella, tomato, basil and olive oil — a caprese in bread form.', ing:['CJ: 200g chicken strips, cooked','2 baguettes','2 balls mozzarella, sliced','4 tomatoes, sliced','Fresh basil','Olive oil, salt, balsamic vinegar','Avocado, lettuce for CJ'], method:['CJ: Fill wrap with warm chicken, avo and lettuce.','Family: Slice baguette, layer mozzarella, tomato and basil.','Drizzle with olive oil and balsamic. Season.'] },
+        { type:'Dinner', name:'Mediterranean Baked Feta with Orzo', time:'Cook 30 min', desc:'A whole block of feta baked in cherry tomatoes, peppers and olive oil until soft and creamy. Stir through cooked orzo for a stunning one-dish dinner. Inspired by the viral baked feta pasta — now a family staple.', ing:['200g feta block (not crumbled)','2 cups cherry tomatoes','2 peppers, chunked','400g orzo pasta','4 garlic cloves','Olive oil, oregano, chilli flakes','Fresh basil to serve'], method:['Preheat oven 200°C. Place feta in centre of baking dish.','Surround with tomatoes, peppers and garlic. Drizzle olive oil.','Season with oregano and chilli. Roast 25–28 min.','Cook orzo per packet. Stir into the tray with the smashed feta.','Scatter basil. Serve directly from the dish.'] }
+      ]},
+      { id:'w4-sun', nav:'Sun', date:'Sun 25 May', meals:[
+        { type:'Breakfast', name:'Bircher Muesli (overnight prep)', time:'Prep 5 min + overnight', desc:'The perfect no-cook Sunday breakfast. Rolled oats soaked overnight in yoghurt and apple juice with grated apple and cinnamon. Top in the morning with banana slices and a drizzle of honey.', ing:['2 cups rolled oats','1½ cups apple juice','1 cup plain yoghurt','2 apples, grated','1 tsp cinnamon','Banana and honey to serve'], method:['Night before: mix oats, juice, yoghurt, apple and cinnamon.','Refrigerate overnight.','Morning: loosen with milk if needed. Top with banana and honey.'] },
+        { type:'Lunch', name:'Cold Mezze Plate', time:'Prep 10 min', desc:'A relaxed, no-cook Sunday spread: hummus, olives, sliced cucumber, cherry tomatoes, feta, pita bread and whatever else is in the fridge. Everyone picks what they like. Lazy, delicious and almost zero effort.', ing:['200g hummus','80g olives','1 cucumber, sliced','200g cherry tomatoes','100g feta, cubed','Pita bread or crackers','Carrot sticks'], method:['Arrange everything on a large board or plate.','Serve with pita bread or crackers.','Let everyone pick and choose.'] },
+        { type:'Dinner', name:'Sunday Roast Vegetables with White Beans', time:'Cook 35 min', desc:'A generous tray of roasted root vegetables — carrot, potato, parsnip, red onion and butternut — with buttery white beans stirred through at the end. Serve with gravy or a herby dressing. CJ gets a lamb chop roasted alongside.', ing:['3 carrots, chunked','3 potatoes, chunked','1 butternut, chunked','2 red onions, wedged','2 cans white/butter beans, drained','Olive oil, rosemary, thyme, garlic','Salt and pepper'], method:['Preheat oven 200°C. Toss all veg in oil, herbs and seasoning.','Roast 30–35 min until golden and tender.','Drain and warm beans, stir gently into tray.','Serve with any pan juices or a herby oil.'] }
+      ]}
+    ],
+    shop:{
+      total:'~R1,550', note:'Lightest shop of the four weeks — most pantry staples are fully stocked. Main costs: fresh produce top-up, dairy, feta.',
+      cats:[
+        { icon:'🥦', title:'Fresh produce', total:'~R270', items:['Bananas ×8 — ~R22','Apples ×6 — ~R30','Avocados ×6 — ~R60','Sweet potatoes ×3 — ~R30','Baby spinach 200g — ~R30','Cherry tomatoes 500g — ~R25','Bell peppers ×5 — ~R42','Cucumber ×2 — ~R20','Carrots 1 kg — ~R22','Garlic bulb — ~R12','Red onion ×3 — ~R18','Lemon ×2 — ~R14'] },
+        { icon:'🥛', title:'Dairy and eggs', total:'~R380', items:['Eggs 18-pack ×2 — ~R150','Full-cream milk 2L ×2 — ~R58','Feta 200g block — ~R55','Cream cheese 230g — ~R38','Mozzarella 2 balls — ~R65','Plain yoghurt 1 kg — ~R45','Butter 250g — ~R38'] },
+        { icon:'🌾', title:'Dry goods', total:'~R130', items:['Orzo 400g — ~R22','Chickpeas ×2 cans — ~R36','White beans ×2 cans — ~R36','Black beans ×2 cans — ~R36','Baguettes ×2 — ~R30','Rice cakes 200g — ~R28','Frozen berries 500g — ~R45'] },
+        { icon:'🥩', title:'Meat — CJ only', total:'~R145', items:['Chicken breasts 600g — ~R48','Lamb chops ×2 — ~R80','Sausages 200g (Fri shakshuka) — ~R38'] }
+      ]
+    }
+  }
+};
+
+function _makeSimpleCard(meal){
+  var block = document.createElement('div');
+  block.className='meal-block';
+
+  var head = document.createElement('div');
+  head.className='meal-head';
+  var pill = document.createElement('span');
+  var typeMap={Breakfast:'tp-b',Lunch:'tp-l',Dinner:'tp-d'};
+  pill.className='type-pill '+(typeMap[meal.type]||'tp-b');
+  pill.textContent=meal.type;
+  var headName = document.createElement('span');
+  headName.className='meal-head-name';
+  headName.textContent=meal.name;
+  head.appendChild(pill); head.appendChild(headName);
+
+  var rcard = document.createElement('div');
+  rcard.className='rcard';
+
+  // Placeholder illustration
+  var colorMap={Breakfast:'#FEF3C7',Lunch:'#ECFDF5',Dinner:'#EFF6FF'};
+  var emojiMap={Breakfast:'🍳',Lunch:'🥗',Dinner:'🍽'};
+  var placeholder = document.createElement('div');
+  placeholder.style.cssText='width:100%;height:100px;background:'+colorMap[meal.type]+';display:flex;align-items:center;justify-content:center;font-size:2.5rem;border-radius:var(--rsm) var(--rsm) 0 0;flex-shrink:0';
+  placeholder.textContent=emojiMap[meal.type]||'🍴';
+
+  var body = document.createElement('div');
+  body.className='rcard-body';
+
+  var chips = document.createElement('div');
+  chips.className='rcard-chips';
+  [meal.time,'Serves 4'].forEach(function(t){ var c=document.createElement('span'); c.className='chip'; c.textContent=t; chips.appendChild(c); });
+
+  var desc = document.createElement('p');
+  desc.className='rcard-desc';
+  desc.textContent=meal.desc;
+
+  var cols = document.createElement('div');
+  cols.className='recipe-cols';
+
+  var ingDiv = document.createElement('div');
+  var ingLbl = document.createElement('p'); ingLbl.className='col-label'; ingLbl.textContent='Ingredients';
+  var ingUl = document.createElement('ul'); ingUl.className='ing-list';
+  (meal.ing||[]).forEach(function(i){ var li=document.createElement('li'); li.textContent=i; ingUl.appendChild(li); });
+  ingDiv.appendChild(ingLbl); ingDiv.appendChild(ingUl);
+
+  var methDiv = document.createElement('div');
+  var methLbl = document.createElement('p'); methLbl.className='col-label'; methLbl.textContent='Method';
+  var methOl = document.createElement('ol'); methOl.className='steps-list';
+  (meal.method||[]).forEach(function(s,i){ var li=document.createElement('li'); var n=document.createElement('span'); n.className='step-n'; n.textContent=i+1; li.appendChild(n); li.appendChild(document.createTextNode(s)); methOl.appendChild(li); });
+  methDiv.appendChild(methLbl); methDiv.appendChild(methOl);
+
+  cols.appendChild(ingDiv); cols.appendChild(methDiv);
+  body.appendChild(chips); body.appendChild(desc); body.appendChild(cols);
+  rcard.appendChild(placeholder); rcard.appendChild(body);
+  block.appendChild(head); block.appendChild(rcard);
+  return block;
+}
+
+function _buildWeekShop(wk, shopData, weekId){
+  var page = document.createElement('div');
+  page.id = weekId+'-shop'; page.className='page';
+
+  var header = document.createElement('div'); header.className='page-header';
+  var h2=document.createElement('h2'); h2.className='page-title'; h2.textContent=wk.label+' shopping list';
+  var sub=document.createElement('span'); sub.className='page-sub'; sub.textContent='Smart split-shop · 4 people · '+wk.dates;
+  header.appendChild(h2); header.appendChild(sub);
+  page.appendChild(header);
+
+  var note = document.createElement('div'); note.className='price-accuracy';
+  note.innerHTML='<strong>'+shopData.note+'</strong> Prices are estimates based on 2025/26 SA market data.';
+  page.appendChild(note);
+
+  var titleBar = document.createElement('p'); titleBar.className='section-title-bar';
+  titleBar.style.cssText='border-top:none;margin-top:.5rem;padding-top:0';
+  titleBar.textContent='Full shopping list with estimated prices';
+  page.appendChild(titleBar);
+
+  shopData.cats.forEach(function(cat){
+    var catId = weekId+'-'+cat.title.replace(/[^a-z]/gi,'-').toLowerCase().slice(0,12);
+    var card=document.createElement('div'); card.className='shop-card';
+    var hdr=document.createElement('div'); hdr.className='shop-card-header';
+    hdr.onclick=function(){ toggleCat(catId); };
+    hdr.innerHTML='<span class="shop-card-icon">'+cat.icon+'</span><span class="shop-card-title">'+cat.title+'</span><span class="shop-card-total">'+cat.total+'</span><svg class="chevron open" id="chev-'+catId+'" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>';
+    var items=document.createElement('div'); items.className='shop-items open'; items.id='cat-'+catId;
+    cat.items.forEach(function(itm){
+      var row=document.createElement('div'); row.className='check-row';
+      row.onclick=function(){ toggleCheck(row); };
+      row.innerHTML='<div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">'+itm.split(' — ')[0]+'</span><span class="check-price">'+(itm.split(' — ')[1]||'')+'</span>';
+      items.appendChild(row);
+    });
+    card.appendChild(hdr); card.appendChild(items);
+    page.appendChild(card);
+  });
+
+  var totalBar=document.createElement('div'); totalBar.className='total-bar';
+  totalBar.innerHTML='<div class="total-left"><p class="total-label">'+wk.label+' estimated total</p><p class="total-note">'+shopData.note+'</p></div><div><p class="total-amount" style="color:var(--gold3)">'+shopData.total+'</p></div>';
+  page.appendChild(totalBar);
+  return page;
+}
+
+function _buildWeekNutrition(wk, weekId){
+  var page = document.createElement('div');
+  page.id = weekId+'-nuts'; page.className='page';
+  var header=document.createElement('div'); header.className='page-header';
+  var h2=document.createElement('h2'); h2.className='page-title'; h2.textContent=wk.label+' nutrition guide';
+  var sub=document.createElement('span'); sub.className='page-sub'; sub.textContent=wk.dates+' · Variety and balance';
+  header.appendChild(h2); header.appendChild(sub);
+  page.appendChild(header);
+  var grid=document.createElement('div'); grid.className='nutrition-grid';
+  [['New proteins','nb-green','Eggs, halloumi, feta and beans feature heavily. Variety keeps micronutrient intake broad and appetite engaged.'],
+   ['Fibre','nb-teal','Lentils, chickpeas, sweet potato and oats ensure excellent fibre variety for gut health.'],
+   ['Fats','nb-amber','Avocado, olive oil and peanut butter provide heart-healthy monounsaturated fats daily.'],
+   ['Iron','nb-purple','Spinach and legumes offer plant-based iron across both lunch and dinner most days.']
+  ].forEach(function(n){
+    var c=document.createElement('div'); c.className='nut-card';
+    c.innerHTML='<span class="nut-badge '+n[1]+'">'+n[0]+'</span><p class="nut-title">'+n[0]+' highlight</p><p class="nut-body">'+n[2]+'</p>';
+    grid.appendChild(c);
+  });
+  page.appendChild(grid);
+  return page;
+}
+
+function _buildWeekBlock(weekKey){
+  var wk = WEEK_BANK[weekKey];
+  var weekId = weekKey; // 'w3' or 'w4'
+  var container = document.getElementById(weekId);
+  if(!container || container.children.length>0) return; // already built
+
+  // Inner main div
+  var main = document.createElement('div');
+  main.className='main-w';
+
+  wk.days.forEach(function(day){
+    var page = document.createElement('div');
+    page.id = day.id; page.className='page';
+    var header=document.createElement('div'); header.className='page-header';
+    var h2=document.createElement('h2'); h2.className='page-title'; h2.textContent=day.date;
+    var sub=document.createElement('span'); sub.className='page-sub'; sub.textContent=wk.label+' · '+wk.dates;
+    header.appendChild(h2); header.appendChild(sub); page.appendChild(header);
+
+    day.meals.forEach(function(meal){
+      page.appendChild(_makeSimpleCard(meal));
+    });
+
+    // Inject lunchbox builder
+    _buildLunchboxBuilder(page);
+    main.appendChild(page);
+  });
+
+  main.appendChild(_buildWeekShop(wk, wk.shop, weekId));
+  main.appendChild(_buildWeekNutrition(wk, weekId));
+  container.appendChild(main);
+
+  // Assign data-ids to new shop rows and inject pantry buttons
+  var shopPage = document.getElementById(weekId+'-shop');
+  if(shopPage){
+    shopPage.querySelectorAll('.shop-items').forEach(function(cat){
+      var catId=cat.id.replace('cat-','');
+      cat.querySelectorAll('.check-row').forEach(function(row,idx){
+        var id=catId+'-'+idx;
+        row.setAttribute('data-id',id);
+        row.appendChild(_makeDelBtn(row,catId,false));
+        if(shopState.deleted.indexOf(id)>-1){ row.style.display='none'; return; }
+        if(shopState.prices[id]) _applyRowPrice(row,shopState.prices[id].label,shopState.prices[id].price);
+        if(shopState.checked.indexOf(id)>-1) row.classList.add('done');
+        _injectPantryBtn(row,id);
+      });
+      if(shopState.added[catId]){
+        shopState.added[catId].forEach(function(item){
+          var row=_makeCheckRow(catId,item.id,item.label,item.price,true);
+          if(shopState.checked.indexOf(item.id)>-1) row.classList.add('done');
+          cat.appendChild(row);
+        });
+      }
+      cat.appendChild(_buildAddRow(catId));
+    });
+
+    // Action bar
+    var titleBars=shopPage.querySelectorAll('.section-title-bar');
+    var listBar=titleBars[0];
+    if(listBar){
+      var bar=document.createElement('div'); bar.className='shop-actions';
+      var ctr=document.createElement('div'); ctr.className='cart-counter'; ctr.id='cart-'+weekId+'-shop';
+      ctr.innerHTML='<span class="cart-amount">R\u202f0</span><span class="cart-tally">0\u202fof\u202f0 checked</span>';
+      var btns=document.createElement('div'); btns.className='shop-action-btns';
+      var waBtn=document.createElement('button'); waBtn.className='btn-wa'; waBtn.innerHTML='📤 Share'; waBtn.onclick=function(){ shareShopList(weekId+'-shop'); };
+      var printBtn=document.createElement('button'); printBtn.className='btn-print'; printBtn.innerHTML='🖨 Print'; printBtn.onclick=function(){ window.print(); };
+      var rstBtn=document.createElement('button'); rstBtn.className='btn-print shop-reset-link'; rstBtn.textContent='Reset'; rstBtn.onclick=resetShopList;
+      btns.appendChild(waBtn); btns.appendChild(printBtn); btns.appendChild(rstBtn);
+      bar.appendChild(ctr); bar.appendChild(btns);
+      listBar.after(bar);
+      _updateCartTotal(weekId+'-shop');
+    }
+  }
+
+  // Apply recipe features to new meal blocks
+  container.querySelectorAll('.meal-block').forEach(function(block,idx){
+    var body=block.querySelector('.rcard-body'); if(!body) return;
+    var id=weekKey+'-meal-'+idx;
+    _injectScaler(block,id);
+    _injectRating(body,id);
+    _injectNote(body,id);
+  });
+}
+
+// Extend switchWeek to handle weeks 3 & 4
+var _origSwitchWeek = switchWeek;
+switchWeek = function(n, btn){
+  curWeek = n;
+  document.querySelectorAll('.week-btn').forEach(function(b){ b.classList.remove('on'); });
+  if(btn) btn.classList.add('on');
+  ['w1','w2','w3','w4'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.toggle('on',id==='w'+n); });
+
+  if(n===3||n===4){
+    var weekKey='w'+n;
+    _buildWeekBlock(weekKey); // build if not yet built
+    // activate Monday
+    var firstDay=document.getElementById(weekKey+'-mon');
+    if(firstDay){
+      document.getElementById(weekKey).querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+      firstDay.classList.add('on');
+    }
+    // highlight Mon nav btn
+    var firstNavBtn=document.querySelector('#main-nav .nav-btn');
+    document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); });
+    if(firstNavBtn) firstNavBtn.classList.add('on');
+  } else {
+    var firstNavBtn2=document.querySelector('#main-nav .nav-btn');
+    if(firstNavBtn2){ document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); }); navTo('mon',firstNavBtn2); }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+// Also extend navTo to handle weeks 3 & 4
+var _origNavTo = navTo;
+navTo = function(slug, btn){
+  if(curWeek===3||curWeek===4){
+    var weekKey='w'+curWeek;
+    var pageId=weekKey+'-'+slug;
+    document.getElementById(weekKey).querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+    document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); });
+    var el=document.getElementById(pageId);
+    if(el) el.classList.add('on');
+    if(btn) btn.classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    _origNavTo(slug,btn);
+  }
+};
+
+// ── Protein tracker init ────────────────────────────────────────────────
+function initProteinTracker(){
+  ['nuts','w2-nuts'].forEach(function(pageId){
+    var page=document.getElementById(pageId); if(!page) return;
+    _buildProteinTracker(page);
+  });
+}
+document.addEventListener('DOMContentLoaded', initProteinTracker);
+
+// ── Lunchbox builder on existing day pages ──────────────────────────────
+function initLunchboxBuilders(){
+  ['mon','tue','wed','thu','fri','sat','sun','w2-mon','w2-tue','w2-wed','w2-thu','w2-fri','w2-sat','w2-sun'].forEach(function(pageId){
+    var page=document.getElementById(pageId); if(!page) return;
+    _buildLunchboxBuilder(page);
+  });
+}
+document.addEventListener('DOMContentLoaded', initLunchboxBuilders);
+
+// Protein chip active state restore
+document.addEventListener('DOMContentLoaded', function(){
+  _loadProt();
+  var today=new Date().toISOString().slice(0,10);
+  document.querySelectorAll('.prot-chip').forEach(function(chip){
+    var d=chip.closest('[data-date]')||{dataset:{date:today}};
+    var log=protState[d.dataset&&d.dataset.date||today]||{};
+    if(log[chip.getAttribute('data-mid')]) chip.style.background='rgba(30,92,53,.1)';
+  });
+});
 </script>
 </body>
 </html>
