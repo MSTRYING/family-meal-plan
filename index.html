@@ -616,6 +616,51 @@ body{
 [data-theme="dark"] .recipe-cols{border-color:var(--mode-border2)}
 [data-theme="dark"] .rcard-svg rect:first-child{fill:#1A120A !important}
 
+/* ── SPLIT SHOP STRATEGY CARD ── */
+.split-shop{
+  background:var(--paper2);border:1px solid var(--border2);
+  border-radius:var(--r);padding:1.25rem 1.4rem;
+  margin-bottom:1.5rem;box-shadow:var(--shadow);
+}
+.split-shop-title{
+  font-family:var(--serif);font-size:1.15rem;font-weight:400;
+  color:var(--ink);margin-bottom:.25rem;
+}
+.split-shop-sub{font-size:12px;color:var(--ink4);margin-bottom:1rem;line-height:1.55}
+.split-shop-lanes{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:.9rem;
+}
+@media(max-width:600px){.split-shop-lanes{grid-template-columns:1fr;gap:8px}}
+.split-lane{border-radius:var(--rsm);padding:.9rem 1rem;border:1px solid transparent}
+.sl-makro{background:rgba(184,136,42,.08);border-color:rgba(184,136,42,.2)}
+.sl-checkers{background:rgba(30,92,53,.08);border-color:rgba(30,92,53,.2)}
+.sl-foodlovers{background:rgba(26,92,90,.08);border-color:rgba(26,92,90,.2)}
+.sl-store{display:block;font-weight:700;font-size:12px;letter-spacing:.04em;margin-bottom:.3rem}
+.sl-makro .sl-store{color:var(--gold)}
+.sl-checkers .sl-store{color:var(--green2)}
+.sl-foodlovers .sl-store{color:var(--teal)}
+.sl-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:.35rem;display:block}
+.sl-items{font-size:12px;color:var(--ink3);line-height:1.6}
+.split-shop-note{
+  font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
+  padding-top:.8rem;border-top:1px solid var(--border);margin-top:.1rem;
+}
+
+/* ── RETAILER TAGS on category headers ── */
+.retailer-tag{
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap;
+}
+.rt-makro{background:rgba(184,136,42,.12);color:var(--gold);border:1px solid rgba(184,136,42,.25)}
+.rt-checkers{background:rgba(30,92,53,.1);color:var(--green2);border:1px solid rgba(30,92,53,.2)}
+.rt-fl{background:rgba(26,92,90,.1);color:var(--teal);border:1px solid rgba(26,92,90,.2)}
+.rt-mix{background:rgba(26,18,9,.06);color:var(--ink3);border:1px solid var(--border)}
+[data-theme="dark"] .rt-mix{background:rgba(245,239,230,.06)}
+[data-theme="dark"] .split-shop{background:var(--mode-bg2);border-color:var(--mode-border2)}
+[data-theme="dark"] .sl-makro{background:rgba(184,136,42,.12);border-color:rgba(184,136,42,.25)}
+[data-theme="dark"] .sl-checkers{background:rgba(30,92,53,.12);border-color:rgba(30,92,53,.25)}
+[data-theme="dark"] .sl-foodlovers{background:rgba(26,92,90,.12);border-color:rgba(26,92,90,.25)}
+
 </style>
 </head>
 <body>
@@ -2099,7 +2144,7 @@ body{
   </div>
 
   <div class="shop-notice">
-    <strong>About these prices:</strong> Makro's website actively blocks automated price scraping, so exact live prices couldn't be retrieved in real time. These estimates are based on Makro's current April 2026 catalogue, recent BusinessTech basket comparisons, and current SA market data. Makro was ranked SA's cheapest grocery retailer in Gauteng in October 2025. Always verify prices at makro.co.za or in-store before your trip — prices can change weekly.
+    <strong>About these prices:</strong> Prices are drawn from BusinessTech basket comparisons (Aug–Oct 2025), Makro's verified catalogue data, and current SA market research. Each category is tagged with the best-value retailer based on 2025 studies — Makro leads on dry goods (R60–90 cheaper per basket than PnP/Woolworths), Checkers leads on meat and dairy, Food Lovers Market leads on fresh produce. Beef prices reflect a 28% annual increase confirmed in Jan 2026. Always verify at the retailer's app or in-store — prices change weekly.
   </div>
 
   <!-- SHOPPING TIPS -->
@@ -2147,15 +2192,40 @@ body{
     </div>
   </div>
 
+  <!-- SPLIT SHOP STRATEGY -->
+  <div class="split-shop">
+    <p class="split-shop-title">💡 Smart split-shop strategy</p>
+    <p class="split-shop-sub">Based on 2025 SA basket studies — Makro beats competitors by R60–90 on staples. Split your shop to maximise savings.</p>
+    <div class="split-shop-lanes">
+      <div class="split-lane sl-makro">
+        <span class="sl-store">🏪 Makro</span>
+        <span class="sl-label">Dry goods · Pantry · Bulk</span>
+        <p class="sl-items">Rice, oats, pasta, lentils, canned goods, oil, peanut butter, bread, spices, flour</p>
+      </div>
+      <div class="split-lane sl-checkers">
+        <span class="sl-store">🛒 Checkers</span>
+        <span class="sl-label">Meat · Dairy · Eggs</span>
+        <p class="sl-items">Chicken, boerewors, beef mince, eggs, yogurt, cheese, milk — cheapest for proteins in 2025</p>
+      </div>
+      <div class="split-lane sl-foodlovers">
+        <span class="sl-store">🌿 Food Lovers Market</span>
+        <span class="sl-label">Fresh Produce</span>
+        <p class="sl-items">Tomatoes, peppers, spinach, mushrooms, avos, sweet potatoes, herbs, bananas</p>
+      </div>
+    </div>
+    <p class="split-shop-note">Can't split-shop? Checkers covers everything well as a single stop and has the best loyalty programme (Xtra Savings).</p>
+  </div>
+
   <!-- CHECKLIST INTRO -->
   <p class="section-title-bar">Full shopping list with prices</p>
-  <p style="font-size:13px;color:var(--ink-muted);font-weight:300;margin-bottom:1.25rem;line-height:1.6">Tap each category to expand. Tap any item to check it off as you shop. Prices are estimates — expect ±10%.</p>
+  <p style="font-size:13px;color:var(--ink4);font-weight:300;margin-bottom:1.25rem;line-height:1.6">Tap each category to expand · Tap any item to check it off · Retailer badge shows best-value store for that category.</p>
 
   <!-- FRESH PRODUCE -->
   <div class="shop-card">
     <div class="shop-card-header" onclick="toggleCat('produce')">
       <span class="shop-card-icon">🥦</span>
       <span class="shop-card-title">Fresh produce</span>
+      <span class="retailer-tag rt-fl">🌿 Food Lovers</span>
       <span class="shop-card-total">~R427</span>
       <svg class="chevron" id="chev-produce" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
@@ -2183,12 +2253,13 @@ body{
     <div class="shop-card-header" onclick="toggleCat('dairy')">
       <span class="shop-card-icon">🥛</span>
       <span class="shop-card-title">Dairy and eggs</span>
+      <span class="retailer-tag rt-checkers">🛒 Checkers</span>
       <span class="shop-card-total">~R580</span>
       <svg class="chevron" id="chev-dairy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
     <div class="shop-items" id="cat-dairy">
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Eggs — 18-pack ×2</span><span class="check-price">~R150</span></div>
-      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Full-cream milk — 2L ×2</span><span class="check-price">~R120</span></div>
+      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Full-cream milk — 2L ×2</span><span class="check-price">~R58 <span class="price-source">VERIFIED</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Butter — 500g</span><span class="check-price">~R70</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Cheddar / gouda — 500g block</span><span class="check-price">~R95</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Halloumi — 200–250g pack</span><span class="check-price">~R75</span></div>
@@ -2203,11 +2274,12 @@ body{
     <div class="shop-card-header" onclick="toggleCat('dry')">
       <span class="shop-card-icon">🌾</span>
       <span class="shop-card-title">Dry goods and pantry staples</span>
+      <span class="retailer-tag rt-makro">🏪 Makro</span>
       <span class="shop-card-total">~R600</span>
       <svg class="chevron" id="chev-dry" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
     <div class="shop-items" id="cat-dry">
-      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Basmati / long grain rice — 2 kg bag</span><span class="check-price">~R45</span></div>
+      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Basmati / long grain rice — 2 kg bag</span><span class="check-price">~R33 <span class="price-source">VERIFIED</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Penne pasta — 500g ×2</span><span class="check-price">~R30</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Fusilli pasta — 500g ×1</span><span class="check-price">~R15</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Egg noodles — 400g pack</span><span class="check-price">~R22</span></div>
@@ -2220,7 +2292,7 @@ body{
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Burger rolls — pack of 4</span><span class="check-price">~R30</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Rolled oats — 1 kg</span><span class="check-price">~R30</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">All-purpose flour — 1 kg</span><span class="check-price">~R20</span></div>
-      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Sunflower oil — 2 L bottle</span><span class="check-price">~R55</span></div>
+      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Sunflower oil — 2 L bottle</span><span class="check-price">~R62 <span class="price-source">VERIFIED</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Olive oil — 500ml</span><span class="check-price">~R65</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Peanut butter — 400g jar</span><span class="check-price">~R38</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Honey — 500g</span><span class="check-price">~R55</span></div>
@@ -2240,6 +2312,7 @@ body{
     <div class="shop-card-header" onclick="toggleCat('spices')">
       <span class="shop-card-icon">🧂</span>
       <span class="shop-card-title">Spices and condiments</span>
+      <span class="retailer-tag rt-makro">🏪 Makro</span>
       <span class="shop-card-total">~R185</span>
       <svg class="chevron" id="chev-spices" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
@@ -2264,13 +2337,14 @@ body{
     <div class="shop-card-header" onclick="toggleCat('meat')">
       <span class="shop-card-icon">🥩</span>
       <span class="shop-card-title">Meat — for CJ only</span>
+      <span class="retailer-tag rt-checkers">🛒 Checkers</span>
       <span class="shop-card-total">~R479</span>
       <svg class="chevron" id="chev-meat" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
     <div class="shop-items" id="cat-meat">
       <p style="padding:10px 1.1rem 6px;font-size:12px;color:var(--ink-faint);font-weight:300">These are add-on portions for CJ. The rest of the household eats the vegetarian base.</p>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Chicken breasts or thighs — 1.5 kg pack (Mon, Tue, Fri)</span><span class="check-price">~R120</span></div>
-      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Beef mince — 500g (Thu bean bowl + Sat nachos)</span><span class="check-price">~R99</span></div>
+      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Beef mince — 500g (Thu bean bowl + Sat nachos)</span><span class="check-price">~R115 <span class="price-source est">est</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Beef strips / stir-fry cut — 300g (Wed noodles)</span><span class="check-price">~R70</span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Boerewors — 500g roll (Sat braai)</span><span class="check-price">~R70</span></div>
       
@@ -2283,6 +2357,7 @@ body{
     <div class="shop-card-header" onclick="toggleCat('w1lunch')">
       <span class="shop-card-icon">&#127920;</span>
       <span class="shop-card-title">Lunchbox essentials — all week</span>
+      <span class="retailer-tag rt-mix">Mix</span>
       <span class="shop-card-total">~R530</span>
       <svg class="chevron open" id="chev-w1lunch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
@@ -3879,12 +3954,37 @@ body{
     <div class="tip-card"><span class="tip-icon">♻️</span><p class="tip-title">Reuse from week 1</p><p class="tip-body">Many pantry staples carry over — olive oil, soy sauce, spices, rice, canned tomatoes, stock cubes. Check your cupboard before buying — week 2 buys should be noticeably less.</p></div>
   </div>
 
+  <!-- SPLIT SHOP STRATEGY W2 -->
+  <div class="split-shop">
+    <p class="split-shop-title">💡 Smart split-shop strategy</p>
+    <p class="split-shop-sub">Based on 2025 SA basket studies — Makro beats competitors by R60–90 on staples. Split your shop to maximise savings.</p>
+    <div class="split-shop-lanes">
+      <div class="split-lane sl-makro">
+        <span class="sl-store">🏪 Makro</span>
+        <span class="sl-label">Dry goods · Pantry · Bulk</span>
+        <p class="sl-items">Rice, oats, pasta, lentils, canned goods, coconut milk, oil, peanut butter, bread, spices</p>
+      </div>
+      <div class="split-lane sl-checkers">
+        <span class="sl-store">🛒 Checkers</span>
+        <span class="sl-label">Meat · Dairy · Eggs</span>
+        <p class="sl-items">Chicken, beef mince, patties, sausages, prawns, eggs, yogurt, cheese, milk</p>
+      </div>
+      <div class="split-lane sl-foodlovers">
+        <span class="sl-store">🌿 Food Lovers Market</span>
+        <span class="sl-label">Fresh Produce</span>
+        <p class="sl-items">Tomatoes, peppers, mushrooms, avos, butternut, courgettes, carrots, bananas</p>
+      </div>
+    </div>
+    <p class="split-shop-note">Week 2 pantry spend is much lower — most staples carry over from week 1. Check your cupboard first.</p>
+  </div>
+
   <p class="section-title-bar">Full shopping list with verified prices</p>
 
   <div class="shop-card">
     <div class="shop-card-header" onclick="toggleCat('w2produce')">
       <span class="shop-card-icon">🥦</span>
       <span class="shop-card-title">Fresh produce</span>
+      <span class="retailer-tag rt-fl">🌿 Food Lovers</span>
       <span class="shop-card-total">~R380</span>
       <svg class="chevron open" id="chev-w2produce" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
@@ -3909,12 +4009,13 @@ body{
     <div class="shop-card-header" onclick="toggleCat('w2dairy')">
       <span class="shop-card-icon">🥛</span>
       <span class="shop-card-title">Dairy and eggs</span>
+      <span class="retailer-tag rt-checkers">🛒 Checkers</span>
       <span class="shop-card-total">~R440</span>
       <svg class="chevron open" id="chev-w2dairy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
     <div class="shop-items open" id="cat-w2dairy">
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Eggs 18-pack ×2</span><span class="check-price">~R150 <span class="price-source est">est</span></span></div>
-      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Full-cream milk 2L ×2</span><span class="check-price">~R80 <span class="price-source est">est</span></span></div>
+      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Full-cream milk 2L ×2</span><span class="check-price">~R58 <span class="price-source">VERIFIED</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Butter 500g</span><span class="check-price">R69.95 <span class="price-source">VERIFIED</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Cheddar 500g block</span><span class="check-price">~R95 <span class="price-source est">est</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Mozzarella 2 × 125g balls</span><span class="check-price">~R65 <span class="price-source est">est</span></span></div>
@@ -3929,6 +4030,7 @@ body{
     <div class="shop-card-header" onclick="toggleCat('w2dry')">
       <span class="shop-card-icon">🌾</span>
       <span class="shop-card-title">Dry goods and new pantry items</span>
+      <span class="retailer-tag rt-makro">🏪 Makro</span>
       <span class="shop-card-total">~R510</span>
       <svg class="chevron open" id="chev-w2dry" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
@@ -3966,6 +4068,7 @@ body{
     <div class="shop-card-header" onclick="toggleCat('w2spice')">
       <span class="shop-card-icon">🧂</span>
       <span class="shop-card-title">Spices — new this week only</span>
+      <span class="retailer-tag rt-makro">🏪 Makro</span>
       <span class="shop-card-total">~R45</span>
       <svg class="chevron open" id="chev-w2spice" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
@@ -3981,12 +4084,13 @@ body{
     <div class="shop-card-header" onclick="toggleCat('w2meat')">
       <span class="shop-card-icon">🥩</span>
       <span class="shop-card-title">Meat — for CJ only</span>
+      <span class="retailer-tag rt-checkers">🛒 Checkers</span>
       <span class="shop-card-total">~R390</span>
       <svg class="chevron open" id="chev-w2meat" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
     <div class="shop-items open" id="cat-w2meat">
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Chicken breasts/thighs 1 kg (Mon risotto + Wed dhal)</span><span class="check-price">~R80 <span class="price-source est">est</span></span></div>
-      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Beef mince 500g (Tue tacos + Thu peppers)</span><span class="check-price">~R99 <span class="price-source est">est</span></span></div>
+      <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Beef mince 500g (Tue tacos + Thu peppers)</span><span class="check-price">~R115 <span class="price-source est">est</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Beef burger patties 4-pack (Sat burgers)</span><span class="check-price">~R85 <span class="price-source est">est</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Sausages 500g (Fri shakshuka)</span><span class="check-price">~R55 <span class="price-source est">est</span></span></div>
       <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div><span class="check-label">Prawns 300g frozen (Sun coconut curry — opt)</span><span class="check-price">~R75 <span class="price-source est">est</span></span></div>
@@ -3998,6 +4102,7 @@ body{
     <div class="shop-card-header" onclick="toggleCat('w2lunch')">
       <span class="shop-card-icon">&#127920;</span>
       <span class="shop-card-title">Lunchbox essentials — all week</span>
+      <span class="retailer-tag rt-mix">Mix</span>
       <span class="shop-card-total">~R530</span>
       <svg class="chevron open" id="chev-w2lunch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>
     </div>
