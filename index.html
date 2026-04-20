@@ -516,10 +516,9 @@ body{
   .total-bar{padding:1.1rem 1.2rem}
 }
 @media(max-width:480px){
-  .week-label{display:none}
-  .week-switcher-inner{gap:5px}
-  .week-btn{padding:.4rem .4rem;font-size:9.5px;letter-spacing:.04em}
-  .theme-toggle{padding:.35rem .65rem;font-size:10.5px}
+  .week-switcher-inner{gap:4px}
+  .week-switcher{padding:.45rem .75rem;gap:7px}
+  .theme-toggle{padding:.35rem .6rem;font-size:10px;letter-spacing:.04em;flex-shrink:0}
   .rcard-svg{height:180px}
   .nutrition-grid{grid-template-columns:1fr}
   .tips-grid{grid-template-columns:1fr}
@@ -529,35 +528,38 @@ body{
 .week-switcher{
   background:var(--mode-nav-bg);
   border-bottom:1px solid rgba(184,136,42,.15);
-  padding:.6rem 1rem;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:1rem;max-width:100%;overflow:hidden;
+  padding:.5rem 1rem;
+  display:flex;align-items:center;gap:10px;
+  max-width:100%;overflow:hidden;
   transition:background .3s;
 }
 .week-switcher-inner{
-  max-width:1080px;margin:0 auto;width:100%;
-  display:flex;align-items:center;gap:8px;
+  flex:1;min-width:0;
+  display:flex;align-items:center;gap:6px;
 }
 .week-btn{
-  flex:1;padding:.5rem .7rem;
+  flex:1;min-width:0;
+  padding:.4rem .3rem;
   border:1px solid rgba(184,136,42,.3);border-radius:30px;
   background:transparent;cursor:pointer;
-  font-family:var(--sans);font-size:10.5px;font-weight:600;
-  letter-spacing:.07em;text-transform:uppercase;
+  font-family:var(--sans);
   color:var(--mode-nav-btn);
   transition:all .2s;-webkit-tap-highlight-color:transparent;
-  white-space:nowrap;min-width:0;
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  line-height:1.2;
+}
+.wk-n{
+  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.wk-d{
+  font-size:9px;font-weight:400;letter-spacing:.02em;opacity:.75;
 }
 .week-btn.on{
   background:var(--gold);border-color:var(--gold);
   color:var(--mode-bg);
 }
+.week-btn.on .wk-d{opacity:.85}
 .week-btn:hover:not(.on){color:var(--gold3);border-color:rgba(184,136,42,.6)}
-.week-label{
-  font-family:var(--sans);font-size:10px;font-weight:600;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(184,136,42,.7);white-space:nowrap;
-}
 /* ── THEME TOGGLE ── */
 .theme-toggle{
   background:rgba(184,136,42,.15);
@@ -996,13 +998,12 @@ body{
 
 <div class="week-switcher">
   <div class="week-switcher-inner">
-    <span class="week-label">Week</span>
-    <button class="week-btn on" onclick="switchWeek(1,this)">Week 1 &nbsp;·&nbsp; 28 Apr</button>
-    <button class="week-btn" onclick="switchWeek(2,this)">Week 2 &nbsp;·&nbsp; 5 May</button>
-    <button class="week-btn" onclick="switchWeek(3,this)">Week 3 &nbsp;·&nbsp; 12 May</button>
-    <button class="week-btn" onclick="switchWeek(4,this)">Week 4 &nbsp;·&nbsp; 19 May</button>
-    <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">☀️ Light</button>
+    <button class="week-btn on" onclick="switchWeek(1,this)"><span class="wk-n">W1</span><span class="wk-d">28 Apr</span></button>
+    <button class="week-btn" onclick="switchWeek(2,this)"><span class="wk-n">W2</span><span class="wk-d">5 May</span></button>
+    <button class="week-btn" onclick="switchWeek(3,this)"><span class="wk-n">W3</span><span class="wk-d">12 May</span></button>
+    <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">19 May</span></button>
   </div>
+  <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">🌙 Dark</button>
 </div>
 </div><!-- /sticky-top -->
 
@@ -4510,14 +4511,20 @@ var curWeek = 1;
 function toggleTheme(btn) {
   var html = document.documentElement;
   var isDark = html.getAttribute('data-theme') === 'dark';
+  var narrow = window.innerWidth < 420;
   if (isDark) {
     html.removeAttribute('data-theme');
-    if (btn) btn.textContent = '🌙 Dark';
+    if (btn) btn.textContent = narrow ? '🌙' : '🌙 Dark';
   } else {
     html.setAttribute('data-theme', 'dark');
-    if (btn) btn.textContent = '☀️ Light';
+    if (btn) btn.textContent = narrow ? '☀️' : '☀️ Light';
   }
 }
+// Set correct initial label on small screens
+(function(){
+  var btn = document.getElementById('theme-btn');
+  if (btn && window.innerWidth < 420) btn.textContent = '🌙';
+})();
 
 // ── Single nav handler — routes to correct week automatically ──────────────
 function navTo(slug, btn) {
