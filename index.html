@@ -516,9 +516,8 @@ body{
   .total-bar{padding:1.1rem 1.2rem}
 }
 @media(max-width:480px){
-  .week-switcher-inner{gap:4px}
-  .week-switcher{padding:.45rem .75rem;gap:7px}
-  .theme-toggle{padding:.35rem .6rem;font-size:10px;letter-spacing:.04em;flex-shrink:0}
+  .week-switcher{padding:.45rem .6rem;gap:5px}
+  .wk-d{font-size:8.5px}
   .rcard-svg{height:180px}
   .nutrition-grid{grid-template-columns:1fr}
   .tips-grid{grid-template-columns:1fr}
@@ -528,54 +527,51 @@ body{
 .week-switcher{
   background:var(--mode-nav-bg);
   border-bottom:1px solid rgba(184,136,42,.15);
-  padding:.5rem 1rem;
-  display:flex;align-items:center;gap:10px;
-  max-width:100%;overflow:hidden;
+  padding:.5rem .75rem;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
   transition:background .3s;
 }
-.week-switcher-inner{
-  flex:1;min-width:0;
-  display:flex;align-items:center;gap:6px;
-}
 .week-btn{
-  flex:1;min-width:0;
-  padding:.4rem .3rem;
+  padding:.45rem .25rem;
   border:1px solid rgba(184,136,42,.3);border-radius:30px;
   background:transparent;cursor:pointer;
   font-family:var(--sans);
   color:var(--mode-nav-btn);
   transition:all .2s;-webkit-tap-highlight-color:transparent;
   display:flex;flex-direction:column;align-items:center;gap:1px;
-  line-height:1.2;
+  line-height:1.2;width:100%;
 }
 .wk-n{
-  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
 }
 .wk-d{
-  font-size:9px;font-weight:400;letter-spacing:.02em;opacity:.75;
+  font-size:9.5px;font-weight:400;letter-spacing:.01em;opacity:.7;white-space:nowrap;
 }
 .week-btn.on{
   background:var(--gold);border-color:var(--gold);
-  color:var(--mode-bg);
+  color:#fff;
 }
-.week-btn.on .wk-d{opacity:.85}
+.week-btn.on .wk-d{opacity:.9}
 .week-btn:hover:not(.on){color:var(--gold3);border-color:rgba(184,136,42,.6)}
-/* ── THEME TOGGLE ── */
+/* ── THEME TOGGLE — fixed corner button ── */
 .theme-toggle{
-  background:rgba(184,136,42,.15);
-  border:1px solid rgba(184,136,42,.3);
+  position:fixed;bottom:22px;right:16px;z-index:400;
+  background:var(--mode-nav-bg);
+  border:1px solid rgba(184,136,42,.35);
   border-radius:30px;
-  padding:.4rem .9rem;
+  padding:.45rem .9rem;
   cursor:pointer;
   font-family:var(--sans);font-size:11px;font-weight:600;
-  letter-spacing:.08em;text-transform:uppercase;
+  letter-spacing:.06em;text-transform:uppercase;
   color:var(--gold2);
   white-space:nowrap;
+  box-shadow:0 2px 12px rgba(0,0,0,.12);
   transition:all .2s;
-  flex-shrink:0;
   -webkit-tap-highlight-color:transparent;
 }
-.theme-toggle:hover{background:rgba(184,136,42,.25)}
+.theme-toggle:hover{background:rgba(184,136,42,.15)}
 /* price accuracy note */
 .price-accuracy{
   background:rgba(122,74,10,.08);
@@ -940,7 +936,7 @@ body{
 
 /* ── PRINT STYLESHEET ── */
 @media print{
-  .hero,.sticky-top,.week-block:not(.on),.shop-actions,.add-item-row,
+  .hero,.sticky-top,.theme-toggle,.week-block:not(.on),.shop-actions,.add-item-row,
   .row-del,.split-shop,.tips-grid,.shop-notice,.price-accuracy,
   .pc-box,.tip-card{display:none!important}
   .week-block.on .page:not(.on){display:none!important}
@@ -997,15 +993,14 @@ body{
 </nav>
 
 <div class="week-switcher">
-  <div class="week-switcher-inner">
-    <button class="week-btn on" onclick="switchWeek(1,this)"><span class="wk-n">W1</span><span class="wk-d">28 Apr</span></button>
-    <button class="week-btn" onclick="switchWeek(2,this)"><span class="wk-n">W2</span><span class="wk-d">5 May</span></button>
-    <button class="week-btn" onclick="switchWeek(3,this)"><span class="wk-n">W3</span><span class="wk-d">12 May</span></button>
-    <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">19 May</span></button>
-  </div>
-  <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">🌙 Dark</button>
+  <button class="week-btn on" onclick="switchWeek(1,this)"><span class="wk-n">W1</span><span class="wk-d">28 Apr</span></button>
+  <button class="week-btn" onclick="switchWeek(2,this)"><span class="wk-n">W2</span><span class="wk-d">5 May</span></button>
+  <button class="week-btn" onclick="switchWeek(3,this)"><span class="wk-n">W3</span><span class="wk-d">12 May</span></button>
+  <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">19 May</span></button>
 </div>
 </div><!-- /sticky-top -->
+
+<button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">🌙 Dark</button>
 
 <div class="main">
 <div class="week-block on" id="w1">
@@ -4511,20 +4506,14 @@ var curWeek = 1;
 function toggleTheme(btn) {
   var html = document.documentElement;
   var isDark = html.getAttribute('data-theme') === 'dark';
-  var narrow = window.innerWidth < 420;
   if (isDark) {
     html.removeAttribute('data-theme');
-    if (btn) btn.textContent = narrow ? '🌙' : '🌙 Dark';
+    if (btn) btn.textContent = '🌙 Dark';
   } else {
     html.setAttribute('data-theme', 'dark');
-    if (btn) btn.textContent = narrow ? '☀️' : '☀️ Light';
+    if (btn) btn.textContent = '☀️ Light';
   }
 }
-// Set correct initial label on small screens
-(function(){
-  var btn = document.getElementById('theme-btn');
-  if (btn && window.innerWidth < 420) btn.textContent = '🌙';
-})();
 
 // ── Single nav handler — routes to correct week automatically ──────────────
 function navTo(slug, btn) {
