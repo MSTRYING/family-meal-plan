@@ -956,6 +956,174 @@ body{
   @page{margin:1.5cm}
 }
 
+/* ═══════════════════════════════════════════════════
+   FRIDGE FINDER
+═══════════════════════════════════════════════════ */
+#chef-page{display:none;padding:2.5rem 0 4rem}
+#chef-page.on{display:block}
+.ff-intro{
+  font-size:13.5px;color:var(--ink3);margin-bottom:1.5rem;line-height:1.65;
+}
+.ff-input-wrap{display:flex;gap:8px;margin-bottom:1.1rem}
+.ff-input{
+  flex:1;background:var(--paper2);border:1.5px solid var(--border2);
+  border-radius:30px;padding:.65rem 1.2rem;
+  font-family:var(--sans);font-size:14px;color:var(--ink);
+  outline:none;transition:border-color .2s;min-width:0;
+}
+.ff-input:focus{border-color:var(--gold)}
+.ff-input::placeholder{color:var(--ink4)}
+.ff-search-btn{
+  background:var(--gold);color:#fff;border:none;
+  border-radius:30px;padding:.65rem 1.4rem;
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:background .2s;
+}
+.ff-search-btn:hover{background:var(--gold2)}
+.ff-pantry-label{
+  font-size:10px;font-weight:600;letter-spacing:.1em;
+  color:var(--ink4);margin-bottom:.6rem;
+}
+.ff-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem}
+.ff-chip{
+  background:var(--paper3);border:1px solid var(--border);
+  border-radius:20px;padding:4px 13px;
+  font-size:12px;font-weight:500;cursor:pointer;
+  transition:all .15s;color:var(--ink3);
+  -webkit-tap-highlight-color:transparent;
+}
+.ff-chip.active{
+  background:rgba(184,136,42,.15);
+  border-color:var(--gold);color:var(--gold);
+}
+.ff-cat-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem}
+.ff-cat-btn{
+  background:var(--paper2);border:1px solid var(--border2);
+  border-radius:20px;padding:5px 13px;
+  font-family:var(--sans);font-size:11px;font-weight:600;
+  letter-spacing:.04em;cursor:pointer;color:var(--ink4);
+  transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.ff-cat-btn.on{background:var(--gold);border-color:var(--gold);color:#fff}
+
+/* Results */
+.ff-results{display:grid;gap:1.25rem}
+.ff-empty{
+  text-align:center;padding:3rem 1rem;color:var(--ink4);
+  font-family:var(--serif);font-size:1.35rem;font-weight:300;
+}
+.ff-empty span{display:block;font-size:2.5rem;margin-bottom:.75rem}
+.ff-no-match{
+  text-align:center;padding:2rem 1rem;color:var(--ink4);font-size:13.5px;
+}
+.ff-no-match strong{color:var(--ink2)}
+
+/* Recipe card */
+.ff-rcard{
+  background:var(--paper2);border:1px solid var(--border2);
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.ff-rcard-head{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:1rem 1.25rem .65rem;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.ff-emoji{font-size:2.1rem;flex-shrink:0;line-height:1;margin-top:2px}
+.ff-rcard-info{flex:1;min-width:0}
+.ff-rcard-name{font-family:var(--serif);font-size:1.18rem;font-weight:400;color:var(--ink);line-height:1.2}
+.ff-rcard-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.ff-badge{
+  font-size:10px;font-weight:600;letter-spacing:.04em;
+  padding:2px 9px;border-radius:12px;white-space:nowrap;
+}
+.ff-badge-time{background:rgba(30,92,53,.1);color:var(--green)}
+.ff-badge-cat{background:rgba(184,136,42,.12);color:var(--gold)}
+.ff-badge-v{background:rgba(30,92,53,.1);color:var(--green)}
+.ff-badge-gf{background:rgba(30,58,107,.09);color:var(--blue)}
+.ff-badge-hf{background:rgba(139,58,26,.1);color:var(--rust)}
+.ff-chevron{
+  flex-shrink:0;width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink4);font-size:14px;margin-top:4px;
+  transition:transform .25s;
+}
+.ff-rcard.open .ff-chevron{transform:rotate(180deg)}
+
+/* Match bar */
+.ff-match-wrap{padding:0 1.25rem .9rem}
+.ff-match-top{
+  display:flex;justify-content:space-between;
+  font-size:11px;font-weight:600;color:var(--ink4);margin-bottom:4px;
+}
+.ff-match-pct{color:var(--gold)}
+.ff-bar-track{height:6px;background:var(--paper3);border-radius:3px;overflow:hidden}
+.ff-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.ff-missing{
+  font-size:11.5px;color:var(--ink4);
+  padding:0 1.25rem .8rem;line-height:1.5;
+}
+.ff-missing em{color:var(--rust2);font-style:normal;font-weight:500}
+
+/* Expanded body */
+.ff-body{display:none;border-top:1px solid var(--border);padding:1.25rem}
+.ff-body.open{display:block}
+.ff-body-title{
+  font-size:11px;font-weight:600;letter-spacing:.1em;
+  color:var(--ink4);text-transform:uppercase;margin-bottom:.6rem;
+}
+.ff-ing-grid{
+  display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1.1rem;
+}
+.ff-ing{
+  padding:3px 11px;border-radius:12px;font-size:12px;
+  border:1px solid var(--border2);background:var(--paper3);color:var(--ink3);
+}
+.ff-ing.have{
+  border-color:rgba(45,138,78,.4);
+  background:rgba(45,138,78,.09);color:var(--green);
+}
+.ff-ing.need{
+  border-color:rgba(194,80,28,.3);
+  background:rgba(194,80,28,.07);color:var(--rust2);
+}
+.ff-method{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem}
+.ff-method li{display:flex;gap:10px;font-size:13px;line-height:1.65;color:var(--ink2)}
+.ff-step-num{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  background:var(--gold);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;margin-top:2px;
+}
+.ff-card-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ff-btn{
+  flex:1;min-width:110px;padding:.55rem .9rem;
+  border-radius:30px;border:1px solid var(--border2);
+  background:var(--paper3);
+  font-family:var(--sans);font-size:12px;font-weight:600;
+  cursor:pointer;color:var(--ink2);
+  transition:all .15s;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.ff-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ff-btn-add{background:var(--green);color:#fff;border-color:var(--green)}
+.ff-btn-add:hover{background:var(--green2);border-color:var(--green2);color:#fff}
+.ff-btn-wa{background:#25D366;color:#fff;border-color:#25D366}
+.ff-btn-wa:hover{background:#1da851;border-color:#1da851;color:#fff}
+
+/* Toast */
+.ff-toast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:var(--green);color:#fff;
+  padding:.6rem 1.5rem;border-radius:30px;
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  opacity:0;transition:opacity .3s,transform .3s;
+  z-index:500;pointer-events:none;white-space:nowrap;
+}
+.ff-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 </style>
 </head>
 <body>
@@ -989,6 +1157,7 @@ body{
     <button class="nav-btn" onclick="navTo('sun',this)">Sunday</button>
     <button class="nav-btn" onclick="navTo('shop',this)">Shopping</button>
     <button class="nav-btn" onclick="navTo('nuts',this)">Nutrition</button>
+    <button class="nav-btn" onclick="navTo('chef',this)">🧑‍🍳 Chef</button>
   </div>
 </nav>
 
@@ -4496,6 +4665,36 @@ body{
 <div class="week-block" id="w3"></div><!-- /w3 — populated by JS -->
 <div class="week-block" id="w4"></div><!-- /w4 — populated by JS -->
 
+<!-- ═══════════════════════════════════════════════════════
+  FRIDGE FINDER — global page (not week-specific)
+═══════════════════════════════════════════════════════ -->
+<div id="chef-page">
+  <div class="page-header">
+    <h2 class="page-title">🧑‍🍳 Fridge Finder</h2>
+    <span class="page-sub">Meals from what you have</span>
+  </div>
+
+  <p class="ff-intro">Type the ingredients you have and we'll rank every matching recipe from our library of 100 meals.</p>
+
+  <div class="ff-input-wrap">
+    <input class="ff-input" id="ff-input" type="text"
+      placeholder="e.g. chicken, onion, garlic, tomatoes, rice…"
+      autocomplete="off" />
+    <button class="ff-search-btn" onclick="ffSearch()">Find Meals</button>
+  </div>
+
+  <p class="ff-pantry-label">QUICK PANTRY PICKS — tap to add:</p>
+  <div class="ff-chips" id="ff-chips"></div>
+
+  <div class="ff-cat-filters" id="ff-cat-filters"></div>
+
+  <div id="ff-results" class="ff-results">
+    <div class="ff-empty"><span>🔍</span>Enter ingredients above to find matching meals</div>
+  </div>
+
+  <div id="ff-toast" class="ff-toast">✓ Added to shopping list</div>
+</div>
+
 </div><!-- /main -->
 
 <script>
@@ -5741,6 +5940,1185 @@ function initLunchboxBuilders(){
 document.addEventListener('DOMContentLoaded', initLunchboxBuilders);
 
 // (protein chip state is restored inside _buildProteinTracker → refreshBar)
+
+// ════════════════════════════════════════════════════════════════════
+// FRIDGE FINDER — local recipe engine
+// ════════════════════════════════════════════════════════════════════
+
+// ── Ingredient normaliser & synonyms ───────────────────────────────
+var FF_NORM_MAP = {
+  'baby marrow':'courgette','zucchini':'courgette',
+  'capsicum':'bell pepper','green pepper':'bell pepper','red pepper':'bell pepper','yellow pepper':'bell pepper',
+  'mince':'ground beef','beef mince':'ground beef','minced beef':'ground beef','lamb mince':'ground beef',
+  'tinned tomatoes':'canned tomatoes','tin tomatoes':'canned tomatoes','chopped tomatoes':'canned tomatoes',
+  'crushed tomatoes':'canned tomatoes','canned tomato':'canned tomatoes',
+  'boerewors':'sausage','wors':'sausage','viennas':'sausage','boerie':'sausage',
+  'naartjie':'tangerine','mandarin':'tangerine',
+  'gem squash':'squash','butternut squash':'squash','butternut':'squash',
+  'dhania':'coriander','cilantro':'coriander','fresh coriander':'coriander',
+  'chili':'chilli','chile':'chilli','fresh chilli':'chilli','dried chilli':'chilli',
+  'scallions':'spring onions','green onions':'spring onions',
+  'mieliepap':'maize meal','pap':'maize meal','mealie meal':'maize meal',
+  'corn meal':'maize meal','polenta':'maize meal',
+  'raisins':'dried fruit','sultanas':'dried fruit',
+  'double cream':'cream','single cream':'cream','fresh cream':'cream','whipping cream':'cream',
+  'plain flour':'flour','self raising flour':'flour','bread flour':'flour',
+  'canola oil':'oil','sunflower oil':'oil','vegetable oil':'oil','olive oil':'oil','cooking oil':'oil',
+  'lemon juice':'lemon',
+  'tin beans':'beans','canned beans':'beans','tinned beans':'beans',
+  'kidney beans':'beans','baked beans':'beans','chickpeas':'beans','cannellini beans':'beans',
+  'baby spinach':'spinach','spinach leaves':'spinach',
+  'cherry tomatoes':'tomatoes','roma tomatoes':'tomatoes','plum tomatoes':'tomatoes',
+  'brown onion':'onion','white onion':'onion','red onion':'onion',
+  'sweet potato':'sweet potatoes',
+  'chicken breast':'chicken','chicken thigh':'chicken','chicken thighs':'chicken',
+  'chicken drumstick':'chicken','chicken pieces':'chicken',
+  'beef steak':'steak','rump steak':'steak','sirloin steak':'steak',
+  'minced garlic':'garlic','garlic cloves':'garlic','garlic clove':'garlic',
+  'whole milk':'milk','skim milk':'milk','fat free milk':'milk',
+  'cheddar cheese':'cheese','mozzarella':'cheese','feta':'cheese','gouda':'cheese',
+  'penne':'pasta','spaghetti':'pasta','fusilli':'pasta','linguine':'pasta','macaroni':'pasta',
+  'basmati rice':'rice','jasmine rice':'rice','white rice':'rice','brown rice':'rice',
+  'bread rolls':'bread','white bread':'bread','brown bread':'bread',
+  'salted butter':'butter','unsalted butter':'butter',
+  'apple cider vinegar':'vinegar','white vinegar':'vinegar','red wine vinegar':'vinegar',
+  'beef stock':'stock','chicken stock':'stock','vegetable stock':'stock',
+  'soy sauce':'soy',
+};
+
+function ffNorm(s) {
+  var n = s.toLowerCase().trim().replace(/\s+/g,' ');
+  return FF_NORM_MAP[n] || n;
+}
+function ffIngMatch(available, recipeIng) {
+  var ra = ffNorm(recipeIng);
+  return available.some(function(a) {
+    var aa = ffNorm(a);
+    return aa === ra || ra.indexOf(aa) !== -1 || aa.indexOf(ra) !== -1;
+  });
+}
+function ffParseInput(str) {
+  return str.split(/[,\n]+/).map(function(s){ return s.trim(); }).filter(Boolean);
+}
+
+// ── Category definitions ────────────────────────────────────────────
+var FF_CATS = [
+  {k:'all',       l:'All Recipes',    e:'🍽'},
+  {k:'quick',     l:'Quick ≤20 min',  e:'⚡'},
+  {k:'onepot',    l:'One-Pot',        e:'🍲'},
+  {k:'protein',   l:'High Protein',   e:'💪'},
+  {k:'sa',        l:'SA Classics',    e:'🇿🇦'},
+  {k:'breakfast', l:'Brekkie',        e:'🍳'},
+  {k:'budget',    l:'Budget',         e:'💰'},
+  {k:'lunchbox',  l:'Lunchbox',       e:'🥡'},
+  {k:'crowd',     l:'Weekend',        e:'🎉'}
+];
+
+// ── Pantry quick-tap chips ──────────────────────────────────────────
+var FF_PANTRY_CHIPS = [
+  'eggs','onion','garlic','tomatoes','chicken','mince',
+  'rice','pasta','potatoes','cheese','milk','butter',
+  'flour','oil','lemon','spinach','canned tomatoes',
+  'beans','lentils','bread','cream','soy sauce','stock'
+];
+
+// ── Recipe bank (100 recipes) ───────────────────────────────────────
+// Fields: id, n=name, c=cat, e=emoji, t=time(min), s=serves,
+//         tags=[], ing=[], steps=[]
+var FF_RECIPES = [
+
+// ── QUICK WEEKNIGHT ≤20 min ─────────────────────────────────────────
+{id:'qw01',n:'Pesto Pasta',c:'quick',e:'🍝',t:15,s:4,tags:['v'],
+ ing:['pasta','pesto','parmesan','cherry tomatoes','olive oil'],
+ steps:['Cook pasta al dente per packet instructions.',
+        'Drain, reserving a splash of pasta water.',
+        'Toss with pesto, pasta water and olive oil until glossy.',
+        'Top with halved cherry tomatoes and grated parmesan.']},
+
+{id:'qw02',n:'Egg Fried Rice',c:'quick',e:'🍳',t:15,s:4,tags:['v','gf'],
+ ing:['rice','eggs','soy sauce','oil','spring onions','frozen peas'],
+ steps:['Use cold day-old rice for best results.',
+        'Heat oil in a wok on high. Scramble eggs and push to side.',
+        'Add rice, stir-fry 3 min. Add peas and soy sauce.',
+        'Toss to combine. Top with sliced spring onions.']},
+
+{id:'qw03',n:'Toasted Cheese & Tomato',c:'quick',e:'🧀',t:10,s:2,tags:['v'],
+ ing:['bread','cheese','tomatoes','butter','salt'],
+ steps:['Butter bread slices on outside.',
+        'Layer cheese and sliced tomatoes on inside.',
+        'Pan-fry on medium until golden and cheese melts.',
+        'Serve with a pinch of salt and black pepper.']},
+
+{id:'qw04',n:'Tuna Pasta',c:'quick',e:'🐟',t:18,s:4,tags:['df'],
+ ing:['pasta','tuna','canned tomatoes','onion','garlic','olive oil'],
+ steps:['Cook pasta al dente.',
+        'Sauté onion and garlic in olive oil 3 min.',
+        'Add canned tomatoes, simmer 5 min. Stir in drained tuna.',
+        'Toss pasta in sauce. Season well.']},
+
+{id:'qw05',n:'Stir-Fried Noodles',c:'quick',e:'🍜',t:15,s:4,tags:['v'],
+ ing:['noodles','soy sauce','oil','cabbage','carrots','eggs','sesame oil'],
+ steps:['Cook noodles per packet. Drain and set aside.',
+        'Stir-fry shredded cabbage and julienned carrots 3 min.',
+        'Add noodles, soy sauce and a drizzle of sesame oil.',
+        'Push aside, scramble eggs in the pan, then fold everything together.']},
+
+{id:'qw06',n:'Greek Salad with Pita',c:'quick',e:'🥗',t:10,s:4,tags:['v'],
+ ing:['tomatoes','cucumber','feta','olives','onion','olive oil','pita bread'],
+ steps:['Dice tomatoes and cucumber. Slice onion thinly.',
+        'Combine with olives and crumbled feta.',
+        'Dress with olive oil, salt and oregano.',
+        'Warm pita in a dry pan and serve alongside.']},
+
+{id:'qw07',n:'Cheese Omelette',c:'quick',e:'🍳',t:10,s:2,tags:['v','gf'],
+ ing:['eggs','cheese','butter','salt','milk'],
+ steps:['Whisk eggs with a splash of milk, salt and pepper.',
+        'Melt butter in non-stick pan on medium heat.',
+        'Pour in eggs; let edges set, then lift and tilt.',
+        'Add grated cheese, fold in half and serve immediately.']},
+
+{id:'qw08',n:'Bean & Veg Wrap',c:'quick',e:'🌯',t:12,s:4,tags:['v'],
+ ing:['wraps','beans','tomatoes','cheese','lettuce','sour cream','onion'],
+ steps:['Warm beans in pan with cumin and salt.',
+        'Layer warm tortillas with beans, diced tomatoes, cheese.',
+        'Add shredded lettuce and a dollop of sour cream.',
+        'Roll tightly and slice in half.']},
+
+{id:'qw09',n:'Quick Chicken Stir-Fry',c:'quick',e:'🥘',t:18,s:4,tags:['gf','hf'],
+ ing:['chicken','broccoli','bell pepper','soy sauce','garlic','oil','cornflour'],
+ steps:['Slice chicken thin. Toss in cornflour, salt and pepper.',
+        'Stir-fry chicken in hot oil until golden, remove.',
+        'Fry garlic, broccoli and bell pepper 3 min.',
+        'Return chicken, add soy sauce and toss to coat.']},
+
+{id:'qw10',n:'Avocado Eggs on Toast',c:'quick',e:'🥑',t:12,s:2,tags:['v'],
+ ing:['bread','avocado','eggs','lemon','salt','chilli'],
+ steps:['Toast bread slices until golden.',
+        'Mash avocado with lemon juice, salt and chilli.',
+        'Fry or poach eggs to your liking.',
+        'Spread avocado on toast and top with egg.']},
+
+{id:'qw11',n:'Pan-Fried Boerewors & Mash',c:'quick',e:'🌭',t:20,s:4,tags:[],
+ ing:['sausage','potatoes','butter','milk','onion','oil'],
+ steps:['Boil potatoes until tender. Mash with butter, milk and salt.',
+        'Pan-fry boerewors in a little oil on medium heat, turning often.',
+        'Slice onions and fry until caramelised for a quick gravy base.',
+        'Serve sausage on mash with onions.']},
+
+{id:'qw12',n:'Quick Tomato Pasta',c:'quick',e:'🍅',t:18,s:4,tags:['v'],
+ ing:['pasta','canned tomatoes','garlic','olive oil','basil','parmesan'],
+ steps:['Cook pasta al dente.',
+        'Gently simmer crushed garlic in olive oil 1 min.',
+        'Add canned tomatoes, season and simmer 8 min.',
+        'Toss with pasta and fresh basil. Finish with parmesan.']},
+
+{id:'qw13',n:'Sardines on Toast',c:'quick',e:'🐟',t:8,s:2,tags:['df','gf'],
+ ing:['sardines','bread','lemon','tomatoes','black pepper'],
+ steps:['Toast bread until crisp.',
+        'Open and drain sardines, lay on toast.',
+        'Top with sliced tomatoes, squeeze of lemon.',
+        'Grind black pepper generously over the top.']},
+
+{id:'qw14',n:'Scrambled Eggs on Toast',c:'quick',e:'🍳',t:10,s:2,tags:['v'],
+ ing:['eggs','butter','milk','bread','salt'],
+ steps:['Whisk eggs with a splash of milk, salt and pepper.',
+        'Melt butter in pan on low-medium heat.',
+        'Add eggs, stir slowly and continuously until just set.',
+        'Serve immediately on hot buttered toast.']},
+
+{id:'qw15',n:'Speedy Quesadillas',c:'quick',e:'🫓',t:12,s:2,tags:['v'],
+ ing:['wraps','cheese','bell pepper','onion','butter','sour cream'],
+ steps:['Sauté diced onion and pepper 3 min.',
+        'Fill one tortilla with cheese and veg. Top with second tortilla.',
+        'Cook in buttered pan 2 min each side until golden.',
+        'Cut into wedges, serve with sour cream.']},
+
+// ── ONE-POT / TRAY BAKES ────────────────────────────────────────────
+{id:'op01',n:'Chicken & Rice One-Pot',c:'onepot',e:'🍗',t:45,s:4,tags:['gf','hf'],
+ ing:['chicken','rice','onion','garlic','stock','canned tomatoes','paprika'],
+ steps:['Brown chicken pieces in a heavy pot. Remove and set aside.',
+        'Sauté onion and garlic until soft. Add paprika.',
+        'Stir in rice, add stock and canned tomatoes.',
+        'Return chicken, cover and simmer 25 min until rice is cooked.']},
+
+{id:'op02',n:'Vegetable Curry',c:'onepot',e:'🍛',t:35,s:4,tags:['v','vg','gf'],
+ ing:['potatoes','carrots','onion','canned tomatoes','curry powder','garlic','oil','chickpeas'],
+ steps:['Fry onion and garlic in oil until soft.',
+        'Add curry powder, stir 1 min until fragrant.',
+        'Add potatoes, carrots, chickpeas and canned tomatoes.',
+        'Cover and simmer 20 min until vegetables are tender.']},
+
+{id:'op03',n:'Hearty Beef Stew',c:'onepot',e:'🥩',t:90,s:6,tags:['gf'],
+ ing:['steak','potatoes','carrots','onion','stock','canned tomatoes','garlic','flour'],
+ steps:['Brown beef cubes (dusted in flour) in batches. Set aside.',
+        'Fry onion and garlic until soft.',
+        'Return beef, add stock, canned tomatoes, potatoes and carrots.',
+        'Cover and simmer 60 min until beef is fall-apart tender.']},
+
+{id:'op04',n:'Red Lentil Soup',c:'onepot',e:'🍜',t:30,s:6,tags:['v','vg','gf'],
+ ing:['lentils','onion','garlic','canned tomatoes','cumin','stock','oil'],
+ steps:['Fry onion and garlic in oil until golden.',
+        'Add cumin, stir 30 sec. Add lentils, canned tomatoes and stock.',
+        'Bring to boil then simmer 20 min until lentils are soft.',
+        'Blend half the soup for a thick, creamy texture. Season well.']},
+
+{id:'op05',n:'Butter Bean Tomato Stew',c:'onepot',e:'🫘',t:25,s:4,tags:['v','vg','gf'],
+ ing:['beans','canned tomatoes','garlic','onion','olive oil','spinach','smoked paprika'],
+ steps:['Fry onion and garlic in olive oil 4 min.',
+        'Add smoked paprika, stir 30 sec.',
+        'Add canned tomatoes and butter beans. Simmer 12 min.',
+        'Stir in spinach until wilted. Season and serve with crusty bread.']},
+
+{id:'op06',n:'Roasted Veg Tray Bake',c:'onepot',e:'🥦',t:40,s:4,tags:['v','vg','gf'],
+ ing:['sweet potatoes','broccoli','bell pepper','onion','olive oil','garlic','feta'],
+ steps:['Preheat oven to 200°C.',
+        'Chop all veg into chunks. Toss with olive oil, garlic, salt and pepper.',
+        'Spread on a large tray. Roast 30 min, turning halfway.',
+        'Crumble feta over and return to oven 5 min.']},
+
+{id:'op07',n:'Chicken Tray Bake',c:'onepot',e:'🍗',t:50,s:4,tags:['gf','hf'],
+ ing:['chicken','potatoes','onion','garlic','olive oil','paprika','lemon','rosemary'],
+ steps:['Preheat oven to 200°C.',
+        'Toss chunked potatoes and onion with oil, paprika and salt.',
+        'Nestle chicken pieces on top. Squeeze over lemon, scatter rosemary.',
+        'Roast 40 min until chicken is golden and juices run clear.']},
+
+{id:'op08',n:'One-Pot Pasta Primavera',c:'onepot',e:'🍝',t:25,s:4,tags:['v'],
+ ing:['pasta','broccoli','bell pepper','onion','garlic','cream','parmesan','butter'],
+ steps:['Sauté onion and garlic in butter 3 min.',
+        'Add cream and bring to a gentle simmer.',
+        'Add pasta and just enough water to cover; cook 10 min stirring often.',
+        'Fold in broccoli and bell pepper. Cook 4 min. Finish with parmesan.']},
+
+{id:'op09',n:'Mince & Veg Casserole',c:'onepot',e:'🥘',t:50,s:6,tags:[],
+ ing:['ground beef','potatoes','carrots','onion','canned tomatoes','garlic','stock'],
+ steps:['Brown mince in a large pot, breaking it up. Drain excess fat.',
+        'Add onion and garlic; fry 3 min.',
+        'Stir in diced potatoes, carrots, canned tomatoes and stock.',
+        'Simmer covered 30 min until veg is tender. Season generously.']},
+
+{id:'op10',n:'Sweet Potato & Chickpea Curry',c:'onepot',e:'🍛',t:35,s:4,tags:['v','vg','gf'],
+ ing:['sweet potatoes','beans','canned tomatoes','onion','garlic','curry powder','coconut milk','oil'],
+ steps:['Fry onion and garlic until soft.',
+        'Add curry powder, stir 1 min.',
+        'Add diced sweet potato, chickpeas, canned tomatoes and coconut milk.',
+        'Simmer 25 min until sweet potato is soft. Serve with rice.']},
+
+{id:'op11',n:'Shakshuka',c:'onepot',e:'🍳',t:25,s:4,tags:['v','gf'],
+ ing:['eggs','canned tomatoes','bell pepper','onion','garlic','cumin','paprika','oil'],
+ steps:['Fry onion and pepper in oil until soft.',
+        'Add garlic, cumin and paprika. Cook 1 min.',
+        'Pour in canned tomatoes. Simmer 10 min until slightly thickened.',
+        'Create wells and crack in eggs. Cover and cook 7 min until whites set.']},
+
+{id:'op12',n:'Sausage & Veg Tray Bake',c:'onepot',e:'🌭',t:45,s:4,tags:[],
+ ing:['sausage','potatoes','onion','bell pepper','olive oil','garlic','mustard'],
+ steps:['Preheat oven to 200°C.',
+        'Parboil potato chunks 5 min. Drain.',
+        'Toss potatoes, sliced sausage, onion and pepper with oil and mustard.',
+        'Spread on tray, roast 30 min turning once.']},
+
+{id:'op13',n:'Vegetarian Bean Chilli',c:'onepot',e:'🌶',t:40,s:6,tags:['v','vg','gf'],
+ ing:['beans','canned tomatoes','onion','garlic','bell pepper','chilli','cumin','oil'],
+ steps:['Fry onion, garlic and bell pepper in oil until soft.',
+        'Add chilli, cumin, stir 1 min.',
+        'Add beans and canned tomatoes. Season with salt.',
+        'Simmer 25 min until thick. Serve with rice or bread.']},
+
+{id:'op14',n:'Tomato Braised Chicken',c:'onepot',e:'🍗',t:45,s:4,tags:['gf'],
+ ing:['chicken','canned tomatoes','onion','garlic','olive oil','basil','stock'],
+ steps:['Brown chicken in olive oil. Remove and set aside.',
+        'Fry onion and garlic 3 min.',
+        'Add canned tomatoes, stock and basil. Stir well.',
+        'Return chicken, cover and braise 30 min until cooked through.']},
+
+{id:'op15',n:'Butternut & Lentil Soup',c:'onepot',e:'🎃',t:35,s:6,tags:['v','vg','gf'],
+ ing:['squash','lentils','onion','garlic','stock','cumin','oil','cream'],
+ steps:['Fry onion and garlic in oil. Add cumin.',
+        'Add cubed butternut, lentils and stock.',
+        'Simmer 25 min until everything is soft.',
+        'Blend until smooth. Stir in cream, season and serve.']},
+
+// ── CJ PROTEIN MEALS ────────────────────────────────────────────────
+{id:'pr01',n:'Grilled Chicken & Veg',c:'protein',e:'💪',t:20,s:2,tags:['gf','hf'],
+ ing:['chicken','broccoli','carrots','olive oil','garlic','salt','lemon'],
+ steps:['Season chicken with salt, pepper and garlic.',
+        'Grill or pan-fry on medium-high, 6-7 min each side.',
+        'Steam broccoli and carrots until just tender.',
+        'Serve with a squeeze of lemon.']},
+
+{id:'pr02',n:'Beef Mince Rice Bowl',c:'protein',e:'🥩',t:20,s:2,tags:['gf','hf'],
+ ing:['ground beef','rice','soy sauce','garlic','onion','oil','sesame oil'],
+ steps:['Cook rice per packet.',
+        'Brown mince with onion and garlic, breaking up lumps.',
+        'Add soy sauce and a splash of sesame oil.',
+        'Serve mince over rice. Top with spring onions if available.']},
+
+{id:'pr03',n:'Chicken Meal-Prep Bowls',c:'protein',e:'🍗',t:30,s:4,tags:['gf','hf'],
+ ing:['chicken','rice','sweet potatoes','broccoli','olive oil','garlic','paprika'],
+ steps:['Preheat oven to 200°C. Roast sweet potatoes 25 min.',
+        'Season and bake chicken breast alongside sweet potato.',
+        'Steam broccoli.',
+        'Divide rice, chicken, veg into meal-prep containers.']},
+
+{id:'pr04',n:'Pan-Fried Steak & Greens',c:'protein',e:'🥩',t:15,s:2,tags:['gf','hf'],
+ ing:['steak','spinach','garlic','butter','olive oil','salt'],
+ steps:['Pat steak dry. Season generously.',
+        'Heat oil in cast-iron skillet until smoking. Sear steak 3 min each side.',
+        'Add butter and garlic in last minute, baste steak.',
+        'Rest 5 min. Wilt spinach in the same pan.']},
+
+{id:'pr05',n:'Tuna Rice Bowl',c:'protein',e:'🐟',t:10,s:2,tags:['gf','hf'],
+ ing:['tuna','rice','soy sauce','lemon','cucumber','spring onions'],
+ steps:['Cook rice per packet.',
+        'Mix drained tuna with soy sauce and lemon juice.',
+        'Slice cucumber into half moons.',
+        'Serve tuna over rice, top with cucumber and spring onions.']},
+
+{id:'pr06',n:'Chicken Schnitzel',c:'protein',e:'🍗',t:20,s:4,tags:['hf'],
+ ing:['chicken','flour','eggs','breadcrumbs','oil','lemon','salt'],
+ steps:['Flatten chicken breasts between cling wrap.',
+        'Coat in flour, then beaten egg, then breadcrumbs.',
+        'Shallow fry in hot oil 3-4 min per side until golden.',
+        'Drain on paper towel. Serve with lemon wedges.']},
+
+{id:'pr07',n:'Homemade Beef Burger',c:'protein',e:'🍔',t:20,s:4,tags:['hf'],
+ ing:['ground beef','bread','onion','cheese','lettuce','tomatoes','salt'],
+ steps:['Season mince with salt and pepper, shape into patties.',
+        'Cook on high heat 4 min each side for medium.',
+        'Toast burger buns. Layer with cheese, patty, lettuce, tomato.',
+        'Add favourite sauce and serve immediately.']},
+
+{id:'pr08',n:'Boiled Egg & Rice Bowl',c:'protein',e:'🥚',t:15,s:2,tags:['v','gf','hf'],
+ ing:['eggs','rice','soy sauce','sesame oil','spring onions','cucumber'],
+ steps:['Boil eggs 7 min for jammy yolk. Cool and peel.',
+        'Cook rice per packet.',
+        'Dress rice with soy sauce and sesame oil.',
+        'Halve eggs, serve over rice with sliced cucumber and spring onions.']},
+
+{id:'pr09',n:'Chicken & Pasta',c:'protein',e:'🍝',t:20,s:4,tags:['hf'],
+ ing:['chicken','pasta','garlic','olive oil','parmesan','spinach','lemon'],
+ steps:['Cook pasta al dente.',
+        'Slice and pan-fry chicken in olive oil until golden.',
+        'Add garlic, toss with drained pasta.',
+        'Fold in spinach, squeeze lemon. Serve with parmesan.']},
+
+{id:'pr10',n:'Beef Mince Stir-Fry',c:'protein',e:'🥩',t:20,s:4,tags:['hf'],
+ ing:['ground beef','bell pepper','onion','garlic','soy sauce','oil','broccoli'],
+ steps:['Brown mince in hot oil, breaking it up. Drain excess fat.',
+        'Add onion, garlic and broccoli. Stir-fry 3 min.',
+        'Toss in bell pepper, add soy sauce.',
+        'Cook 2 min until veg is crisp-tender. Serve with rice.']},
+
+{id:'pr11',n:'Grilled Chicken Thighs',c:'protein',e:'🍗',t:25,s:4,tags:['gf','hf'],
+ ing:['chicken','garlic','olive oil','lemon','paprika','salt','rosemary'],
+ steps:['Mix garlic, olive oil, lemon juice, paprika and rosemary.',
+        'Marinate chicken thighs in mixture for 10+ minutes.',
+        'Grill or pan-fry skin side down 10 min, flip, cook 10 min more.',
+        'Rest 3 min before serving.']},
+
+{id:'pr12',n:'Protein Overnight Oats',c:'protein',e:'🥣',t:5,s:2,tags:['v','gf','hf'],
+ ing:['oats','milk','plain yoghurt','banana','peanut butter','honey'],
+ steps:['Mix oats with milk and yoghurt in a jar.',
+        'Stir in a tablespoon of peanut butter.',
+        'Cover and refrigerate overnight.',
+        'Top with sliced banana and drizzle of honey in the morning.']},
+
+{id:'pr13',n:'Chicken & Sweet Potato Bowl',c:'protein',e:'🍠',t:30,s:2,tags:['gf','hf'],
+ ing:['chicken','sweet potatoes','spinach','garlic','olive oil','paprika','lemon'],
+ steps:['Roast cubed sweet potato at 200°C for 20 min.',
+        'Pan-fry seasoned chicken in olive oil 8 min per side.',
+        'Wilt spinach in the same pan with garlic.',
+        'Build bowls: sweet potato, chicken, spinach, lemon squeeze.']},
+
+{id:'pr14',n:'Beef & Veg Wraps',c:'protein',e:'🌯',t:15,s:4,tags:['hf'],
+ ing:['ground beef','wraps','onion','garlic','tomatoes','cheese','lettuce'],
+ steps:['Brown mince with onion, garlic, salt and pepper.',
+        'Warm wraps in a dry pan.',
+        'Fill with mince, diced tomatoes, cheese and lettuce.',
+        'Fold and serve.']},
+
+{id:'pr15',n:'Egg & Bacon Breakfast Plate',c:'protein',e:'🥓',t:12,s:2,tags:['gf','hf'],
+ ing:['eggs','bacon','tomatoes','butter','salt'],
+ steps:['Fry bacon rashers until crispy. Set aside.',
+        'Halve tomatoes and fry cut-side down in bacon fat.',
+        'Fry or scramble eggs in butter.',
+        'Plate bacon, eggs and tomatoes. Season and serve.']},
+
+// ── SA CLASSICS ─────────────────────────────────────────────────────
+{id:'sa01',n:'Bobotie',c:'sa',e:'🇿🇦',t:60,s:6,tags:[],
+ ing:['ground beef','bread','milk','eggs','onion','curry powder','dried fruit','almonds','bay leaves','lemon'],
+ steps:['Sauté onion and curry powder. Add mince and brown.',
+        'Soak bread in milk, squeeze out (keep milk). Crumble into mince with fruit and almonds.',
+        'Press into greased dish. Top with egg-and-milk custard mixture.',
+        'Bake at 180°C for 35-40 min until set and golden.']},
+
+{id:'sa02',n:'Boerewors Rolls',c:'sa',e:'🌭',t:20,s:4,tags:[],
+ ing:['sausage','bread','onion','canned tomatoes','oil'],
+ steps:['Braai or pan-fry boerewors until cooked through.',
+        'Fry sliced onion until caramelised.',
+        'Add a splash of tomato and simmer for a saucy topping.',
+        'Slice bread rolls, fill with boerewors and caramelised onions.']},
+
+{id:'sa03',n:'Pap & Tomato Bredie',c:'sa',e:'🍲',t:45,s:6,tags:['v','gf'],
+ ing:['maize meal','canned tomatoes','onion','oil','garlic','chilli','salt'],
+ steps:['Bring salted water to boil (4 cups per 1 cup pap).',
+        'Stir in maize meal, cover and cook on low 20 min, stirring occasionally.',
+        'Fry onion and garlic until golden. Add chilli, then canned tomatoes.',
+        'Simmer tomato bredie 15 min. Serve alongside stiff pap.']},
+
+{id:'sa04',n:'Braai Chicken',c:'sa',e:'🔥',t:45,s:4,tags:['gf'],
+ ing:['chicken','garlic','lemon','olive oil','paprika','salt'],
+ steps:['Mix garlic, lemon, olive oil, paprika, salt into a marinade.',
+        'Score chicken pieces and rub marinade in well. Rest 30 min.',
+        'Braai over medium coals, turning regularly, about 35 min.',
+        'Chicken is done when juices run clear.']},
+
+{id:'sa05',n:'Frikkadels',c:'sa',e:'🍖',t:30,s:4,tags:[],
+ ing:['ground beef','bread','onion','eggs','milk','coriander','salt'],
+ steps:['Soak bread in milk, squeeze and crumble into mince.',
+        'Add grated onion, egg, coriander, salt and pepper. Mix well.',
+        'Shape into balls, flatten slightly.',
+        'Fry in oil on medium heat, 5 min each side until cooked through.']},
+
+{id:'sa06',n:'Potjiekos',c:'sa',e:'🍲',t:120,s:8,tags:['gf'],
+ ing:['chicken','potatoes','carrots','onion','stock','garlic','squash','beer'],
+ steps:['Brown chicken in potjie on coals. Remove.',
+        'Fry onion and garlic. Layer vegetables on top — no stirring!',
+        'Return chicken on top of veg. Add stock and beer.',
+        'Cook covered on medium coals 2 hours. Resist opening the lid.']},
+
+{id:'sa07',n:'Bunny Chow',c:'sa',e:'🍞',t:45,s:4,tags:[],
+ ing:['bread','ground beef','onion','garlic','curry powder','canned tomatoes','potatoes'],
+ steps:['Brown mince with onion, garlic and curry powder.',
+        'Add potatoes and canned tomatoes. Simmer 25 min.',
+        'Hollow out half a loaf of bread from the top.',
+        'Fill bread hollow with curry. Top with the bread "lid".']},
+
+{id:'sa08',n:'Snoek Braai',c:'sa',e:'🐟',t:30,s:4,tags:['gf'],
+ ing:['fish','butter','garlic','lemon','apricot jam','chilli','salt'],
+ steps:['Mix butter, garlic, lemon and apricot jam into a basting sauce.',
+        'Score fish on skin side. Season generously.',
+        'Braai flesh side down on grid for 8 min.',
+        'Turn, baste generously and cook 10 min more. Baste again.']},
+
+{id:'sa09',n:'Chakalaka',c:'sa',e:'🌶',t:20,s:6,tags:['v','vg','gf'],
+ ing:['onion','bell pepper','carrots','canned tomatoes','chilli','garlic','curry powder','beans'],
+ steps:['Fry onion, pepper and carrots in oil until soft.',
+        'Add garlic, chilli and curry powder. Stir 1 min.',
+        'Add canned tomatoes and beans.',
+        'Simmer 10 min. Serve as a relish with pap or braai.']},
+
+{id:'sa10',n:'Yellow Rice',c:'sa',e:'🍚',t:25,s:6,tags:['v','gf'],
+ ing:['rice','dried fruit','turmeric','cinnamon','sugar','butter','salt'],
+ steps:['Rinse rice. Bring salted water to boil.',
+        'Add turmeric, cinnamon stick, raisins, sugar and butter.',
+        'Add rice, stir once, cover and simmer on low 18 min.',
+        'Fluff with fork. Lovely alongside bobotie or stew.']},
+
+{id:'sa11',n:'Malva Pudding',c:'sa',e:'🍮',t:45,s:8,tags:['v'],
+ ing:['flour','eggs','sugar','butter','apricot jam','milk','bicarbonate of soda','cream'],
+ steps:['Mix sugar, eggs and jam. Add melted butter and milk.',
+        'Fold in flour and bicarbonate. Pour into greased dish.',
+        'Bake at 180°C for 30-35 min until golden and risen.',
+        'Pour warm cream sauce (cream, butter, sugar) over hot pudding.']},
+
+{id:'sa12',n:'Milk Tart',c:'sa',e:'🥧',t:60,s:8,tags:['v'],
+ ing:['flour','butter','eggs','sugar','milk','cream','cinnamon','cornflour'],
+ steps:['Make short pastry, line tin, bake blind 15 min.',
+        'Heat milk and cream until almost boiling.',
+        'Mix egg yolks, sugar, flour, cornflour. Slowly whisk in hot milk.',
+        'Return to heat, stir until thick. Pour into pastry. Dust with cinnamon.']},
+
+{id:'sa13',n:'Vetkoek with Mince',c:'sa',e:'🍞',t:30,s:6,tags:[],
+ ing:['flour','yeast','sugar','salt','oil','ground beef','onion','curry powder'],
+ steps:['Mix flour, yeast, sugar, salt and warm water into a dough. Rest 30 min.',
+        'Fry mince with onion and curry powder for the filling.',
+        'Shape dough into balls. Deep-fry in oil until golden and cooked through.',
+        'Split open and fill with mince curry.']},
+
+{id:'sa14',n:'Braaibroodjies',c:'sa',e:'🧀',t:15,s:4,tags:['v'],
+ ing:['bread','cheese','tomatoes','onion','butter','chutney'],
+ steps:['Butter bread slices generously on outside.',
+        'Spread chutney inside. Layer cheese, sliced tomato and raw onion.',
+        'Press together firmly.',
+        'Braai on grid until bread is toasted and cheese melted.']},
+
+{id:'sa15',n:'Mielie Pap & Chakalaka',c:'sa',e:'🌽',t:30,s:6,tags:['v','gf'],
+ ing:['maize meal','canned tomatoes','onion','bell pepper','beans','curry powder','oil'],
+ steps:['Bring 4 cups salted water to boil. Pour in 1 cup pap, stir.',
+        'Cover and cook on low 20 min, stirring occasionally until thick.',
+        'Fry onion, pepper with curry powder. Add tomatoes and beans.',
+        'Simmer 10 min. Serve chakalaka alongside pap.']},
+
+// ── BREAKFAST FOR DINNER ────────────────────────────────────────────
+{id:'bk01',n:'Full English Breakfast',c:'breakfast',e:'🍳',t:20,s:2,tags:['gf'],
+ ing:['eggs','bacon','tomatoes','bread','butter','beans'],
+ steps:['Fry bacon until crispy. Set aside.',
+        'Fry eggs in the bacon fat to your liking.',
+        'Halve tomatoes and fry cut side down. Warm baked beans.',
+        'Toast bread, butter generously. Plate everything together.']},
+
+{id:'bk02',n:'Fluffy Pancakes',c:'breakfast',e:'🥞',t:20,s:4,tags:['v'],
+ ing:['flour','eggs','milk','butter','sugar','baking powder','banana'],
+ steps:['Mix flour, baking powder, sugar and a pinch of salt.',
+        'Whisk in eggs and milk until smooth. Add melted butter.',
+        'Cook tablespoon-sized rounds on medium heat, flip when bubbles appear.',
+        'Serve with sliced banana and golden syrup.']},
+
+{id:'bk03',n:'French Toast',c:'breakfast',e:'🍞',t:15,s:4,tags:['v'],
+ ing:['bread','eggs','milk','butter','cinnamon','sugar'],
+ steps:['Whisk eggs, milk, cinnamon and a pinch of sugar.',
+        'Dip thick bread slices in mixture, coat both sides.',
+        'Fry in butter on medium heat 2-3 min each side until golden.',
+        'Dust with icing sugar and serve with sliced fruit.']},
+
+{id:'bk04',n:'Build-Your-Own Omelette',c:'breakfast',e:'🍳',t:15,s:2,tags:['v','gf'],
+ ing:['eggs','cheese','bell pepper','onion','tomatoes','butter','milk'],
+ steps:['Dice all fillings and prepare them.',
+        'Whisk eggs with milk, salt and pepper.',
+        'Melt butter in non-stick pan. Pour in eggs.',
+        'When edges set, add fillings to one half, fold and serve.']},
+
+{id:'bk05',n:'Banana Waffles',c:'breakfast',e:'🧇',t:25,s:4,tags:['v'],
+ ing:['flour','eggs','milk','butter','banana','baking powder','honey'],
+ steps:['Mash banana into a smooth paste.',
+        'Mix with egg, milk and melted butter.',
+        'Fold in flour and baking powder until just combined.',
+        'Cook in waffle maker until golden. Serve with honey.']},
+
+{id:'bk06',n:'Boerie & Egg Roll',c:'breakfast',e:'🌭',t:15,s:2,tags:[],
+ ing:['sausage','eggs','bread','butter','tomatoes'],
+ steps:['Pan-fry boerewors in a little oil until cooked through.',
+        'Fry eggs alongside in same pan.',
+        'Toast and butter bread rolls.',
+        'Fill rolls with boerewors, egg and sliced tomato.']},
+
+{id:'bk07',n:'Eggs Benedict',c:'breakfast',e:'🍳',t:25,s:2,tags:['v'],
+ ing:['eggs','bread','butter','lemon','cream','bacon'],
+ steps:['Make a quick hollandaise: whisk egg yolks with lemon juice over gentle heat; beat in butter.',
+        'Poach eggs in simmering water with a splash of vinegar.',
+        'Fry bacon until crispy. Toast English muffins.',
+        'Build: muffin, bacon, egg, hollandaise.']},
+
+{id:'bk08',n:'Smoothie Bowl',c:'breakfast',e:'🍓',t:10,s:2,tags:['v','vg','gf'],
+ ing:['banana','milk','plain yoghurt','honey','oats','fresh fruit'],
+ steps:['Blend banana with yoghurt and a splash of milk until thick and smooth.',
+        'Pour into bowls — the consistency should be thick enough to eat with a spoon.',
+        'Top with oats, fresh fruit and a drizzle of honey.',
+        'Eat immediately.']},
+
+{id:'bk09',n:'Baked Beans on Toast',c:'breakfast',e:'🫘',t:10,s:2,tags:['v'],
+ ing:['beans','bread','butter','cheese','salt'],
+ steps:['Heat baked beans in a small saucepan with a pinch of salt.',
+        'Toast bread until golden and crisp.',
+        'Butter toast generously.',
+        'Pour hot beans over toast. Top with grated cheese if desired.']},
+
+{id:'bk10',n:'Breakfast Burrito',c:'breakfast',e:'🌯',t:20,s:4,tags:[],
+ ing:['wraps','eggs','bacon','cheese','tomatoes','onion','butter'],
+ steps:['Scramble eggs in butter.',
+        'Fry bacon until crispy. Sauté diced onion.',
+        'Warm wraps in a dry pan.',
+        'Fill with scrambled eggs, bacon, onion, tomatoes and cheese. Roll tightly.']},
+
+// ── BUDGET MEALS (under R150 for 4) ────────────────────────────────
+{id:'bu01',n:'Samp & Beans',c:'budget',e:'🌽',t:90,s:6,tags:['v','gf'],
+ ing:['dried beans','maize meal','onion','oil','salt'],
+ steps:['Soak samp and beans overnight. Drain.',
+        'Cover with fresh water, boil until tender (~60 min).',
+        'Fry onion until golden, add to pot with salt.',
+        'Simmer 15 min until thick and creamy. Serve with chakalaka.']},
+
+{id:'bu02',n:'Red Lentil Dhal',c:'budget',e:'🍲',t:30,s:4,tags:['v','vg','gf'],
+ ing:['lentils','canned tomatoes','onion','garlic','cumin','turmeric','oil'],
+ steps:['Fry onion with cumin and turmeric until fragrant.',
+        'Add garlic, stir 1 min.',
+        'Add lentils and canned tomatoes plus 2 cups water.',
+        'Simmer 20 min until lentils dissolve into a thick sauce. Serve with rice or bread.']},
+
+{id:'bu03',n:'Pasta with Tomato Sauce',c:'budget',e:'🍝',t:20,s:4,tags:['v'],
+ ing:['pasta','canned tomatoes','garlic','onion','olive oil','basil','parmesan'],
+ steps:['Sauté onion and garlic in olive oil until soft.',
+        'Add canned tomatoes, salt, pepper and a pinch of sugar.',
+        'Simmer 12 min until thickened.',
+        'Toss with al dente pasta, fresh basil and parmesan.']},
+
+{id:'bu04',n:'Hearty Bean Soup',c:'budget',e:'🍵',t:35,s:6,tags:['v','vg','gf'],
+ ing:['beans','onion','garlic','carrots','canned tomatoes','stock','oil'],
+ steps:['Fry onion, garlic and carrots in oil until softened.',
+        'Add canned tomatoes, beans and stock.',
+        'Simmer 20 min. Remove a cup of soup, mash and return for thickness.',
+        'Season well and serve with crusty bread.']},
+
+{id:'bu05',n:'Pap with Tomato Gravy',c:'budget',e:'🌽',t:30,s:6,tags:['v','gf'],
+ ing:['maize meal','canned tomatoes','onion','oil','chilli','garlic'],
+ steps:['Make pap: boil 4 cups salted water, add 1 cup maize meal.',
+        'Cover, cook on lowest heat 20 min, stirring twice.',
+        'Fry onion and garlic until golden. Add chilli and canned tomatoes.',
+        'Simmer gravy 10 min. Pour over stiff pap.']},
+
+{id:'bu06',n:'Tuna Fishcakes',c:'budget',e:'🐟',t:25,s:4,tags:[],
+ ing:['tuna','potatoes','onion','eggs','flour','oil','lemon'],
+ steps:['Boil and mash potatoes.',
+        'Mix mashed potato with drained tuna, grated onion and egg.',
+        'Shape into patties, dust in flour.',
+        'Shallow fry in oil 3 min each side until golden. Serve with lemon.']},
+
+{id:'bu07',n:'Budget Egg Fried Rice',c:'budget',e:'🍳',t:15,s:4,tags:['v','gf'],
+ ing:['rice','eggs','oil','soy sauce','onion','frozen peas'],
+ steps:['Use leftover cold rice for best results.',
+        'Scramble eggs in hot oil, push to side.',
+        'Add rice, frozen peas and diced onion. Stir-fry 3 min.',
+        'Splash in soy sauce, toss well and serve hot.']},
+
+{id:'bu08',n:'Bread & Butter Pudding',c:'budget',e:'🍮',t:45,s:6,tags:['v'],
+ ing:['bread','butter','eggs','milk','sugar','cinnamon','dried fruit'],
+ steps:['Butter bread slices on both sides. Layer in greased dish with raisins.',
+        'Whisk eggs, milk, sugar and cinnamon into custard.',
+        'Pour custard over bread. Press down and rest 15 min.',
+        'Bake at 180°C for 30-35 min until golden and set.']},
+
+{id:'bu09',n:'Chickpea Tomato Curry',c:'budget',e:'🍛',t:30,s:4,tags:['v','vg','gf'],
+ ing:['beans','canned tomatoes','onion','garlic','curry powder','oil','rice'],
+ steps:['Fry onion and garlic until golden.',
+        'Add curry powder, stir 1 min.',
+        'Add chickpeas and canned tomatoes. Simmer 18 min.',
+        'Season well. Serve with rice.']},
+
+{id:'bu10',n:'Oven Chicken Drumsticks & Chips',c:'budget',e:'🍗',t:40,s:4,tags:['gf'],
+ ing:['chicken','potatoes','oil','paprika','garlic','salt'],
+ steps:['Preheat oven to 200°C.',
+        'Toss potato chips in oil, paprika and salt. Spread on tray.',
+        'Season drumsticks with garlic, paprika and salt. Place on same tray.',
+        'Roast 35 min, turning chips halfway.']},
+
+// ── LUNCHBOX FRIENDLY ────────────────────────────────────────────────
+{id:'lb01',n:'Chicken Mayo Wrap',c:'lunchbox',e:'🌯',t:10,s:2,tags:['hf'],
+ ing:['chicken','wraps','mayonnaise','lettuce','tomatoes','cucumber'],
+ steps:['Shred cooked chicken and mix with mayonnaise. Season.',
+        'Lay wrap flat, add lettuce, sliced tomato and cucumber.',
+        'Top with chicken mayo.',
+        'Roll tightly and wrap in foil or cling wrap for lunchbox.']},
+
+{id:'lb02',n:'Cold Pasta Salad',c:'lunchbox',e:'🍝',t:15,s:4,tags:['v'],
+ ing:['pasta','cherry tomatoes','cucumber','feta','olives','olive oil','lemon'],
+ steps:['Cook pasta al dente. Rinse with cold water to cool.',
+        'Halve cherry tomatoes, dice cucumber.',
+        'Combine pasta, tomatoes, cucumber, olives and crumbled feta.',
+        'Dress with olive oil and lemon juice. Season well.']},
+
+{id:'lb03',n:'Egg Mayo Sandwich',c:'lunchbox',e:'🥚',t:10,s:2,tags:['v'],
+ ing:['eggs','mayonnaise','bread','lettuce','salt','mustard'],
+ steps:['Hard boil eggs (10 min). Cool, peel and chop.',
+        'Mix with mayonnaise, a dollop of mustard, salt and pepper.',
+        'Spread on bread slices over lettuce.',
+        'Press together and cut diagonally.']},
+
+{id:'lb04',n:'Tuna Mayo Bap',c:'lunchbox',e:'🐟',t:10,s:2,tags:[],
+ ing:['tuna','bread','mayonnaise','lemon','cucumber','lettuce'],
+ steps:['Drain tuna well. Mix with mayonnaise and a squeeze of lemon.',
+        'Season with salt and pepper.',
+        'Split bread rolls and layer with lettuce and sliced cucumber.',
+        'Fill with tuna mayo.']},
+
+{id:'lb05',n:'Peanut Butter & Banana Wrap',c:'lunchbox',e:'🍌',t:5,s:1,tags:['v','vg'],
+ ing:['wraps','peanut butter','banana','honey'],
+ steps:['Spread peanut butter generously over the wrap.',
+        'Lay whole or sliced banana in the centre.',
+        'Drizzle with honey.',
+        'Roll tightly and slice in half.']},
+
+{id:'lb06',n:'Greek Salad Lunchbox',c:'lunchbox',e:'🥗',t:10,s:2,tags:['v','gf'],
+ ing:['tomatoes','cucumber','feta','olives','onion','olive oil'],
+ steps:['Dice tomatoes and cucumber into chunks.',
+        'Slice red onion thinly.',
+        'Combine with pitted olives and crumbled feta.',
+        'Dress with olive oil, dried oregano, salt and pepper.']},
+
+{id:'lb07',n:'Rice & Roasted Veg Box',c:'lunchbox',e:'🍱',t:15,s:2,tags:['v','gf'],
+ ing:['rice','sweet potatoes','spinach','olive oil','garlic','lemon'],
+ steps:['Cook rice per packet and allow to cool.',
+        'Cube sweet potato and microwave or roast until tender.',
+        'Wilt spinach with garlic and olive oil.',
+        'Layer rice, sweet potato and spinach. Dress with lemon juice.']},
+
+{id:'lb08',n:'Mini Frittata Muffins',c:'lunchbox',e:'🧁',t:30,s:6,tags:['v','gf'],
+ ing:['eggs','cheese','bell pepper','onion','spinach','milk','salt'],
+ steps:['Preheat oven to 180°C. Grease a muffin tin.',
+        'Dice veg small, wilt spinach.',
+        'Whisk eggs with milk, salt and pepper. Stir in veg and cheese.',
+        'Pour into muffin moulds. Bake 20-22 min until set and golden.']},
+
+{id:'lb09',n:'Cheesy Quesadilla Wedges',c:'lunchbox',e:'🫓',t:12,s:2,tags:['v'],
+ ing:['wraps','cheese','tomatoes','onion','bell pepper'],
+ steps:['Dice tomatoes and pepper finely.',
+        'Sprinkle cheese and veg on one tortilla. Top with second.',
+        'Cook in a dry pan on medium, 2 min each side until golden.',
+        'Cool slightly before cutting into wedges for packing.']},
+
+{id:'lb10',n:'Chickpea Salad Box',c:'lunchbox',e:'🥙',t:10,s:2,tags:['v','vg','gf'],
+ ing:['beans','tomatoes','cucumber','onion','lemon','olive oil','coriander'],
+ steps:['Drain and rinse chickpeas.',
+        'Dice tomatoes, cucumber and red onion.',
+        'Combine chickpeas and veg in a container.',
+        'Dress with olive oil, lemon juice, coriander, salt and pepper.']},
+
+// ── CROWD / WEEKEND COOKING ─────────────────────────────────────────
+{id:'cr01',n:'Slow-Roast Whole Chicken',c:'crowd',e:'🍗',t:120,s:6,tags:['gf'],
+ ing:['chicken','butter','garlic','lemon','rosemary','salt','potatoes'],
+ steps:['Preheat oven to 160°C.',
+        'Mix butter, garlic, lemon zest and rosemary. Rub under and over skin.',
+        'Place chicken over halved potatoes in roasting tin. Season well.',
+        'Roast 1.5 hours, rest 15 min, then carve.']},
+
+{id:'cr02',n:'Classic Lasagne',c:'crowd',e:'🍝',t:90,s:8,tags:[],
+ ing:['ground beef','pasta','canned tomatoes','onion','garlic','cheese','milk','flour','butter'],
+ steps:['Make Bolognese: brown mince with onion, garlic and canned tomatoes. Simmer 20 min.',
+        'Make béchamel: melt butter, add flour, slowly whisk in milk. Season.',
+        'Layer pasta sheets, Bolognese, béchamel, repeat. Top with cheese.',
+        'Bake at 180°C for 40-45 min until bubbling and golden.']},
+
+{id:'cr03',n:'Slow-Roast Lamb',c:'crowd',e:'🥩',t:150,s:8,tags:['gf'],
+ ing:['steak','garlic','rosemary','olive oil','lemon','onion','potatoes'],
+ steps:['Stab lamb leg all over and insert garlic slices.',
+        'Rub with olive oil, lemon, rosemary, salt and pepper.',
+        'Roast at 150°C on a bed of onions and potatoes for 2.5 hours.',
+        'Rest 20 min before carving.']},
+
+{id:'cr04',n:'Seafood Paella',c:'crowd',e:'🥘',t:50,s:6,tags:['gf'],
+ ing:['rice','fish','onion','garlic','bell pepper','canned tomatoes','paprika','saffron','stock','oil'],
+ steps:['Fry onion, garlic and pepper in wide pan until soft.',
+        'Add paprika and rice. Stir 2 min.',
+        'Pour in stock, canned tomatoes and saffron. Bring to boil.',
+        'Arrange fish on top. Simmer uncovered 20 min until liquid is absorbed.']},
+
+{id:'cr05',n:'Homemade Pizza',c:'crowd',e:'🍕',t:60,s:6,tags:['v'],
+ ing:['flour','yeast','canned tomatoes','cheese','onion','bell pepper','olive oil'],
+ steps:['Make dough: mix flour, yeast, salt, olive oil and warm water. Knead 8 min. Rest 30 min.',
+        'Simmer canned tomatoes with garlic, salt and oregano for sauce.',
+        'Roll dough thin. Spread sauce, add toppings and cheese.',
+        'Bake at 230°C for 10-12 min until crust is crispy.']},
+
+{id:'cr06',n:'Loaded Nachos',c:'crowd',e:'🌮',t:25,s:6,tags:['v'],
+ ing:['tortilla chips','cheese','canned tomatoes','onion','beans','sour cream','chilli'],
+ steps:['Preheat oven to 200°C.',
+        'Layer chips in oven dish, top with beans, diced tomato and onion.',
+        'Smother with cheese. Bake 10-12 min until cheese bubbles.',
+        'Serve with dollops of sour cream and guacamole.']},
+
+{id:'cr07',n:'Build-Your-Own Tacos',c:'crowd',e:'🌮',t:30,s:6,tags:[],
+ ing:['ground beef','wraps','onion','garlic','chilli','cheese','tomatoes','sour cream','lettuce'],
+ steps:['Brown mince with onion, garlic, chilli, cumin and salt.',
+        'Warm taco shells or wraps in the oven.',
+        'Prepare toppings: shredded lettuce, diced tomato, grated cheese.',
+        'Let everyone build their own tacos at the table.']},
+
+{id:'cr08',n:'Spaghetti Bolognese',c:'crowd',e:'🍝',t:60,s:6,tags:[],
+ ing:['pasta','ground beef','canned tomatoes','onion','garlic','olive oil','parmesan','basil'],
+ steps:['Brown mince in olive oil, breaking up lumps.',
+        'Add onion and garlic, fry 3 min.',
+        'Add canned tomatoes, salt and a pinch of sugar. Simmer 30 min.',
+        'Toss with al dente pasta and fresh basil. Serve with parmesan.']},
+
+{id:'cr09',n:'Sunday Roast Chicken & Veg',c:'crowd',e:'🍗',t:90,s:6,tags:['gf'],
+ ing:['chicken','potatoes','carrots','onion','garlic','butter','stock','rosemary'],
+ steps:['Stuff chicken with garlic, butter and rosemary. Season well.',
+        'Roast at 190°C for 20 min per 500g plus 20 min.',
+        'Add par-boiled potatoes and carrots around chicken for last 40 min.',
+        'Rest chicken 15 min. Use pan juices for gravy.']},
+
+{id:'cr10',n:'Slow-Braised BBQ Ribs',c:'crowd',e:'🍖',t:180,s:4,tags:['gf'],
+ ing:['steak','garlic','onion','canned tomatoes','soy sauce','honey','mustard','oil'],
+ steps:['Season ribs with salt and pepper. Brown all over in oil.',
+        'Mix canned tomatoes, honey, soy sauce, mustard and garlic into BBQ sauce.',
+        'Place ribs in dish, pour sauce over. Cover with foil.',
+        'Braise at 160°C for 2.5 hours. Uncover last 20 min to caramelise.']}
+
+]; // end FF_RECIPES
+
+// ── Fridge Finder state ─────────────────────────────────────────────
+var ffActiveCat = 'all';
+var ffAvailable = [];
+
+// ── Build category filter bar ───────────────────────────────────────
+function ffBuildCatFilters() {
+  var wrap = document.getElementById('ff-cat-filters');
+  if (!wrap) return;
+  FF_CATS.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'ff-cat-btn' + (cat.k === 'all' ? ' on' : '');
+    btn.textContent = cat.e + ' ' + cat.l;
+    btn.onclick = function() {
+      ffActiveCat = cat.k;
+      wrap.querySelectorAll('.ff-cat-btn').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      ffRenderResults();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Build pantry chip bar ───────────────────────────────────────────
+function ffBuildChips() {
+  var wrap = document.getElementById('ff-chips');
+  if (!wrap) return;
+  FF_PANTRY_CHIPS.forEach(function(ing) {
+    var chip = document.createElement('button');
+    chip.className = 'ff-chip';
+    chip.textContent = ing;
+    chip.onclick = function() {
+      chip.classList.toggle('active');
+      ffSyncChipsToInput();
+      ffSearch();
+    };
+    wrap.appendChild(chip);
+  });
+}
+
+function ffSyncChipsToInput() {
+  var input = document.getElementById('ff-input');
+  if (!input) return;
+  // Collect all active chips
+  var active = [];
+  document.querySelectorAll('#ff-chips .ff-chip.active').forEach(function(c){
+    active.push(c.textContent);
+  });
+  // Collect manual input (items not matching any chip)
+  var chipNames = FF_PANTRY_CHIPS.map(function(s){ return s.toLowerCase(); });
+  var manual = input.value.split(',').map(function(s){ return s.trim(); })
+    .filter(function(s){ return s && chipNames.indexOf(s.toLowerCase()) === -1; });
+  // Combine
+  input.value = active.concat(manual).join(', ');
+}
+
+// ── Search & match ──────────────────────────────────────────────────
+function ffSearch() {
+  var input = document.getElementById('ff-input');
+  var val = input ? input.value : '';
+  ffAvailable = ffParseInput(val);
+  ffRenderResults();
+}
+
+function ffScoreRecipe(recipe) {
+  var matched = 0;
+  recipe.ing.forEach(function(ing) {
+    if (ffIngMatch(ffAvailable, ing)) matched++;
+  });
+  return { matched: matched, total: recipe.ing.length,
+           score: matched / (recipe.ing.length || 1) };
+}
+
+function ffRenderResults() {
+  var container = document.getElementById('ff-results');
+  if (!container) return;
+
+  if (ffAvailable.length === 0) {
+    container.innerHTML = '<div class="ff-empty"><span>🔍</span>Enter ingredients above to find matching meals</div>';
+    return;
+  }
+
+  // Score and filter
+  var scored = FF_RECIPES.map(function(r) {
+    var s = ffScoreRecipe(r);
+    return { recipe: r, matched: s.matched, total: s.total, score: s.score };
+  }).filter(function(item) {
+    if (ffActiveCat !== 'all' && item.recipe.c !== ffActiveCat) return false;
+    return item.matched > 0; // only show if at least 1 match
+  });
+
+  // Sort by score desc, then alpha
+  scored.sort(function(a, b) {
+    if (b.score !== a.score) return b.score - a.score;
+    return a.recipe.n.localeCompare(b.recipe.n);
+  });
+
+  if (scored.length === 0) {
+    var catLabel = ffActiveCat === 'all' ? '' : ' in this category';
+    container.innerHTML = '<div class="ff-no-match"><strong>No matches found' + catLabel + '.</strong><br>Try adding more ingredients or switch category.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  scored.forEach(function(item) {
+    container.appendChild(ffBuildCard(item));
+  });
+}
+
+function ffBuildCard(item) {
+  var r = item.recipe;
+  var pct = Math.round(item.score * 100);
+  var catLabel = FF_CATS.filter(function(c){ return c.k === r.c; })[0];
+  catLabel = catLabel ? catLabel.l : r.c;
+
+  // Missing ingredients
+  var missing = r.ing.filter(function(ing) {
+    return !ffIngMatch(ffAvailable, ing);
+  });
+
+  // Bar colour: green ≥75%, amber 40-74%, rust <40%
+  var barColour = pct >= 75 ? 'var(--green2)' : pct >= 40 ? 'var(--gold)' : 'var(--rust2)';
+
+  var card = document.createElement('div');
+  card.className = 'ff-rcard';
+
+  // Head
+  var head = document.createElement('div');
+  head.className = 'ff-rcard-head';
+  head.innerHTML =
+    '<span class="ff-emoji">' + r.e + '</span>' +
+    '<div class="ff-rcard-info">' +
+      '<div class="ff-rcard-name">' + r.n + '</div>' +
+      '<div class="ff-rcard-meta">' +
+        '<span class="ff-badge ff-badge-time">⏱ ' + r.t + ' min</span>' +
+        '<span class="ff-badge ff-badge-cat">' + catLabel + '</span>' +
+        (r.tags.indexOf('v') !== -1 ? '<span class="ff-badge ff-badge-v">vegetarian</span>' : '') +
+        (r.tags.indexOf('gf') !== -1 ? '<span class="ff-badge ff-badge-gf">GF</span>' : '') +
+        (r.tags.indexOf('hf') !== -1 ? '<span class="ff-badge ff-badge-hf">high protein</span>' : '') +
+      '</div>' +
+    '</div>' +
+    '<span class="ff-chevron">▼</span>';
+  head.onclick = function() {
+    card.classList.toggle('open');
+    body.classList.toggle('open');
+  };
+
+  // Match bar
+  var matchWrap = document.createElement('div');
+  matchWrap.className = 'ff-match-wrap';
+  matchWrap.innerHTML =
+    '<div class="ff-match-top">' +
+      '<span>You have ' + item.matched + ' of ' + item.total + ' ingredients</span>' +
+      '<span class="ff-match-pct">' + pct + '% match</span>' +
+    '</div>' +
+    '<div class="ff-bar-track"><div class="ff-bar-fill" style="width:' + pct + '%;background:' + barColour + '"></div></div>';
+
+  // Missing
+  var missingEl = document.createElement('div');
+  missingEl.className = 'ff-missing';
+  if (missing.length > 0) {
+    missingEl.innerHTML = 'Still need: <em>' + missing.join(', ') + '</em>';
+  } else {
+    missingEl.innerHTML = '✅ <strong style="color:var(--green)">You have everything!</strong>';
+  }
+
+  // Body (hidden until toggled)
+  var body = document.createElement('div');
+  body.className = 'ff-body';
+
+  // Ingredient pills
+  var ingTitle = document.createElement('div');
+  ingTitle.className = 'ff-body-title';
+  ingTitle.textContent = 'INGREDIENTS (serves ' + r.s + ')';
+  var ingGrid = document.createElement('div');
+  ingGrid.className = 'ff-ing-grid';
+  r.ing.forEach(function(ing) {
+    var have = ffIngMatch(ffAvailable, ing);
+    var pill = document.createElement('span');
+    pill.className = 'ff-ing ' + (have ? 'have' : 'need');
+    pill.textContent = (have ? '✓ ' : '✗ ') + ing;
+    ingGrid.appendChild(pill);
+  });
+
+  // Method
+  var methTitle = document.createElement('div');
+  methTitle.className = 'ff-body-title';
+  methTitle.style.marginTop = '.9rem';
+  methTitle.textContent = 'METHOD';
+  var methList = document.createElement('ol');
+  methList.className = 'ff-method';
+  r.steps.forEach(function(step, i) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="ff-step-num">' + (i+1) + '</span><span>' + step + '</span>';
+    methList.appendChild(li);
+  });
+
+  // Buttons
+  var btns = document.createElement('div');
+  btns.className = 'ff-card-btns';
+
+  if (missing.length > 0) {
+    var addBtn = document.createElement('button');
+    addBtn.className = 'ff-btn ff-btn-add';
+    addBtn.textContent = '➕ Add missing to shopping list';
+    addBtn.onclick = function(e) {
+      e.stopPropagation();
+      ffAddMissing(r.n, missing);
+    };
+    btns.appendChild(addBtn);
+  }
+
+  var waBtn = document.createElement('button');
+  waBtn.className = 'ff-btn ff-btn-wa';
+  waBtn.textContent = '📤 Share on WhatsApp';
+  waBtn.onclick = function(e) {
+    e.stopPropagation();
+    ffShareWhatsApp(r);
+  };
+  btns.appendChild(waBtn);
+
+  var aiBtn = document.createElement('button');
+  aiBtn.className = 'ff-btn';
+  aiBtn.textContent = '🤖 Ask Claude AI';
+  aiBtn.onclick = function(e) {
+    e.stopPropagation();
+    var prompt = encodeURIComponent('Give me a detailed recipe for ' + r.n + ' to serve ' + r.s + '. I have: ' + ffAvailable.join(', ') + '. Keep it simple and budget-friendly for a South African family.');
+    window.open('https://claude.ai/new?q=' + prompt, '_blank');
+  };
+  btns.appendChild(aiBtn);
+
+  body.appendChild(ingTitle);
+  body.appendChild(ingGrid);
+  body.appendChild(methTitle);
+  body.appendChild(methList);
+  body.appendChild(btns);
+
+  card.appendChild(head);
+  card.appendChild(matchWrap);
+  card.appendChild(missingEl);
+  card.appendChild(body);
+  return card;
+}
+
+// ── Add missing ingredients to shopping list ────────────────────────
+var FF_SHOP_EXTRAS_KEY = 'mealplan_ff_extras_v1';
+
+function ffAddMissing(recipeName, missing) {
+  var stored = [];
+  try { stored = JSON.parse(localStorage.getItem(FF_SHOP_EXTRAS_KEY)) || []; } catch(e){ stored=[]; }
+  missing.forEach(function(ing) {
+    if (stored.indexOf(ing) === -1) stored.push(ing);
+  });
+  localStorage.setItem(FF_SHOP_EXTRAS_KEY, JSON.stringify(stored));
+  ffShowToast('✓ ' + missing.length + ' item' + (missing.length > 1 ? 's' : '') + ' added to Shopping List');
+  // Inject into shopping page if visible
+  ffInjectExtrasIntoShop();
+}
+
+function ffInjectExtrasIntoShop() {
+  var stored = [];
+  try { stored = JSON.parse(localStorage.getItem(FF_SHOP_EXTRAS_KEY)) || []; } catch(e){ stored=[]; }
+  if (stored.length === 0) return;
+
+  // Try to find the shopping page currently in view or w1-shop
+  var shopPage = document.getElementById('shop') || document.getElementById('w2-shop');
+  if (!shopPage) return;
+
+  var existing = document.getElementById('ff-extras-card');
+  if (!existing) {
+    // Create a new card at top of shopping page
+    var card = document.createElement('div');
+    card.id = 'ff-extras-card';
+    card.className = 'shop-card';
+    card.style.cssText = 'border-left:3px solid var(--gold);margin-bottom:1.25rem';
+    card.innerHTML = '<div class="shop-card-header" onclick="document.getElementById(\'ff-extras-items\').classList.toggle(\'open\')" style="cursor:pointer">' +
+      '<span style="font-weight:600;font-size:13px;color:var(--gold)">🧑‍🍳 Chef\'s Shopping Additions</span>' +
+      '<button onclick="event.stopPropagation();ffClearExtras()" style="background:none;border:none;color:var(--ink4);font-size:11px;cursor:pointer;margin-left:auto">Clear all</button>' +
+      '</div>' +
+      '<div id="ff-extras-items" class="open" style="padding:.75rem 1rem"></div>';
+    shopPage.insertBefore(card, shopPage.firstChild);
+    existing = card;
+  }
+
+  var list = document.getElementById('ff-extras-items');
+  if (!list) return;
+  list.innerHTML = '';
+  stored.forEach(function(ing) {
+    var row = document.createElement('div');
+    row.style.cssText = 'padding:5px 0;font-size:13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center';
+    row.innerHTML = '<span>' + ing + '</span>' +
+      '<button onclick="ffRemoveExtra(\'' + ing.replace(/'/g,"\\'") + '\')" style="background:none;border:none;color:var(--ink4);cursor:pointer;font-size:15px;padding:0 4px">×</button>';
+    list.appendChild(row);
+  });
+}
+
+function ffRemoveExtra(ing) {
+  var stored = [];
+  try { stored = JSON.parse(localStorage.getItem(FF_SHOP_EXTRAS_KEY)) || []; } catch(e){ stored=[]; }
+  stored = stored.filter(function(s){ return s !== ing; });
+  localStorage.setItem(FF_SHOP_EXTRAS_KEY, JSON.stringify(stored));
+  ffInjectExtrasIntoShop();
+  if (stored.length === 0) {
+    var card = document.getElementById('ff-extras-card');
+    if (card) card.remove();
+  }
+}
+
+function ffClearExtras() {
+  localStorage.removeItem(FF_SHOP_EXTRAS_KEY);
+  var card = document.getElementById('ff-extras-card');
+  if (card) card.remove();
+}
+
+// ── WhatsApp share ──────────────────────────────────────────────────
+function ffShareWhatsApp(r) {
+  var msg = '🍽 *' + r.n + '*\n';
+  msg += '⏱ ' + r.t + ' min | Serves ' + r.s + '\n\n';
+  msg += '*Ingredients:*\n' + r.ing.map(function(i){ return '• ' + i; }).join('\n');
+  msg += '\n\n*Method:*\n' + r.steps.map(function(s,i){ return (i+1)+'. '+s; }).join('\n');
+  msg += '\n\n_From the Family Meal Plan app_';
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ── Toast ───────────────────────────────────────────────────────────
+function ffShowToast(msg) {
+  var t = document.getElementById('ff-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+
+// ── navTo override for 'chef' slug ──────────────────────────────────
+var _navToPreFF = navTo;
+navTo = function(slug, btn) {
+  var chefPage = document.getElementById('chef-page');
+  if (slug === 'chef') {
+    // Hide week blocks, show chef page
+    ['w1','w2','w3','w4'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('on');
+    });
+    if (chefPage) chefPage.classList.add('on');
+    document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); });
+    if (btn) btn.classList.add('on');
+    window.scrollTo({top:0, behavior:'smooth'});
+    // Inject any saved extras into the shop list
+    ffInjectExtrasIntoShop();
+  } else {
+    // Hide chef page, restore week block
+    if (chefPage) chefPage.classList.remove('on');
+    var wBlock = document.getElementById('w' + curWeek);
+    if (wBlock) wBlock.classList.add('on');
+    _navToPreFF(slug, btn);
+  }
+};
+
+// Also ensure switchWeek hides chef page
+var _switchWeekPreFF = switchWeek;
+switchWeek = function(n, btn) {
+  var chefPage = document.getElementById('chef-page');
+  if (chefPage) chefPage.classList.remove('on');
+  _switchWeekPreFF(n, btn);
+};
+
+// ── Init Fridge Finder ──────────────────────────────────────────────
+function initFridgeFinder() {
+  ffBuildCatFilters();
+  ffBuildChips();
+
+  // Allow pressing Enter to search
+  var input = document.getElementById('ff-input');
+  if (input) {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') ffSearch();
+    });
+  }
+
+  // Restore any saved shopping extras
+  ffInjectExtrasIntoShop();
+}
+document.addEventListener('DOMContentLoaded', initFridgeFinder);
 
 // ── PWA: Service Worker registration ──────────────────────────────────
 if('serviceWorker' in navigator){
