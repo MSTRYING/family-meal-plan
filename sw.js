@@ -1,10 +1,12 @@
-// Family Meal Plan — Service Worker v2
-// Caches the full app on first load so it works offline.
+// Family Meal Plan — Service Worker v3
+// Caches the full app shell (including split JS modules) on first load.
 
-var CACHE = 'meal-plan-v2';
+var CACHE = 'meal-plan-v3';
 var ASSETS = [
   '/family-meal-plan/',
-  '/family-meal-plan/index.html'
+  '/family-meal-plan/index.html',
+  '/family-meal-plan/ff-data.js',
+  '/family-meal-plan/ff-engine.js'
 ];
 
 // Install — pre-cache shell
