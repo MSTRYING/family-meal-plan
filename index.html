@@ -555,6 +555,21 @@ body{
 }
 .week-btn.on .wk-d{opacity:.9}
 .week-btn:hover:not(.on){color:var(--gold3);border-color:rgba(184,136,42,.6)}
+/* Share bar */
+.share-bar{
+  background:var(--mode-nav-bg);
+  border-bottom:1px solid rgba(184,136,42,.15);
+  padding:5px .75rem;display:flex;justify-content:flex-end;
+  transition:background .3s;
+}
+.share-week-btn{
+  background:none;border:1px solid rgba(37,211,102,.45);border-radius:20px;
+  color:#25D366;font-family:var(--sans);font-size:11px;font-weight:600;
+  padding:4px 12px;cursor:pointer;letter-spacing:.02em;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.share-week-btn:hover{background:#25D366;color:#fff;border-color:#25D366}
+
 /* ── THEME TOGGLE — fixed corner button ── */
 .theme-toggle{
   position:fixed;bottom:22px;right:16px;z-index:400;
@@ -954,6 +969,19 @@ body{
   .section-title-bar{border-color:#ddd!important}
   .chevron,.shop-card-header svg:last-child{display:none!important}
   @page{margin:1.5cm}
+
+  /* ── Print week plan mode ── */
+  body.print-plan .week-block.on{display:grid!important;grid-template-columns:repeat(3,1fr);gap:8px;padding:0!important}
+  body.print-plan .week-block.on .page{display:block!important;border:1px solid #ccc;border-radius:6px;padding:8px;break-inside:avoid}
+  body.print-plan .week-block.on .page .page-header{border-bottom:1px solid #eee;margin-bottom:6px;padding-bottom:4px}
+  body.print-plan .page-title{font-size:11pt!important;font-weight:700!important;margin:0!important}
+  body.print-plan .page-sub{display:none}
+  body.print-plan .rcard,.rcard-svg,.rcard-chips,.rcard-desc,.recipe-cols,.rcard-body{display:none!important}
+  body.print-plan .meal-block{margin-bottom:4px!important}
+  body.print-plan .meal-head{margin-bottom:0!important;gap:6px!important;align-items:flex-start}
+  body.print-plan .meal-head-name{font-size:9pt!important;line-height:1.3}
+  body.print-plan .type-pill{font-size:7pt!important;padding:2px 5px!important}
+  body.print-plan .swap-btn,.co-section,.shop-actions,.add-item-row,.ff-toast,.swap-banner,.swap-toast,.favs-page,.search-page,#chef-page{display:none!important}
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1006,6 +1034,25 @@ body{
   transition:all .15s;-webkit-tap-highlight-color:transparent;
 }
 .ff-cat-btn.on{background:var(--gold);border-color:var(--gold);color:#fff}
+
+/* Match slider */
+.ff-slider-row{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:1.25rem;background:var(--paper2);
+  border:1px solid var(--border2);border-radius:10px;
+  padding:10px 14px;
+}
+.ff-slider-label{
+  font-family:var(--sans);font-size:12px;font-weight:600;
+  color:var(--ink3);white-space:nowrap;flex-shrink:0;
+}
+.ff-slider-val{
+  font-family:var(--sans);font-size:12px;font-weight:700;
+  color:var(--gold);white-space:nowrap;flex-shrink:0;min-width:34px;text-align:right;
+}
+#ff-min-pct{
+  flex:1;accent-color:var(--gold);cursor:pointer;height:4px;
+}
 
 /* Results */
 .ff-results{display:grid;gap:1.25rem}
@@ -1112,6 +1159,97 @@ body{
 .ff-btn-wa{background:#25D366;color:#fff;border-color:#25D366}
 .ff-btn-wa:hover{background:#1da851;border-color:#1da851;color:#fff}
 
+/* ── Favourites Page ────────────────────────────────────────────────────── */
+.favs-page{
+  display:none;max-width:640px;margin:0 auto;padding:1.5rem 1rem 5rem;
+}
+.favs-page.on{display:block}
+.favs-card{
+  background:var(--paper2);border:1px solid var(--border2);border-radius:14px;
+  padding:1rem 1.1rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:12px;
+}
+.favs-emoji{font-size:2rem;line-height:1;flex-shrink:0;margin-top:2px}
+.favs-info{flex:1;min-width:0}
+.favs-name{font-family:var(--serif);font-size:1.05rem;color:var(--ink);margin-bottom:4px}
+.favs-meta{font-family:var(--sans);font-size:11.5px;color:var(--ink4);margin-bottom:6px}
+.favs-stars{font-size:14px;letter-spacing:1px}
+.favs-go{
+  background:none;border:1px solid var(--border2);border-radius:20px;
+  font-family:var(--sans);font-size:11px;font-weight:600;
+  color:var(--ink3);padding:4px 12px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0;margin-top:4px;
+}
+.favs-go:hover{background:var(--gold);border-color:var(--gold);color:#fff}
+.favs-empty{
+  text-align:center;padding:3rem 1rem;color:var(--ink4);
+  font-family:var(--serif);font-size:1.2rem;font-weight:300;
+}
+.favs-empty span{display:block;font-size:2.5rem;margin-bottom:.75rem}
+
+/* ── Shopping Carry-Over ────────────────────────────────────────────────── */
+.row-carryover{
+  background:none;border:none;cursor:pointer;
+  font-size:15px;padding:0 4px;flex-shrink:0;
+  opacity:0;transition:opacity .15s,color .15s;color:var(--ink4);
+  -webkit-tap-highlight-color:transparent;
+}
+@media(hover:hover){.check-row:hover .row-carryover{opacity:.65}}
+@media(hover:none){.row-carryover{opacity:.5}}
+.row-carryover:hover,.row-carryover:focus{opacity:1;color:var(--gold)}
+.co-section{
+  margin-bottom:1.25rem;border:1px dashed var(--gold);
+  border-radius:12px;overflow:hidden;background:rgba(184,136,42,.04);
+}
+.co-header{
+  padding:8px 14px;font-family:var(--sans);font-size:11.5px;font-weight:700;
+  color:var(--gold);letter-spacing:.05em;text-transform:uppercase;
+  border-bottom:1px dashed rgba(184,136,42,.35);
+}
+.co-badge{
+  font-family:var(--sans);font-size:10px;font-weight:600;
+  color:var(--gold);background:rgba(184,136,42,.12);
+  border:1px solid rgba(184,136,42,.25);border-radius:10px;
+  padding:2px 8px;flex-shrink:0;white-space:nowrap;
+}
+.co-del{margin-left:6px;opacity:.55!important}
+
+/* ── Meal Swap ──────────────────────────────────────────────────────────── */
+.swap-btn{
+  margin-left:auto;background:none;border:none;
+  font-size:17px;cursor:pointer;opacity:.32;padding:2px 8px;
+  border-radius:6px;transition:all .15s;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;color:var(--ink3);
+}
+.swap-btn:hover,.swap-btn:focus{opacity:1;background:rgba(184,136,42,.12);color:var(--gold)}
+.meal-block.swap-select .swap-btn{opacity:1;color:var(--gold)}
+.meal-block.swap-select{
+  outline:2px dashed var(--gold);outline-offset:4px;border-radius:10px;
+}
+.swap-banner{
+  position:fixed;bottom:76px;left:50%;transform:translateX(-50%);
+  background:var(--ink2);color:var(--paper);
+  padding:10px 18px;border-radius:24px;font-size:13px;font-family:var(--sans);
+  display:flex;align-items:center;gap:10px;
+  z-index:300;opacity:0;pointer-events:none;
+  transition:opacity .2s;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.28);
+}
+.swap-banner.on{opacity:1;pointer-events:auto}
+.swap-cancel-btn{
+  background:rgba(255,255,255,.18);border:none;color:var(--paper);
+  border-radius:12px;padding:3px 12px;font-size:12px;cursor:pointer;
+  font-family:var(--sans);font-weight:600;
+}
+.swap-toast{
+  position:fixed;bottom:76px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:var(--green);color:#fff;
+  padding:.55rem 1.4rem;border-radius:30px;
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  opacity:0;transition:opacity .25s,transform .25s;
+  z-index:400;pointer-events:none;white-space:nowrap;
+}
+.swap-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
 /* Toast */
 .ff-toast{
   position:fixed;bottom:80px;left:50%;
@@ -1158,6 +1296,8 @@ body{
     <button class="nav-btn" onclick="navTo('shop',this)">Shopping</button>
     <button class="nav-btn" onclick="navTo('nuts',this)">Nutrition</button>
     <button class="nav-btn" onclick="navTo('chef',this)">🧑‍🍳 Chef</button>
+    <button class="nav-btn" onclick="navTo('favs',this)">⭐ Favourites</button>
+    <button class="nav-btn" onclick="navTo('search',this)">🔍 Search</button>
   </div>
 </nav>
 
@@ -1166,6 +1306,10 @@ body{
   <button class="week-btn" onclick="switchWeek(2,this)"><span class="wk-n">W2</span><span class="wk-d">5 May</span></button>
   <button class="week-btn" onclick="switchWeek(3,this)"><span class="wk-n">W3</span><span class="wk-d">12 May</span></button>
   <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">19 May</span></button>
+</div>
+<div class="share-bar">
+  <button class="share-week-btn" onclick="printWeekPlan()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px">🖨️ Print plan</button>
+  <button class="share-week-btn" onclick="shareWeekWhatsApp()">📱 Share week on WhatsApp</button>
 </div>
 </div><!-- /sticky-top -->
 
@@ -4688,11 +4832,37 @@ body{
 
   <div class="ff-cat-filters" id="ff-cat-filters"></div>
 
+  <div class="ff-slider-row">
+    <span class="ff-slider-label">Min match:</span>
+    <input type="range" id="ff-min-pct" min="0" max="90" step="10" value="0" />
+    <span class="ff-slider-val" id="ff-min-pct-val">Any</span>
+  </div>
+
   <div id="ff-results" class="ff-results">
     <div class="ff-empty"><span>🔍</span>Enter ingredients above to find matching meals</div>
   </div>
 
   <div id="ff-toast" class="ff-toast">✓ Added to shopping list</div>
+</div>
+
+<div id="search-page" class="favs-page">
+  <div class="page-header">
+    <h2 class="page-title">🔍 Search Meals</h2>
+    <span class="page-sub">Find any meal across all 4 weeks</span>
+  </div>
+  <div class="ff-input-wrap" style="margin-bottom:1.25rem">
+    <input class="ff-input" id="meal-search-input" type="text" placeholder="e.g. chicken, pasta, curry…" autocomplete="off" />
+    <button class="ff-search-btn" onclick="runMealSearch()">Search</button>
+  </div>
+  <div id="meal-search-results"></div>
+</div>
+
+<div id="favs-page" class="favs-page">
+  <div class="page-header">
+    <h2 class="page-title">⭐ Cook Again</h2>
+    <span class="page-sub">Your 4 &amp; 5 star meals</span>
+  </div>
+  <div id="favs-list"></div>
 </div>
 
 </div><!-- /main -->
@@ -5034,6 +5204,75 @@ function shareShopList(pageId) {
   window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
 }
 
+// ── Shopping List Carry-Over ────────────────────────────────────────────────
+var CO_KEY = 'mealplan_carryover_v1';
+
+function _getCO() {
+  try { return JSON.parse(localStorage.getItem(CO_KEY) || '[]'); } catch(e) { return []; }
+}
+function _saveCO(arr) { localStorage.setItem(CO_KEY, JSON.stringify(arr)); }
+
+function _addCO(label) {
+  var list = _getCO();
+  if (list.indexOf(label) === -1) { list.push(label); _saveCO(list); }
+  _refreshCOSections();
+}
+function _removeCO(label) {
+  _saveCO(_getCO().filter(function(l){ return l !== label; }));
+  _refreshCOSections();
+}
+
+function _refreshCOSections() {
+  document.querySelectorAll('.co-section').forEach(function(s){ s.remove(); });
+  _injectCOSections();
+}
+
+function _injectCOSections() {
+  var items = _getCO();
+  ['shop','w2-shop','w3-shop','w4-shop'].forEach(function(pid) {
+    var page = document.getElementById(pid);
+    if (!page || !items.length) return;
+    var sec = document.createElement('div');
+    sec.className = 'co-section';
+    sec.innerHTML = '<div class="co-header">🔁 Carry-over — not bought yet</div>';
+    items.forEach(function(label) {
+      var row = document.createElement('div');
+      row.className = 'check-row';
+      row.innerHTML =
+        '<div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div>' +
+        '<span class="check-label">' + label + '</span>' +
+        '<span class="co-badge">carried over</span>';
+      row.addEventListener('click', function(e){
+        if (!e.target.closest('.row-del')) row.classList.toggle('done');
+      });
+      var del = document.createElement('button');
+      del.className = 'row-del co-del'; del.textContent = '×';
+      del.title = 'Remove from carry-over list';
+      del.addEventListener('click', function(e){ e.stopPropagation(); _removeCO(label); });
+      row.appendChild(del);
+      sec.appendChild(row);
+    });
+    var hdr = page.querySelector('.page-header');
+    if (hdr) hdr.parentNode.insertBefore(sec, hdr.nextSibling);
+    else page.insertBefore(sec, page.firstChild);
+  });
+}
+
+function _makeCarryOverBtn(label) {
+  var btn = document.createElement('button');
+  btn.className = 'row-carryover';
+  btn.title = 'Carry over — didn\'t buy this';
+  btn.textContent = '↗';
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    _addCO(label);
+    var orig = btn.textContent;
+    btn.textContent = '✓'; btn.style.color = 'var(--green)';
+    setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 1400);
+  });
+  return btn;
+}
+
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetShopList() {
   if (!confirm('Reset list? This restores removed items, clears custom items and saved prices.')) return;
@@ -5067,6 +5306,14 @@ function initShopList() {
       var id = catId + '-' + idx;
       row.setAttribute('data-id', id);
       row.appendChild(_makeDelBtn(row, catId, false));
+      // Carry-over button — insert before del button
+      var lbl = row.querySelector('.check-label');
+      if (lbl && lbl.textContent.trim()) {
+        var coBtn = _makeCarryOverBtn(lbl.textContent.trim());
+        var delRef = row.querySelector('.row-del');
+        if (delRef) row.insertBefore(coBtn, delRef);
+        else row.appendChild(coBtn);
+      }
       if (shopState.deleted.indexOf(id) > -1) { row.style.display = 'none'; return; }
       // Restore saved actual price/label
       if (shopState.prices[id]) _applyRowPrice(row, shopState.prices[id].label, shopState.prices[id].price);
@@ -5136,6 +5383,9 @@ function initShopList() {
 
     _updateCartTotal(cfg.id);
   });
+
+  // Inject any saved carry-over items
+  _injectCOSections();
 }
 
 document.querySelectorAll('.shop-items').forEach(function(el){ el.classList.add('open'); });
@@ -5335,6 +5585,295 @@ function _injectPantryBtn(row, itemId){
   else { row.appendChild(tag); row.appendChild(btn); }
   if(rcpState.pantry.indexOf(itemId)>-1) row.classList.add('pantry');
 }
+
+// ── Cross-week Search ──────────────────────────────────────────────────────
+function runMealSearch() {
+  var q = (document.getElementById('meal-search-input').value || '').toLowerCase().trim();
+  var out = document.getElementById('meal-search-results');
+  if (!out) return;
+  if (!q) { out.innerHTML = '<div class="favs-empty"><span>🔍</span>Type a meal name to search</div>'; return; }
+  var blocks = Array.from(document.querySelectorAll('.meal-block'));
+  var results = [];
+  blocks.forEach(function(block, idx) {
+    var nameEl = block.querySelector('.meal-head-name');
+    if (!nameEl) return;
+    var name = nameEl.textContent.trim();
+    if (name.toLowerCase().indexOf(q) === -1) return;
+    var pillEl = block.querySelector('.type-pill');
+    var page = block.closest('.page');
+    var pageId = page ? page.id : '';
+    var week = 1;
+    if (pageId.startsWith('w4-')) week = 4;
+    else if (pageId.startsWith('w3-')) week = 3;
+    else if (pageId.startsWith('w2-')) week = 2;
+    var slug = pageId.replace(/^w[234]-/, '');
+    var dayLabel = _PAGE_LABELS[pageId] || pageId;
+    var pillText = pillEl ? pillEl.textContent.trim() : '';
+    var mealEmoji = pillText === 'Breakfast' ? '🌅' : pillText === 'Lunch' ? '🥗' : '🍴';
+    results.push({ idx:idx, name:name, week:week, slug:slug, dayLabel:dayLabel, emoji:mealEmoji });
+  });
+  out.innerHTML = '';
+  if (!results.length) {
+    out.innerHTML = '<div class="favs-empty"><span>🔍</span>No meals found for "' + q + '"</div>';
+    return;
+  }
+  results.forEach(function(r) {
+    var card = document.createElement('div');
+    card.className = 'favs-card';
+    card.innerHTML =
+      '<div class="favs-emoji">' + r.emoji + '</div>' +
+      '<div class="favs-info">' +
+        '<div class="favs-name">' + r.name + '</div>' +
+        '<div class="favs-meta">Week ' + r.week + ' · ' + r.dayLabel + '</div>' +
+      '</div>';
+    var goBtn = document.createElement('button');
+    goBtn.className = 'favs-go'; goBtn.textContent = 'View →';
+    goBtn.addEventListener('click', function() {
+      if (r.week !== curWeek) {
+        var wBtn = document.querySelector('.week-btn:nth-child(' + r.week + ')');
+        switchWeek(r.week, wBtn || {classList:{add:function(){},remove:function(){}}});
+      }
+      var navBtn = document.querySelector('#main-nav .nav-btn[onclick*="\'' + r.slug + '\'"]');
+      navTo(r.slug, navBtn);
+      setTimeout(function(){
+        var target = document.querySelectorAll('.meal-block')[r.idx];
+        if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 350);
+    });
+    card.appendChild(goBtn);
+    out.appendChild(card);
+  });
+}
+
+var _navToPreSearch = navTo;
+navTo = function(slug, btn) {
+  var searchPage = document.getElementById('search-page');
+  if (slug === 'search') {
+    ['w1','w2','w3','w4'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('on'); });
+    var chefPage=document.getElementById('chef-page'); if(chefPage) chefPage.classList.remove('on');
+    var favsPage=document.getElementById('favs-page'); if(favsPage) favsPage.classList.remove('on');
+    if (searchPage) searchPage.classList.add('on');
+    document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); });
+    if (btn) btn.classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+    setTimeout(function(){
+      var si=document.getElementById('meal-search-input');
+      if (si) {
+        si.focus();
+        if (!si._searchWired) {
+          si._searchWired = true;
+          si.addEventListener('input', runMealSearch);
+          si.addEventListener('keydown', function(e){ if(e.key==='Enter') runMealSearch(); });
+        }
+      }
+    }, 150);
+  } else {
+    if (searchPage) searchPage.classList.remove('on');
+    var wBlock = document.getElementById('w' + curWeek);
+    if (wBlock) wBlock.classList.add('on');
+    _navToPreSearch(slug, btn);
+  }
+};
+
+var _switchWeekPreSearch = switchWeek;
+switchWeek = function(n, btn) {
+  var searchPage = document.getElementById('search-page');
+  if (searchPage) searchPage.classList.remove('on');
+  _switchWeekPreSearch(n, btn);
+};
+
+// ── Favourites Page ────────────────────────────────────────────────────────
+var _PAGE_LABELS = {
+  'mon':'Monday','tue':'Tuesday','wed':'Wednesday','thu':'Thursday',
+  'fri':'Friday','sat':'Saturday','sun':'Sunday',
+  'w2-mon':'Monday','w2-tue':'Tuesday','w2-wed':'Wednesday','w2-thu':'Thursday',
+  'w2-fri':'Friday','w2-sat':'Saturday','w2-sun':'Sunday',
+  'w3-mon':'Monday','w3-tue':'Tuesday','w3-wed':'Wednesday','w3-thu':'Thursday',
+  'w3-fri':'Friday','w3-sat':'Saturday','w3-sun':'Sunday',
+  'w4-mon':'Monday','w4-tue':'Tuesday','w4-wed':'Wednesday','w4-thu':'Thursday',
+  'w4-fri':'Friday','w4-sat':'Saturday','w4-sun':'Sunday'
+};
+
+function _buildFavsPage() {
+  var list = document.getElementById('favs-list');
+  if (!list) return;
+  _loadRcp();
+  var blocks = Array.from(document.querySelectorAll('.meal-block'));
+  var faves = [];
+  blocks.forEach(function(block, idx) {
+    var rating = rcpState.ratings[idx];
+    if (!rating || rating < 4) return;
+    var nameEl = block.querySelector('.meal-head-name');
+    var pillEl = block.querySelector('.type-pill');
+    var page   = block.closest('.page');
+    var pageId = page ? page.id : '';
+    var week = 1;
+    if (pageId.startsWith('w4-')) week = 4;
+    else if (pageId.startsWith('w3-')) week = 3;
+    else if (pageId.startsWith('w2-')) week = 2;
+    var slug = pageId.replace(/^w[234]-/, '');
+    var dayLabel  = _PAGE_LABELS[pageId] || pageId;
+    var pillText  = pillEl ? pillEl.textContent.trim() : '';
+    var mealEmoji = pillText === 'Breakfast' ? '🌅' : pillText === 'Lunch' ? '🥗' : '🍴';
+    faves.push({
+      idx: idx, name: nameEl ? nameEl.textContent.trim() : 'Meal',
+      rating: rating, week: week, slug: slug, dayLabel: dayLabel, emoji: mealEmoji
+    });
+  });
+
+  list.innerHTML = '';
+  if (!faves.length) {
+    list.innerHTML = '<div class="favs-empty"><span>⭐</span>Rate any meal 4 or 5 stars<br>and it will appear here.</div>';
+    return;
+  }
+  faves.sort(function(a,b){ return b.rating - a.rating || a.name.localeCompare(b.name); });
+  faves.forEach(function(f) {
+    var stars = '';
+    for (var i = 1; i <= 5; i++) stars += i <= f.rating ? '★' : '☆';
+    var card = document.createElement('div');
+    card.className = 'favs-card';
+    card.innerHTML =
+      '<div class="favs-emoji">' + f.emoji + '</div>' +
+      '<div class="favs-info">' +
+        '<div class="favs-name">' + f.name + '</div>' +
+        '<div class="favs-meta">Week ' + f.week + ' · ' + f.dayLabel + '</div>' +
+        '<div class="favs-stars" style="color:var(--gold)">' + stars + '</div>' +
+      '</div>';
+    var goBtn = document.createElement('button');
+    goBtn.className = 'favs-go';
+    goBtn.textContent = 'View →';
+    goBtn.addEventListener('click', function() {
+      if (f.week !== curWeek) {
+        var wBtn = document.querySelector('.week-btn:nth-child(' + f.week + ')');
+        switchWeek(f.week, wBtn || {classList:{add:function(){},remove:function(){}}});
+      }
+      var navBtn = document.querySelector('#main-nav .nav-btn[onclick*="\'' + f.slug + '\'"]');
+      navTo(f.slug, navBtn);
+      setTimeout(function(){
+        var target = document.querySelectorAll('.meal-block')[f.idx];
+        if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 350);
+    });
+    card.appendChild(goBtn);
+    list.appendChild(card);
+  });
+}
+
+var _navToPreFavs = navTo;
+navTo = function(slug, btn) {
+  var favsPage = document.getElementById('favs-page');
+  if (slug === 'favs') {
+    ['w1','w2','w3','w4'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('on'); });
+    var chefPage = document.getElementById('chef-page');
+    if (chefPage) chefPage.classList.remove('on');
+    var searchPage = document.getElementById('search-page');
+    if (searchPage) searchPage.classList.remove('on');
+    if (favsPage) { favsPage.classList.add('on'); _buildFavsPage(); }
+    document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); });
+    if (btn) btn.classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    if (favsPage) favsPage.classList.remove('on');
+    var wBlock = document.getElementById('w' + curWeek);
+    if (wBlock) wBlock.classList.add('on');
+    _navToPreFavs(slug, btn);
+  }
+};
+
+var _switchWeekPreFavs = switchWeek;
+switchWeek = function(n, btn) {
+  var favsPage = document.getElementById('favs-page');
+  if (favsPage) favsPage.classList.remove('on');
+  var searchPage = document.getElementById('search-page');
+  if (searchPage) searchPage.classList.remove('on');
+  _switchWeekPreFavs(n, btn);
+};
+
+// ── Meal Swap ──────────────────────────────────────────────────────────────
+var SWAP_KEY = 'mealplan_swaps_v1';
+var _swapPending = null;
+
+function _swapDomElements(a, b) {
+  var ph = document.createComment('sw');
+  a.parentNode.insertBefore(ph, a);
+  b.parentNode.insertBefore(a, b);
+  ph.parentNode.insertBefore(b, ph);
+  ph.parentNode.removeChild(ph);
+}
+
+function restoreSwaps() {
+  var saved;
+  try { saved = JSON.parse(localStorage.getItem(SWAP_KEY) || '[]'); } catch(e) { saved = []; }
+  saved.forEach(function(pair) {
+    var blocks = document.querySelectorAll('.meal-block');
+    var a = blocks[pair[0]], b = blocks[pair[1]];
+    if (a && b) _swapDomElements(a, b);
+  });
+}
+
+function _swapSavePair(idxA, idxB) {
+  var saved;
+  try { saved = JSON.parse(localStorage.getItem(SWAP_KEY) || '[]'); } catch(e) { saved = []; }
+  saved.push([idxA, idxB]);
+  localStorage.setItem(SWAP_KEY, JSON.stringify(saved));
+}
+
+function _swapSetPending(block) {
+  if (_swapPending === block) { _swapCancel(); return; }
+  if (_swapPending) {
+    var all = Array.from(document.querySelectorAll('.meal-block'));
+    var idxA = all.indexOf(_swapPending), idxB = all.indexOf(block);
+    _swapPending.classList.remove('swap-select');
+    _swapDomElements(_swapPending, block);
+    _swapSavePair(idxA, idxB);
+    _swapPending = null;
+    _swapBannerHide();
+    _showSwapToast();
+    return;
+  }
+  _swapPending = block;
+  block.classList.add('swap-select');
+  _swapBannerShow();
+}
+
+function _swapCancel() {
+  if (_swapPending) { _swapPending.classList.remove('swap-select'); _swapPending = null; }
+  _swapBannerHide();
+}
+
+function _swapBannerShow() {
+  var el = document.getElementById('swap-banner');
+  if (el) el.classList.add('on');
+}
+function _swapBannerHide() {
+  var el = document.getElementById('swap-banner');
+  if (el) el.classList.remove('on');
+}
+function _showSwapToast() {
+  var el = document.getElementById('swap-toast');
+  if (!el) return;
+  el.classList.add('on');
+  setTimeout(function(){ el.classList.remove('on'); }, 2200);
+}
+
+function initMealSwap() {
+  restoreSwaps();
+  document.querySelectorAll('.meal-block').forEach(function(block) {
+    var head = block.querySelector('.meal-head');
+    if (!head || head.querySelector('.swap-btn')) return;
+    var btn = document.createElement('button');
+    btn.className = 'swap-btn';
+    btn.title = 'Swap this meal with another';
+    btn.setAttribute('aria-label', 'Swap meal');
+    btn.textContent = '⇄';
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      _swapSetPending(block);
+    });
+    head.appendChild(btn);
+  });
+}
+document.addEventListener('DOMContentLoaded', initMealSwap);
 
 // ── Main recipe init ────────────────────────────────────────────────────
 function initRecipes(){
@@ -5942,6 +6481,40 @@ document.addEventListener('DOMContentLoaded', initLunchboxBuilders);
 // (protein chip state is restored inside _buildProteinTracker → refreshBar)
 
 
+// ── Print Week Plan ────────────────────────────────────────────────────────
+function printWeekPlan() {
+  document.body.classList.add('print-plan');
+  window.print();
+  document.body.classList.remove('print-plan');
+}
+
+// ── Whole-week WhatsApp Share ──────────────────────────────────────────────
+function shareWeekWhatsApp() {
+  var wk = curWeek;
+  var prefix = wk === 1 ? '' : 'w' + wk + '-';
+  var days = ['mon','tue','wed','thu','fri','sat','sun'];
+  var dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  var lines = ['🍽️ *Week ' + wk + ' Family Meal Plan*\n'];
+  days.forEach(function(day, i) {
+    var page = document.getElementById(prefix + day);
+    if (!page) return;
+    var blocks = page.querySelectorAll('.meal-block');
+    if (!blocks.length) return;
+    lines.push('*' + dayNames[i] + '*');
+    blocks.forEach(function(block) {
+      var typeEl = block.querySelector('.type-pill');
+      var nameEl = block.querySelector('.meal-head-name');
+      if (!nameEl) return;
+      var type = typeEl ? typeEl.textContent.trim() : '';
+      var emoji = type === 'Breakfast' ? '🌅' : type === 'Lunch' ? '🥗' : '🍴';
+      lines.push('  ' + emoji + ' ' + (type ? type + ': ' : '') + nameEl.textContent.trim());
+    });
+    lines.push('');
+  });
+  lines.push('_Planned with our family meal app_ 🌿');
+  window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
+}
+
 // (Fridge Finder loaded via ff-data.js + ff-engine.js below)
 
 
@@ -5958,6 +6531,13 @@ if('serviceWorker' in navigator){
 </script>
 <script src="ff-data.js" defer></script>
 <script src="ff-engine.js" defer></script>
+
+<!-- Swap UI -->
+<div class="swap-banner" id="swap-banner">
+  ⇄ Now tap the ⇄ on the meal you want to swap with
+  <button class="swap-cancel-btn" onclick="_swapCancel()">✕ Cancel</button>
+</div>
+<div class="swap-toast" id="swap-toast">✓ Meals swapped!</div>
 
 </body>
 </html>

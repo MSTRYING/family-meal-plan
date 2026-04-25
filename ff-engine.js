@@ -5,6 +5,7 @@
 // ── Fridge Finder state ─────────────────────────────────────────────
 var ffActiveCat = 'all';
 var ffAvailable = [];
+var ffMinPct    = 0;    // minimum match % (0 = show all with ≥1 match)
 
 // ── Build category filter bar ───────────────────────────────────────
 function ffBuildCatFilters() {
@@ -84,7 +85,7 @@ function ffRenderResults() {
     return { recipe: r, matched: s.matched, total: s.total, score: s.score };
   }).filter(function(item) {
     if (ffActiveCat !== 'all' && item.recipe.c !== ffActiveCat) return false;
-    return item.matched > 0; // only show if at least 1 match
+    return item.matched > 0 && Math.round(item.score * 100) >= ffMinPct;
   });
 
   // Sort by score desc, then alpha
@@ -132,9 +133,9 @@ function ffBuildCard(item) {
       '<div class="ff-rcard-meta">' +
         '<span class="ff-badge ff-badge-time">⏱ ' + r.t + ' min</span>' +
         '<span class="ff-badge ff-badge-cat">' + catLabel + '</span>' +
+        (r.p ? '<span class="ff-badge ff-badge-hf">💪 ~' + r.p + 'g protein</span>' : '') +
         (r.tags.indexOf('v') !== -1 ? '<span class="ff-badge ff-badge-v">vegetarian</span>' : '') +
         (r.tags.indexOf('gf') !== -1 ? '<span class="ff-badge ff-badge-gf">GF</span>' : '') +
-        (r.tags.indexOf('hf') !== -1 ? '<span class="ff-badge ff-badge-hf">high protein</span>' : '') +
       '</div>' +
     '</div>' +
     '<span class="ff-chevron">▼</span>';
@@ -399,6 +400,17 @@ function initFridgeFinder() {
     });
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { e.preventDefault(); ffSearch(); }
+    });
+  }
+
+  // Min-match slider
+  var slider = document.getElementById('ff-min-pct');
+  var sliderVal = document.getElementById('ff-min-pct-val');
+  if (slider && sliderVal) {
+    slider.addEventListener('input', function() {
+      ffMinPct = parseInt(slider.value, 10);
+      sliderVal.textContent = ffMinPct === 0 ? 'Any' : ffMinPct + '%+';
+      ffRenderResults();
     });
   }
 
