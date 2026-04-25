@@ -5984,6 +5984,17 @@ var FF_NORM_MAP = {
   'apple cider vinegar':'vinegar','white vinegar':'vinegar','red wine vinegar':'vinegar',
   'beef stock':'stock','chicken stock':'stock','vegetable stock':'stock',
   'soy sauce':'soy',
+  'snoek':'fish','kabeljou':'fish','hake':'fish','yellowtail':'fish',
+  'noodles':'pasta','egg noodles':'pasta','rice noodles':'pasta',
+  'avocado':'avocado','avo':'avocado',
+  'rashers':'bacon','streaky bacon':'bacon',
+  'peas':'peas','frozen peas':'peas','garden peas':'peas',
+  'broccoli florets':'broccoli',
+  'courgette':'courgette','baby marrow':'courgette',
+  'plain yoghurt':'yoghurt','greek yoghurt':'yoghurt','double cream yogurt':'yoghurt',
+  'bicarbonate of soda':'bicarb','baking soda':'bicarb',
+  'self-raising flour':'flour',
+  'tin fish':'tuna',
 };
 
 function ffNorm(s) {
@@ -6016,10 +6027,11 @@ var FF_CATS = [
 
 // ── Pantry quick-tap chips ──────────────────────────────────────────
 var FF_PANTRY_CHIPS = [
-  'eggs','onion','garlic','tomatoes','chicken','mince',
-  'rice','pasta','potatoes','cheese','milk','butter',
-  'flour','oil','lemon','spinach','canned tomatoes',
-  'beans','lentils','bread','cream','soy sauce','stock'
+  'eggs','onion','garlic','tomatoes','chicken','mince','steak',
+  'rice','pasta','potatoes','sweet potatoes','cheese','milk','butter',
+  'flour','oil','lemon','spinach','canned tomatoes','avocado',
+  'beans','lentils','bread','cream','soy sauce','stock',
+  'bacon','carrots','broccoli','bell pepper','peas','noodles'
 ];
 
 // ── Recipe bank (100 recipes) ───────────────────────────────────────
@@ -6769,27 +6781,22 @@ function ffBuildChips() {
     chip.textContent = ing;
     chip.onclick = function() {
       chip.classList.toggle('active');
-      ffSyncChipsToInput();
+      var input = document.getElementById('ff-input');
+      if (!input) return;
+      var items = input.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+      if (chip.classList.contains('active')) {
+        // Add ingredient if not already present (case-insensitive)
+        var already = items.some(function(s){ return s.toLowerCase() === ing.toLowerCase(); });
+        if (!already) items.push(ing);
+      } else {
+        // Remove this ingredient
+        items = items.filter(function(s){ return s.toLowerCase() !== ing.toLowerCase(); });
+      }
+      input.value = items.join(', ');
       ffSearch();
     };
     wrap.appendChild(chip);
   });
-}
-
-function ffSyncChipsToInput() {
-  var input = document.getElementById('ff-input');
-  if (!input) return;
-  // Collect all active chips
-  var active = [];
-  document.querySelectorAll('#ff-chips .ff-chip.active').forEach(function(c){
-    active.push(c.textContent);
-  });
-  // Collect manual input (items not matching any chip)
-  var chipNames = FF_PANTRY_CHIPS.map(function(s){ return s.toLowerCase(); });
-  var manual = input.value.split(',').map(function(s){ return s.trim(); })
-    .filter(function(s){ return s && chipNames.indexOf(s.toLowerCase()) === -1; });
-  // Combine
-  input.value = active.concat(manual).join(', ');
 }
 
 // ── Search & match ──────────────────────────────────────────────────
@@ -7000,23 +7007,31 @@ function ffInjectExtrasIntoShop() {
   try { stored = JSON.parse(localStorage.getItem(FF_SHOP_EXTRAS_KEY)) || []; } catch(e){ stored=[]; }
   if (stored.length === 0) return;
 
-  // Try to find the shopping page currently in view or w1-shop
-  var shopPage = document.getElementById('shop') || document.getElementById('w2-shop');
+  // Target current week's shopping page, fall back to w1
+  var weekShopId = curWeek === 1 ? 'shop' : 'w' + curWeek + '-shop';
+  var shopPage = document.getElementById(weekShopId) || document.getElementById('shop');
   if (!shopPage) return;
 
   var existing = document.getElementById('ff-extras-card');
   if (!existing) {
-    // Create a new card at top of shopping page
     var card = document.createElement('div');
     card.id = 'ff-extras-card';
     card.className = 'shop-card';
     card.style.cssText = 'border-left:3px solid var(--gold);margin-bottom:1.25rem';
-    card.innerHTML = '<div class="shop-card-header" onclick="document.getElementById(\'ff-extras-items\').classList.toggle(\'open\')" style="cursor:pointer">' +
-      '<span style="font-weight:600;font-size:13px;color:var(--gold)">🧑‍🍳 Chef\'s Shopping Additions</span>' +
-      '<button onclick="event.stopPropagation();ffClearExtras()" style="background:none;border:none;color:var(--ink4);font-size:11px;cursor:pointer;margin-left:auto">Clear all</button>' +
+    card.innerHTML =
+      '<div class="shop-card-header" onclick="document.getElementById(\'ff-extras-items\').classList.toggle(\'open\')" style="cursor:pointer;display:flex;align-items:center;gap:8px">' +
+        '<span style="font-weight:600;font-size:13px;color:var(--gold)">🧑‍🍳 Chef\'s Shopping Additions</span>' +
+        '<button onclick="event.stopPropagation();ffClearExtras()" style="background:none;border:none;color:var(--ink4);font-size:11px;cursor:pointer;margin-left:auto;padding:4px 8px">✕ Clear all</button>' +
       '</div>' +
       '<div id="ff-extras-items" class="open" style="padding:.75rem 1rem"></div>';
-    shopPage.insertBefore(card, shopPage.firstChild);
+
+    // Insert AFTER the page-header so it sits below the title
+    var hdr = shopPage.querySelector('.page-header');
+    if (hdr && hdr.nextSibling) {
+      shopPage.insertBefore(card, hdr.nextSibling);
+    } else {
+      shopPage.appendChild(card);
+    }
     existing = card;
   }
 
@@ -7025,9 +7040,16 @@ function ffInjectExtrasIntoShop() {
   list.innerHTML = '';
   stored.forEach(function(ing) {
     var row = document.createElement('div');
-    row.style.cssText = 'padding:5px 0;font-size:13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center';
-    row.innerHTML = '<span>' + ing + '</span>' +
-      '<button onclick="ffRemoveExtra(\'' + ing.replace(/'/g,"\\'") + '\')" style="background:none;border:none;color:var(--ink4);cursor:pointer;font-size:15px;padding:0 4px">×</button>';
+    row.style.cssText = 'padding:6px 0;font-size:13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center';
+    var label = document.createElement('span');
+    label.textContent = ing;
+    var removeBtn = document.createElement('button');
+    removeBtn.textContent = '×';
+    removeBtn.style.cssText = 'background:none;border:none;color:var(--ink4);cursor:pointer;font-size:18px;padding:0 4px;line-height:1';
+    removeBtn.setAttribute('data-ing', ing);
+    removeBtn.onclick = function(){ ffRemoveExtra(this.getAttribute('data-ing')); };
+    row.appendChild(label);
+    row.appendChild(removeBtn);
     list.appendChild(row);
   });
 }
@@ -7107,11 +7129,23 @@ function initFridgeFinder() {
   ffBuildCatFilters();
   ffBuildChips();
 
-  // Allow pressing Enter to search
+  // Live search as user types; also allow Enter
   var input = document.getElementById('ff-input');
   if (input) {
+    input.addEventListener('input', function() {
+      // Keep chips in sync with what's typed (deactivate chips removed from input)
+      var val = input.value.toLowerCase();
+      document.querySelectorAll('#ff-chips .ff-chip').forEach(function(chip) {
+        var chipLower = chip.textContent.toLowerCase();
+        // Only force-deactivate if the chip text is completely gone from input
+        if (chip.classList.contains('active') && val.indexOf(chipLower) === -1) {
+          chip.classList.remove('active');
+        }
+      });
+      ffSearch();
+    });
     input.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') ffSearch();
+      if (e.key === 'Enter') { e.preventDefault(); ffSearch(); }
     });
   }
 
