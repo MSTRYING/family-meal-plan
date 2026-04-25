@@ -4998,15 +4998,16 @@ function savePriceConfirm() {
   var newLbl   = box.querySelector('.pc-lbl').value.trim();
   var newPrice = box.querySelector('.pc-price').value.trim();
   var id       = _confirmTarget.getAttribute('data-id');
+  var pg       = _confirmTarget.closest ? _confirmTarget.closest('.page') : null; // capture before hide
   if (!shopState.prices) shopState.prices = {};
   if (newLbl || newPrice) {
     shopState.prices[id] = { label: newLbl, price: newPrice };
     _applyRowPrice(_confirmTarget, newLbl, newPrice);
     _saveShop();
-    var pg = _confirmTarget.closest ? _confirmTarget.closest('.page') : null;
     if (pg) _updateCartTotal(pg.id);
   }
   _hidePriceConfirm();
+  if (pg) _injectShopExtras(pg.id); // refresh budget summary with new actual price
 }
 
 function _applyRowPrice(row, label, price) {
@@ -5096,10 +5097,12 @@ function _makeCheckRow(catId, id, label, price, isCustom) {
   pr.className = 'check-price';
   pr.textContent = price || '';
 
+  var delBtn = _makeDelBtn(row, catId, isCustom);
   row.appendChild(box);
   row.appendChild(lbl);
   row.appendChild(pr);
-  row.appendChild(_makeDelBtn(row, catId, isCustom));
+  if (label) row.appendChild(_makeCarryOverBtn(label)); // carry-over button for all rows
+  row.appendChild(delBtn);
   return row;
 }
 
@@ -5255,7 +5258,8 @@ function _injectShopExtras(pageId) {
   }
 
   // ── Budget summary ──
-  if (page.querySelector('.budget-summary')) return; // already injected
+  var oldBS = page.querySelector('.budget-summary');
+  if (oldBS) oldBS.remove(); // remove stale summary so it refreshes with new prices
   var estTotal = 0;
   page.querySelectorAll('.check-price').forEach(function(el) {
     var m = el.textContent.match(/[\d,]+/);
@@ -5318,6 +5322,7 @@ function _injectCOSections() {
   ['shop','w2-shop','w3-shop','w4-shop'].forEach(function(pid) {
     var page = document.getElementById(pid);
     if (!page || !items.length) return;
+    if (page.querySelector('.co-section')) return; // already injected (use _refreshCOSections to rebuild)
     var sec = document.createElement('div');
     sec.className = 'co-section';
     sec.innerHTML = '<div class="co-header">🔁 Carry-over — not bought yet</div>';
@@ -5329,7 +5334,11 @@ function _injectCOSections() {
         '<span class="check-label">' + label + '</span>' +
         '<span class="co-badge">carried over</span>';
       row.addEventListener('click', function(e){
-        if (!e.target.closest('.row-del')) row.classList.toggle('done');
+        if (!e.target.closest('.row-del')) {
+          row.classList.toggle('done');
+          var pg = row.closest ? row.closest('.page') : null;
+          if (pg) _updateCartTotal(pg.id);
+        }
       });
       var del = document.createElement('button');
       del.className = 'row-del co-del'; del.textContent = '×';
@@ -6523,7 +6532,13 @@ function _buildWeekBlock(weekKey){
       cat.querySelectorAll('.check-row').forEach(function(row,idx){
         var id=catId+'-'+idx;
         row.setAttribute('data-id',id);
-        row.appendChild(_makeDelBtn(row,catId,false));
+        var delBtn=_makeDelBtn(row,catId,false);
+        var lbl=row.querySelector('.check-label');
+        if(lbl&&lbl.textContent.trim()){
+          var coBtn=_makeCarryOverBtn(lbl.textContent.trim());
+          row.appendChild(coBtn);
+        }
+        row.appendChild(delBtn);
         if(shopState.deleted.indexOf(id)>-1){ row.style.display='none'; return; }
         if(shopState.prices[id]) _applyRowPrice(row,shopState.prices[id].label,shopState.prices[id].price);
         if(shopState.checked.indexOf(id)>-1) row.classList.add('done');
@@ -6555,6 +6570,10 @@ function _buildWeekBlock(weekKey){
       listBar.after(bar);
       _updateCartTotal(weekId+'-shop');
     }
+    // Budget summary + scale notice (lazy build — inject now that page exists)
+    _injectShopExtras(weekId+'-shop');
+    // CO section (any items carried over before this week was built)
+    _injectCOSections();
   }
 
   // Apply recipe features to new meal blocks
