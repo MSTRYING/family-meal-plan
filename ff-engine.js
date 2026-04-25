@@ -350,11 +350,15 @@ var _navToPreFF = navTo;
 navTo = function(slug, btn) {
   var chefPage = document.getElementById('chef-page');
   if (slug === 'chef') {
-    // Hide week blocks, show chef page
+    // Hide week blocks and any other special pages, show chef page
     ['w1','w2','w3','w4'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.classList.remove('on');
     });
+    var favsPage = document.getElementById('favs-page');
+    if (favsPage) favsPage.classList.remove('on');
+    var searchPage = document.getElementById('search-page');
+    if (searchPage) searchPage.classList.remove('on');
     if (chefPage) chefPage.classList.add('on');
     document.querySelectorAll('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('on'); });
     if (btn) btn.classList.add('on');

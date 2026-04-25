@@ -269,6 +269,14 @@ body{
   padding:3px 10px;border-radius:30px;
   border:1px solid var(--border);
 }
+.chip-protein{
+  background:rgba(30,92,53,.10);color:var(--green);
+  border-color:rgba(30,92,53,.22);font-weight:600;
+}
+.chip-prep{
+  background:rgba(139,58,26,.08);color:var(--rust);
+  border-color:rgba(139,58,26,.2);font-weight:600;
+}
 
 .rcard-desc{
   font-family:var(--serif);
@@ -976,7 +984,7 @@ body{
   body.print-plan .week-block.on .page .page-header{border-bottom:1px solid #eee;margin-bottom:6px;padding-bottom:4px}
   body.print-plan .page-title{font-size:11pt!important;font-weight:700!important;margin:0!important}
   body.print-plan .page-sub{display:none}
-  body.print-plan .rcard,.rcard-svg,.rcard-chips,.rcard-desc,.recipe-cols,.rcard-body{display:none!important}
+  body.print-plan .rcard,body.print-plan .rcard-svg,body.print-plan .rcard-chips,body.print-plan .rcard-desc,body.print-plan .recipe-cols,body.print-plan .rcard-body{display:none!important}
   body.print-plan .meal-block{margin-bottom:4px!important}
   body.print-plan .meal-head{margin-bottom:0!important;gap:6px!important;align-items:flex-start}
   body.print-plan .meal-head-name{font-size:9pt!important;line-height:1.3}
@@ -1185,6 +1193,28 @@ body{
   font-family:var(--serif);font-size:1.2rem;font-weight:300;
 }
 .favs-empty span{display:block;font-size:2.5rem;margin-bottom:.75rem}
+
+/* ── Scale notice & Budget summary ─────────────────────────────────────── */
+.scale-notice{
+  background:rgba(184,136,42,.08);border:1px solid rgba(184,136,42,.3);
+  border-radius:10px;padding:9px 14px;margin-bottom:1rem;
+  font-family:var(--sans);font-size:12px;color:var(--ink3);
+}
+.scale-notice strong{color:var(--gold)}
+.budget-summary{
+  background:var(--paper2);border:1px solid var(--border2);border-radius:12px;
+  padding:1rem 1.1rem;margin-top:1.25rem;
+}
+.budget-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--sans);font-size:12.5px;color:var(--ink3);
+  padding:3px 0;border-bottom:1px dashed var(--border);
+}
+.budget-row:last-child{border-bottom:none;padding-top:6px;margin-top:3px}
+.budget-row strong{color:var(--ink);font-weight:600}
+.budget-row .bval{font-variant-numeric:tabular-nums;font-weight:500}
+.budget-row.saved .bval{color:var(--green)}
+.budget-row.over .bval{color:var(--rust)}
 
 /* ── Shopping Carry-Over ────────────────────────────────────────────────── */
 .row-carryover{
@@ -5204,6 +5234,62 @@ function shareShopList(pageId) {
   window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
 }
 
+// ── Scale notice & Budget summary ──────────────────────────────────────────
+function _injectShopExtras(pageId) {
+  var page = document.getElementById(pageId);
+  if (!page) return;
+
+  // ── Scaling notice ──
+  _loadRcp();
+  var scaledCount = Object.keys(rcpState.scalers).length;
+  if (scaledCount > 0) {
+    var notice = page.querySelector('.scale-notice');
+    if (!notice) {
+      notice = document.createElement('div');
+      notice.className = 'scale-notice';
+      notice.innerHTML = '⚖️ <strong>' + scaledCount + ' recipe' + (scaledCount > 1 ? 's' : '') +
+        ' scaled</strong> — check ingredient quantities in the list match your serving sizes.';
+      var hdr = page.querySelector('.page-header');
+      if (hdr) hdr.parentNode.insertBefore(notice, hdr.nextSibling);
+    }
+  }
+
+  // ── Budget summary ──
+  if (page.querySelector('.budget-summary')) return; // already injected
+  var estTotal = 0;
+  page.querySelectorAll('.check-price').forEach(function(el) {
+    var m = el.textContent.match(/[\d,]+/);
+    if (m) estTotal += parseInt(m[0].replace(/,/g, ''), 10);
+  });
+  var actTotal = 0;
+  Object.values(shopState.prices || {}).forEach(function(p) {
+    var m = (p.price || '').replace(/[^0-9.]/g, '');
+    if (m) actTotal += parseFloat(m);
+  });
+  var trackedCount = Object.keys(shopState.prices || {}).length;
+  if (estTotal === 0 && trackedCount === 0) return;
+  var diff = actTotal - estTotal;
+
+  var summary = document.createElement('div');
+  summary.className = 'budget-summary';
+  var trackedRow = trackedCount > 0
+    ? '<div class="budget-row"><span>Actual tracked (' + trackedCount + ' items)</span><span class="bval">R\u202f' + Math.round(actTotal).toLocaleString('en-ZA') + '</span></div>'
+    : '<div class="budget-row"><span>Actual tracked</span><span class="bval" style="color:var(--ink4)">tap ✓ to enter prices</span></div>';
+  var diffRow = trackedCount > 0
+    ? '<div class="budget-row ' + (diff < 0 ? 'saved' : diff > 0 ? 'over' : '') + '"><strong>' + (diff < 0 ? '💚 Under budget' : diff > 0 ? '🔴 Over budget' : '✅ On budget') + '</strong><span class="bval">' + (diff !== 0 ? (diff < 0 ? '-' : '+') + 'R\u202f' + Math.abs(Math.round(diff)).toLocaleString('en-ZA') : '') + '</span></div>'
+    : '';
+  summary.innerHTML =
+    '<div class="budget-row"><strong>💰 Budget tracker</strong></div>' +
+    '<div class="budget-row"><span>Estimated total</span><span class="bval">R\u202f' + Math.round(estTotal).toLocaleString('en-ZA') + '</span></div>' +
+    trackedRow + diffRow;
+
+  // Insert after the last .shop-card
+  var cards = page.querySelectorAll('.shop-card');
+  var last = cards[cards.length - 1];
+  if (last) last.parentNode.insertBefore(summary, last.nextSibling);
+  else page.appendChild(summary);
+}
+
 // ── Shopping List Carry-Over ────────────────────────────────────────────────
 var CO_KEY = 'mealplan_carryover_v1';
 
@@ -5383,6 +5469,9 @@ function initShopList() {
 
     _updateCartTotal(cfg.id);
   });
+
+  // Scale notice + budget summary
+  ['shop','w2-shop','w3-shop','w4-shop'].forEach(_injectShopExtras);
 
   // Inject any saved carry-over items
   _injectCOSections();
@@ -5875,12 +5964,75 @@ function initMealSwap() {
 }
 document.addEventListener('DOMContentLoaded', initMealSwap);
 
+// ── Protein estimate + prep reminders ──────────────────────────────────────
+function _estimateProtein(mealName) {
+  var n = mealName.toLowerCase();
+  if (/chicken breast|schnitzel|grilled chicken/.test(n)) return 38;
+  if (/chicken thigh|chicken drumstick|braai chicken|chicken.*rice|chicken.*pasta/.test(n)) return 30;
+  if (/chicken/.test(n)) return 26;
+  if (/steak|sirloin|rump/.test(n)) return 34;
+  if (/beef|mince|frikkadel|bobotie|bolognese|lasagne|burger|taco|burrito/.test(n)) return 28;
+  if (/lamb|mutton|potjie/.test(n)) return 30;
+  if (/pork|bacon|boerewors|wors|sausage|vetkoek/.test(n)) return 24;
+  if (/tuna|snoek|fish|salmon|sardine|seafood|paella/.test(n)) return 26;
+  if (/scrambled egg|poached egg|fried egg|omelette|egg.*benedict|shakshuka|frittata|egg.*fried/.test(n)) return 15;
+  if (/egg/.test(n)) return 12;
+  if (/yoghurt|milk tart/.test(n)) return 8;
+  if (/cheese/.test(n)) return 12;
+  if (/lentil|dhal/.test(n)) return 14;
+  if (/chickpea|butter bean|bean chilli|chilli/.test(n)) return 12;
+  if (/samp.*bean|bean.*samp/.test(n)) return 14;
+  if (/bean|tofu/.test(n)) return 10;
+  if (/pasta|noodle|pesto|tomato sauce/.test(n)) return 9;
+  if (/rice|fried rice/.test(n)) return 7;
+  if (/oat|porridge|pancake|waffle|french toast/.test(n)) return 8;
+  if (/pap|samp|maize/.test(n)) return 5;
+  if (/bread|toast|sandwich|wrap|bap/.test(n)) return 8;
+  if (/salad|smoothie/.test(n)) return 6;
+  if (/curry|stew|soup|casserole/.test(n)) return 10;
+  return 9;
+}
+
+function _injectProteinChip(block) {
+  var nameEl = block.querySelector('.meal-head-name');
+  var chipsEl = block.querySelector('.rcard-chips');
+  if (!nameEl || !chipsEl) return;
+  if (chipsEl.querySelector('.chip-protein')) return; // already injected
+  var g = _estimateProtein(nameEl.textContent);
+  var chip = document.createElement('span');
+  chip.className = 'chip chip-protein';
+  chip.title = 'Estimated protein per serving (approximate)';
+  chip.textContent = '💪 ~' + g + 'g protein';
+  chipsEl.appendChild(chip);
+}
+
+function _injectPrepChip(block) {
+  var chipsEl = block.querySelector('.rcard-chips');
+  if (!chipsEl || chipsEl.querySelector('.chip-prep')) return;
+  var ingText  = (block.querySelector('.ing-list')   || {textContent:''}).textContent.toLowerCase();
+  var stepText = (block.querySelector('.steps-list') || {textContent:''}).textContent.toLowerCase();
+  var full = ingText + ' ' + stepText;
+  var label = null;
+  if (/overnight|night before/.test(full))    label = '🕐 Prep night before';
+  else if (/marinate|marinade/.test(full))    label = '🕐 Marinate ahead';
+  else if (/soak|soaking/.test(full))         label = '🕐 Soak ahead';
+  else if (/defrost|thaw/.test(full))         label = '🕐 Defrost first';
+  if (!label) return;
+  var chip = document.createElement('span');
+  chip.className = 'chip chip-prep';
+  chip.title = 'This meal needs advance preparation — check steps';
+  chip.textContent = label;
+  chipsEl.insertBefore(chip, chipsEl.firstChild);
+}
+
 // ── Main recipe init ────────────────────────────────────────────────────
 function initRecipes(){
   _loadRcp();
   document.querySelectorAll('.meal-block').forEach(function(block,idx){
     var body = block.querySelector('.rcard-body'); if(!body) return;
     var id = 'meal-'+idx;
+    _injectProteinChip(block);
+    _injectPrepChip(block);
     _injectScaler(block,id);
     _injectRating(body,id);
     _injectNote(body,id);
@@ -6409,6 +6561,8 @@ function _buildWeekBlock(weekKey){
   container.querySelectorAll('.meal-block').forEach(function(block,idx){
     var body=block.querySelector('.rcard-body'); if(!body) return;
     var id=weekKey+'-meal-'+idx;
+    _injectProteinChip(block);
+    _injectPrepChip(block);
     _injectScaler(block,id);
     _injectRating(body,id);
     _injectNote(body,id);
@@ -6447,6 +6601,8 @@ switchWeek = function(n, btn){
 var _origNavTo = navTo;
 navTo = function(slug, btn){
   if(curWeek===3||curWeek===4){
+    // Global pages (not week-specific) — pass through the override chain
+    if(slug==='favs'||slug==='search'||slug==='chef'){ _origNavTo(slug,btn); return; }
     var weekKey='w'+curWeek;
     var pageId=weekKey+'-'+slug;
     document.getElementById(weekKey).querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
