@@ -4975,7 +4975,7 @@ var _confirmTarget = null; // currently open confirm row
 // Float checked rows to top, unchecked to bottom of their category container
 function _floatRowUp(row) {
   var c = row.parentNode; if (!c) return;
-  c.insertBefore(row, c.firstChild);
+  c.insertBefore(row, c.firstElementChild || null);
 }
 function _floatRowDown(row) {
   var c = row.parentNode; if (!c) return;
@@ -5023,7 +5023,10 @@ function _showPriceConfirm(row) {
   // insert box after row
   row.parentNode.insertBefore(box, row.nextSibling);
   box.style.display = 'flex';
-  box.querySelector('.pc-price').select();
+  // Only auto-select price field on touch devices — avoids focus/keyboard grab on desktop
+  if (!window.matchMedia('(hover:hover)').matches) {
+    box.querySelector('.pc-price').select();
+  }
 }
 
 function _hidePriceConfirm() {
@@ -5477,6 +5480,20 @@ function initShopList() {
     '<button class="pc-skip-btn" onclick="_hidePriceConfirm()">Skip</button>';
   document.body.appendChild(pcBox);
 
+  // Dismiss price-confirm box when clicking outside it, or pressing Escape
+  if (!window._pcBoxListeners) {
+    window._pcBoxListeners = true;
+    document.addEventListener('mousedown', function(e) {
+      var box = document.getElementById('pc-box');
+      if (box && box.style.display !== 'none' && !box.contains(e.target)) {
+        _hidePriceConfirm();
+      }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') _hidePriceConfirm();
+    });
+  }
+
   document.querySelectorAll('.shop-items').forEach(function(cat) {
     var catId = cat.id.replace('cat-','');
 
@@ -5513,7 +5530,7 @@ function initShopList() {
 
     // Sort: float all checked rows to the top of their category on page load
     Array.from(cat.querySelectorAll('.check-row.done')).forEach(function(r){
-      cat.insertBefore(r, cat.firstChild);
+      cat.insertBefore(r, cat.firstElementChild || null);
     });
   });
 
