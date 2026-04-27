@@ -1303,6 +1303,22 @@ body{
 /* theme toggle clears the basket bar when active */
 .has-sst .theme-toggle{bottom:calc(66px + env(safe-area-inset-bottom, 0px))!important}
 
+/* ── SAVE CONFIRMATION TOAST ── */
+.save-toast{
+  position:fixed;top:calc(68px + env(safe-area-inset-top, 0px));right:16px;
+  z-index:600;background:var(--green2);color:#fff;
+  padding:5px 13px;border-radius:20px;
+  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.04em;
+  opacity:0;transition:opacity .22s;pointer-events:none;white-space:nowrap;
+}
+.save-toast.show{opacity:1}
+.save-toast.error{background:var(--rust2)}
+/* last-saved line below cart counter */
+.cart-saved{
+  display:block;font-size:10px;color:var(--ink5);
+  font-family:var(--sans);margin-top:2px;letter-spacing:.01em;
+}
+
 </style>
 
 </head>
@@ -5120,8 +5136,43 @@ function _updatePriceDB(id, label, priceStr) {
   _savePriceDB();
 }
 
+// ── Save-confirmation helpers ──────────────────────────────────────────────
+var _saveToastTimer = null;
+function _showSaveToast(isError) {
+  var toast = document.getElementById('save-toast');
+  if (!toast) return;
+  if (isError) {
+    toast.textContent = '⚠️ Not saved — check browser storage';
+    toast.classList.add('error');
+  } else {
+    toast.textContent = '✓ Saved';
+    toast.classList.remove('error');
+  }
+  toast.classList.add('show');
+  if (_saveToastTimer) clearTimeout(_saveToastTimer);
+  _saveToastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
+}
+
+function _refreshSavedLabel(ts) {
+  var diff = ts ? Math.round((Date.now() - ts) / 1000) : -1;
+  var label = '';
+  if (diff < 0)     label = '';
+  else if (diff < 10)  label = 'Saved just now';
+  else if (diff < 60)  label = 'Saved ' + diff + 's ago';
+  else if (diff < 3600) label = 'Saved ' + Math.floor(diff/60) + 'm ago';
+  else label = 'Saved at ' + new Date(ts).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'});
+  document.querySelectorAll('.cart-saved').forEach(function(el){ el.textContent = label; });
+}
+
 function _saveShop() {
-  try { localStorage.setItem(SHOP_KEY, JSON.stringify(shopState)); } catch(e){}
+  shopState._savedAt = Date.now();
+  try {
+    localStorage.setItem(SHOP_KEY, JSON.stringify(shopState));
+    _showSaveToast(false);
+    _refreshSavedLabel(shopState._savedAt);
+  } catch(e) {
+    _showSaveToast(true);
+  }
 }
 function _loadShop() {
   try {
@@ -5131,6 +5182,10 @@ function _loadShop() {
     if (!shopState.added)   shopState.added   = {};
     if (!shopState.checked) shopState.checked = [];
     if (!shopState.prices)  shopState.prices  = {};
+    // Refresh "saved X ago" label after load (DOM may not be ready yet — use setTimeout)
+    if (shopState._savedAt) {
+      setTimeout(function(){ _refreshSavedLabel(shopState._savedAt); }, 0);
+    }
   } catch(e) { shopState = { deleted:[], added:{}, checked:[], prices:{} }; }
 }
 
@@ -5573,7 +5628,7 @@ function initShopList() {
     var ctr = document.createElement('div');
     ctr.className = 'cart-counter';
     ctr.id = 'cart-' + cfg.id;
-    ctr.innerHTML = '<span class="cart-amount">R\u202f0</span><span class="cart-tally">0\u202fof\u202f0 checked</span>';
+    ctr.innerHTML = '<span class="cart-amount">R\u202f0</span><span class="cart-tally">0\u202fof\u202f0 checked</span><span class="cart-saved"></span>';
 
     // Buttons
     var btns = document.createElement('div');
@@ -5623,6 +5678,20 @@ function initShopList() {
       '<span class="sst-tally">0 items</span>';
     document.body.appendChild(sst);
   }
+
+  // Create save-confirmation toast (shown briefly after every _saveShop call)
+  if (!document.getElementById('save-toast')) {
+    var saveToastEl = document.createElement('div');
+    saveToastEl.id = 'save-toast';
+    saveToastEl.className = 'save-toast';
+    saveToastEl.textContent = '✓ Saved';
+    document.body.appendChild(saveToastEl);
+  }
+
+  // Keep "saved X ago" label fresh while the page is open
+  setInterval(function(){
+    if (shopState._savedAt) _refreshSavedLabel(shopState._savedAt);
+  }, 30000);
 
   // Patch navTo + switchWeek so sticky bar updates on page change
   (function(){
