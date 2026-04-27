@@ -5423,15 +5423,22 @@ function _injectShopExtras(pageId) {
   if (oldBS) oldBS.remove(); // remove stale summary so it refreshes with new prices
   var estTotal = 0;
   page.querySelectorAll('.check-price').forEach(function(el) {
-    var m = el.textContent.match(/[\d,]+/);
-    if (m) estTotal += parseInt(m[0].replace(/,/g, ''), 10);
+    // Skip rows that were deleted (display:none)
+    var row = el.closest ? el.closest('.check-row') : null;
+    if (row && row.style.display === 'none') return;
+    // Use floating-point match so R58.50 isn't truncated to 58
+    var m = el.textContent.match(/[\d,]+(?:\.\d+)?/);
+    if (m) estTotal += parseFloat(m[0].replace(/,/g, ''));
   });
   var actTotal = 0;
-  Object.values(shopState.prices || {}).forEach(function(p) {
+  var trackedCount = 0;
+  Object.keys(shopState.prices || {}).forEach(function(id) {
+    // Only count prices for items that actually live on this page
+    if (!page.querySelector('[data-id="' + id + '"]')) return;
+    var p = shopState.prices[id];
     var m = (p.price || '').replace(/[^0-9.]/g, '');
-    if (m) actTotal += parseFloat(m);
+    if (m) { actTotal += parseFloat(m); trackedCount++; }
   });
-  var trackedCount = Object.keys(shopState.prices || {}).length;
   if (estTotal === 0 && trackedCount === 0) return;
   var diff = actTotal - estTotal;
 
@@ -5455,12 +5462,23 @@ function _injectShopExtras(pageId) {
 }
 
 // ── Shopping List Carry-Over ────────────────────────────────────────────────
-var CO_KEY = 'mealplan_carryover_v1';
+var CO_KEY         = 'mealplan_carryover_v1';
+var CO_CHECKED_KEY = 'mealplan_carryover_checked_v1';
 
 function _getCO() {
   try { return JSON.parse(localStorage.getItem(CO_KEY) || '[]'); } catch(e) { return []; }
 }
 function _saveCO(arr) { localStorage.setItem(CO_KEY, JSON.stringify(arr)); }
+
+function _getCOChecked() {
+  try { return JSON.parse(localStorage.getItem(CO_CHECKED_KEY) || '[]'); } catch(e) { return []; }
+}
+function _toggleCOChecked(label) {
+  var list = _getCOChecked();
+  var idx = list.indexOf(label);
+  if (idx === -1) list.push(label); else list.splice(idx, 1);
+  try { localStorage.setItem(CO_CHECKED_KEY, JSON.stringify(list)); } catch(e) {}
+}
 
 function _addCO(label) {
   var list = _getCO();
@@ -5469,6 +5487,9 @@ function _addCO(label) {
 }
 function _removeCO(label) {
   _saveCO(_getCO().filter(function(l){ return l !== label; }));
+  // Also clear its checked state so it doesn't linger in storage
+  var list = _getCOChecked().filter(function(l){ return l !== label; });
+  try { localStorage.setItem(CO_CHECKED_KEY, JSON.stringify(list)); } catch(e) {}
   _refreshCOSections();
 }
 
@@ -5486,9 +5507,11 @@ function _injectCOSections() {
     var sec = document.createElement('div');
     sec.className = 'co-section';
     sec.innerHTML = '<div class="co-header">🔁 Carry-over — not bought yet</div>';
+    var coChecked = _getCOChecked();
     items.forEach(function(label) {
       var row = document.createElement('div');
       row.className = 'check-row';
+      if (coChecked.indexOf(label) !== -1) row.classList.add('done');
       row.innerHTML =
         '<div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div>' +
         '<span class="check-label">' + label + '</span>' +
@@ -5496,6 +5519,7 @@ function _injectCOSections() {
       row.addEventListener('click', function(e){
         if (!e.target.closest('.row-del')) {
           row.classList.toggle('done');
+          _toggleCOChecked(label);   // persist checked state across reloads
           var pg = row.closest ? row.closest('.page') : null;
           if (pg) _updateCartTotal(pg.id);
         }
@@ -5527,6 +5551,16 @@ function _makeCarryOverBtn(label) {
   });
   return btn;
 }
+
+// ── Meal-swap stubs (UI scaffolded; full swap feature not yet implemented) ──
+function _swapCancel() {
+  var banner = document.getElementById('swap-banner');
+  if (banner) banner.classList.remove('on');
+  var toast = document.getElementById('swap-toast');
+  if (toast) toast.classList.remove('on');
+  document.querySelectorAll('.meal-block.swap-select').forEach(function(b){ b.classList.remove('swap-select'); });
+}
+function _swapStart() { /* placeholder — swap feature not yet implemented */ }
 
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetShopList() {
