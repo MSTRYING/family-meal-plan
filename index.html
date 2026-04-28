@@ -5740,6 +5740,219 @@ document.querySelectorAll('.shop-items').forEach(function(el){ el.classList.add(
 document.querySelectorAll('.chevron').forEach(function(el){ el.classList.add('open'); });
 document.addEventListener('DOMContentLoaded', initShopList);
 
+// ── Recipe-scaler state stubs (prevents _injectShopExtras crash) ──────────
+// No recipe-scaling feature yet — stubs keep the budget summary working.
+var RCP_KEY  = 'mealplan_rcp_v1';
+var rcpState = { scalers: {} };
+function _loadRcp() {
+  try {
+    var r = localStorage.getItem(RCP_KEY);
+    if (r) rcpState = JSON.parse(r);
+  } catch(e) {}
+  if (!rcpState || typeof rcpState.scalers !== 'object') rcpState = { scalers: {} };
+}
+
+// ── Print week plan ────────────────────────────────────────────────────────
+// body.print-plan CSS hides recipe cards; only meal names print.
+function printWeekPlan() {
+  document.body.classList.add('print-plan');
+  window.print();
+  setTimeout(function(){ document.body.classList.remove('print-plan'); }, 600);
+}
+
+// ── Share week on WhatsApp ─────────────────────────────────────────────────
+function shareWeekWhatsApp() {
+  var days  = ['mon','tue','wed','thu','fri','sat','sun'];
+  var names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  var lines = ['🍽️ *Week ' + curWeek + ' Meal Plan*'];
+  days.forEach(function(d, i) {
+    var id   = curWeek === 1 ? d : 'w' + curWeek + '-' + d;
+    var page = document.getElementById(id);
+    if (!page) return;
+    var meals = [];
+    page.querySelectorAll('.meal-block').forEach(function(mb) {
+      var pill = mb.querySelector('.type-pill');
+      var name = mb.querySelector('.meal-head-name');
+      if (name) meals.push('• ' + (pill ? pill.textContent.trim() + ': ' : '') + name.textContent.trim());
+    });
+    if (meals.length) lines.push('*' + names[i] + '*\n' + meals.join('\n'));
+  });
+  var text = lines.join('\n\n');
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+// ── Meal ratings & Favourites ──────────────────────────────────────────────
+var RATINGS_KEY = 'mealplan_ratings_v1';
+var _ratings    = {};
+
+function _loadRatings() {
+  try { var r = localStorage.getItem(RATINGS_KEY); if (r) _ratings = JSON.parse(r); } catch(e) { _ratings = {}; }
+}
+function _saveRatings() {
+  try { localStorage.setItem(RATINGS_KEY, JSON.stringify(_ratings)); } catch(e) {}
+}
+
+// Stable ID from meal name (slug)
+function _mealId(mb) {
+  var n = mb.querySelector('.meal-head-name');
+  return n ? n.textContent.trim().toLowerCase().replace(/[\s\W]+/g, '-').replace(/^-|-$/g, '') : null;
+}
+
+// Toggle a 👍/👎 rating; second tap on same button removes the rating.
+function rateMeal(btn, up) {
+  var mb = btn.closest ? btn.closest('.meal-block') : null;
+  if (!mb) return;
+  var id = _mealId(mb);
+  if (!id) return;
+  _loadRatings();
+  var cur = _ratings[id] ? _ratings[id].v : 0;
+  if (cur === (up ? 1 : -1)) {
+    delete _ratings[id]; // second tap = toggle off
+  } else {
+    var pill    = mb.querySelector('.type-pill');
+    var page    = mb.closest ? mb.closest('.page') : null;
+    var titleEl = page ? page.querySelector('.page-title') : null;
+    _ratings[id] = {
+      v    : up ? 1 : -1,
+      name : mb.querySelector('.meal-head-name').textContent.trim(),
+      type : pill ? pill.textContent.trim() : '',
+      day  : titleEl ? titleEl.textContent.trim() : '',
+      week : curWeek
+    };
+  }
+  _saveRatings();
+  _refreshRatingUI(mb);
+  // Refresh favourites list if it's currently visible
+  var favPg = document.getElementById('favs-page');
+  if (favPg && favPg.classList.contains('on')) _renderFavs();
+}
+
+function _refreshRatingUI(mb) {
+  var id  = _mealId(mb);
+  var r   = id ? _ratings[id] : null;
+  var upB = mb.querySelector('.rating-btn.up');
+  var dnB = mb.querySelector('.rating-btn.down');
+  var lbl = mb.querySelector('.rating-label');
+  if (upB) upB.classList.toggle('active', !!(r && r.v === 1));
+  if (dnB) dnB.classList.toggle('active', !!(r && r.v === -1));
+  if (lbl) lbl.textContent = r ? (r.v === 1 ? 'Cook again! ✨' : 'Skip next time') : '';
+}
+
+// Append 👍/👎 row into each recipe card body (runs once per meal-block)
+function _injectRatingRow(mb) {
+  if (mb.querySelector('.recipe-footer')) return; // already done
+  var body = mb.querySelector('.rcard-body');
+  if (!body) return;
+  var row = document.createElement('div');
+  row.className = 'recipe-footer';
+  row.innerHTML =
+    '<div class="rating-btns">' +
+      '<button class="rating-btn up" onclick="rateMeal(this,true)" aria-label="Cook again">👍 Cook again</button>' +
+      '<button class="rating-btn down" onclick="rateMeal(this,false)" aria-label="Skip next time">👎 Skip</button>' +
+    '</div>' +
+    '<span class="rating-label"></span>';
+  body.appendChild(row);
+  _refreshRatingUI(mb);
+}
+
+// Render the Favourites page list from saved ratings
+function _renderFavs() {
+  _loadRatings();
+  var list   = document.getElementById('favs-list');
+  if (!list) return;
+  var liked  = Object.keys(_ratings).filter(function(k){ return _ratings[k].v === 1; });
+  if (!liked.length) {
+    list.innerHTML = '<p style="text-align:center;color:var(--ink4);font-family:var(--sans);padding:2rem 1rem">' +
+      'No favourites yet — tap 👍 on any recipe to save it here.</p>';
+    return;
+  }
+  list.innerHTML = liked.map(function(k) {
+    var r = _ratings[k];
+    return '<div class="favs-card">' +
+      '<div class="favs-emoji">⭐</div>' +
+      '<div class="favs-info">' +
+        '<div class="favs-name">' + r.name + '</div>' +
+        '<div class="favs-meta">' + r.type +
+          (r.day  ? ' · ' + r.day  : '') +
+          (r.week ? ' · Week ' + r.week : '') +
+        '</div>' +
+        '<div class="favs-stars">⭐ Cook again</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function initRatings() {
+  _loadRatings();
+  document.querySelectorAll('.meal-block').forEach(_injectRatingRow);
+  // Wrap navTo so favourites list refreshes whenever the user visits the page
+  var _prevNav = navTo;
+  navTo = function(slug, btn) {
+    _prevNav(slug, btn);
+    if (slug === 'favs') _renderFavs();
+  };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initRatings();
+  // Live search on the Search page
+  var inp = document.getElementById('meal-search-input');
+  if (inp) {
+    inp.addEventListener('input',   function(){ _execSearch(inp.value.trim()); });
+    inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') _execSearch(inp.value.trim()); });
+  }
+});
+
+// ── Meal search ────────────────────────────────────────────────────────────
+function runMealSearch() {
+  var inp = document.getElementById('meal-search-input');
+  _execSearch(inp ? inp.value.trim() : '');
+}
+
+function _execSearch(q) {
+  var results = document.getElementById('meal-search-results');
+  if (!results) return;
+  if (!q) { results.innerHTML = ''; return; }
+  var term  = q.toLowerCase();
+  var found = [];
+  document.querySelectorAll('.meal-block').forEach(function(mb) {
+    var nameEl = mb.querySelector('.meal-head-name');
+    var descEl = mb.querySelector('.rcard-desc');
+    var pillEl = mb.querySelector('.type-pill');
+    var name   = nameEl ? nameEl.textContent : '';
+    var desc   = descEl ? descEl.textContent : '';
+    var pill   = pillEl ? pillEl.textContent : '';
+    if ((name + ' ' + desc + ' ' + pill).toLowerCase().indexOf(term) === -1) return;
+    var page   = mb.closest ? mb.closest('.page') : null;
+    var wkBlk  = mb.closest ? mb.closest('.week-block') : null;
+    var wkNum  = wkBlk ? ({'w1':1,'w2':2,'w3':3,'w4':4}[wkBlk.id] || '?') : '?';
+    var dayEl  = page ? page.querySelector('.page-title') : null;
+    found.push({
+      name : name.trim(),
+      type : pill.trim(),
+      day  : dayEl ? dayEl.textContent.trim() : '',
+      week : wkNum
+    });
+  });
+  if (!found.length) {
+    results.innerHTML = '<p style="text-align:center;color:var(--ink4);font-family:var(--sans);padding:2rem 1rem">' +
+      'No meals match “' + q + '” — try a different keyword.</p>';
+    return;
+  }
+  results.innerHTML = found.map(function(f) {
+    return '<div class="favs-card">' +
+      '<div class="favs-emoji">🔍</div>' +
+      '<div class="favs-info">' +
+        '<div class="favs-name">' + f.name + '</div>' +
+        '<div class="favs-meta">' + f.type +
+          (f.day  ? ' · ' + f.day  : '') +
+          ' · Week ' + f.week +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 
 // ── PWA: Service Worker registration ──────────────────────────────────
 if('serviceWorker' in navigator){
