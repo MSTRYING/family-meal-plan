@@ -979,7 +979,7 @@ body{
   body.print-plan .meal-head{margin-bottom:0!important;gap:6px!important;align-items:flex-start}
   body.print-plan .meal-head-name{font-size:9pt!important;line-height:1.3}
   body.print-plan .type-pill{font-size:7pt!important;padding:2px 5px!important}
-  body.print-plan .swap-btn,.co-section,.shop-actions,.add-item-row,.ff-toast,.swap-banner,.swap-toast,.favs-page,.search-page,#chef-page,.offline-bar,.pwa-prompt{display:none!important}
+  body.print-plan .swap-btn,.co-section,.shop-actions,.add-item-row,.ff-toast,.swap-banner,.swap-toast,.favs-page,.search-page,#chef-page,.offline-bar,.pwa-prompt,.update-bar{display:none!important}
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1340,6 +1340,26 @@ body{
   font-size:16px;cursor:pointer;padding:0 2px;line-height:1;
 }
 
+/* ── APP UPDATE BAR ── */
+.update-bar{
+  position:fixed;top:0;left:0;right:0;z-index:750;
+  background:var(--green2);color:#fff;
+  font-family:var(--sans);font-size:12px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:7px 1rem;
+  transform:translateY(-100%);transition:transform .25s ease;
+}
+.update-bar.on{transform:translateY(0)}
+.update-bar-btn{
+  background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);
+  border-radius:12px;padding:3px 12px;font-family:var(--sans);
+  font-size:11px;font-weight:700;color:#fff;cursor:pointer;white-space:nowrap;
+}
+.update-dismiss{
+  background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:18px;cursor:pointer;padding:0 4px;line-height:1;
+}
+
 /* ── SAVE CONFIRMATION TOAST ── */
 .save-toast{
   position:fixed;top:calc(68px + env(safe-area-inset-top, 0px));right:16px;
@@ -1403,8 +1423,9 @@ body{
   <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">19 May</span></button>
 </div>
 <div class="share-bar">
-  <button class="share-week-btn" onclick="printWeekPlan()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px">🖨️ Print plan</button>
-  <button class="share-week-btn" onclick="shareWeekWhatsApp()">📱 Share week on WhatsApp</button>
+  <button class="share-week-btn" onclick="checkForUpdate()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px" id="update-check-btn">⟳ Update</button>
+  <button class="share-week-btn" onclick="printWeekPlan()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px">🖨️ Print</button>
+  <button class="share-week-btn" onclick="shareWeekWhatsApp()">📱 Share on WhatsApp</button>
 </div>
 </div><!-- /sticky-top -->
 
@@ -6103,14 +6124,89 @@ function _dismissPWA() {
   try { localStorage.setItem('mealplan_pwa_dismissed', '1'); } catch(e) {}
 }
 
-// ── PWA: Service Worker registration ──────────────────────────────────
-if('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('sw.js').then(function(reg){
+// ── PWA: Service Worker + automatic update detection ──────────────────────
+// How it works:
+//   The SW has skipWaiting() so new versions activate immediately.
+//   We listen for controllerchange — that fires the moment the new SW takes
+//   over — and show a non-intrusive "New version ready" bar at the top.
+//   The manual "⟳ Update" button calls reg.update() to force an immediate
+//   fetch check instead of waiting for the browser's 24-hour cycle.
+var _swReg = null;
+// True if the page already had an active SW on load (i.e. not first install)
+var _hadSWCtrl = 'serviceWorker' in navigator && !!navigator.serviceWorker.controller;
+
+function _showUpdateBar(msg) {
+  var bar = document.getElementById('update-bar');
+  if (!bar) return;
+  bar.querySelector('.update-msg').textContent = msg || '✨ New version ready';
+  bar.classList.add('on');
+}
+function _hideUpdateBar() {
+  var bar = document.getElementById('update-bar');
+  if (bar) bar.classList.remove('on');
+}
+function _reloadApp() { window.location.reload(); }
+
+function checkForUpdate() {
+  var btn = document.getElementById('update-check-btn');
+  if (btn) { btn.textContent = '⟳ Checking…'; btn.disabled = true; }
+  _showUpdateBar('🔄 Checking for updates…');
+  if (!_swReg) {
+    setTimeout(function() {
+      _hideUpdateBar();
+      if (btn) { btn.textContent = '⟳ Update'; btn.disabled = false; }
+    }, 2000);
+    return;
+  }
+  _swReg.update().then(function() {
+    // Give the SW 5 s to download + activate. If controllerchange fires first,
+    // the bar message will already have been updated to "New version ready".
+    // If nothing happens by 5 s, we're already on the latest version.
+    setTimeout(function() {
+      if (btn) { btn.textContent = '⟳ Update'; btn.disabled = false; }
+      var bar  = document.getElementById('update-bar');
+      var msg  = bar ? bar.querySelector('.update-msg') : null;
+      if (msg && msg.textContent.includes('Checking')) {
+        _hideUpdateBar();
+        // Show "up to date" via the existing save-toast element
+        var t = document.getElementById('save-toast');
+        if (t) {
+          var prev = t.textContent;
+          t.textContent = '✓ Already up to date';
+          t.style.opacity = '1';
+          setTimeout(function() { t.style.opacity = ''; t.textContent = prev; }, 2500);
+        }
+      }
+    }, 5000);
+  }).catch(function() {
+    if (btn) { btn.textContent = '⟳ Update'; btn.disabled = false; }
+    _hideUpdateBar();
+  });
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      _swReg = reg;
       console.log('[SW] registered, scope:', reg.scope);
-    }).catch(function(err){
+    }).catch(function(err) {
       console.warn('[SW] registration failed:', err);
     });
+  });
+
+  // controllerchange fires when a new SW takes control of this page.
+  // With skipWaiting() in the SW this happens immediately after install.
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (!_hadSWCtrl) {
+      // Very first install — SW just came alive for the first time.
+      // No old version was replaced; no need to bother the user.
+      _hadSWCtrl = true;
+      return;
+    }
+    // A genuine update just activated — let the user decide when to reload.
+    _showUpdateBar('✨ App updated — tap Reload to get the new version');
+    var btn = document.getElementById('update-check-btn');
+    if (btn) { btn.textContent = '⟳ Update'; btn.disabled = false; }
   });
 }
 </script>
@@ -6123,6 +6219,13 @@ if('serviceWorker' in navigator){
   <button class="swap-cancel-btn" onclick="_swapCancel()">✕ Cancel</button>
 </div>
 <div class="swap-toast" id="swap-toast">✓ Meals swapped!</div>
+
+<!-- App update bar (shown when new SW activates) -->
+<div class="update-bar" id="update-bar">
+  <span class="update-msg">✨ App updated — tap Reload to get the new version</span>
+  <button class="update-bar-btn" onclick="_reloadApp()">Reload →</button>
+  <button class="update-dismiss" onclick="_hideUpdateBar()" aria-label="Dismiss">×</button>
+</div>
 
 <!-- Offline indicator -->
 <div class="offline-bar" id="offline-bar">📡 You're offline — the app still works, prices just won't update</div>
