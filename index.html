@@ -6173,8 +6173,9 @@ function checkForUpdate() {
         if (t) {
           var prev = t.textContent;
           t.textContent = '✓ Already up to date';
-          t.style.opacity = '1';
-          setTimeout(function() { t.style.opacity = ''; t.textContent = prev; }, 2500);
+          t.classList.add('show');
+          if (_saveToastTimer) clearTimeout(_saveToastTimer);
+          _saveToastTimer = setTimeout(function() { t.classList.remove('show'); t.textContent = prev; }, 2500);
         }
       }
     }, 5000);
