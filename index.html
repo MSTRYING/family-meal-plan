@@ -236,13 +236,12 @@ body{
 
 /* ── RECIPE CARD ── */
 .rcard{
-  transition:background .3s,box-shadow .3s;
   background:var(--paper2);
   border:1px solid var(--border2);
   border-radius:var(--r);
   overflow:hidden;
   box-shadow:var(--shadow);
-  transition:box-shadow .3s,transform .3s;
+  transition:background .3s,box-shadow .3s,transform .3s;
 }
 @media(hover:hover){
   .rcard:hover{box-shadow:var(--shadow2);transform:translateY(-2px)}
@@ -644,6 +643,38 @@ body{
 [data-theme="dark"] .divider-rule{border-color:var(--mode-border2)}
 [data-theme="dark"] .recipe-cols{border-color:var(--mode-border2)}
 [data-theme="dark"] .rcard-svg rect:first-child{fill:#1A120A !important}
+
+/* ── DARK MODE: type pills — light text on dark cards ── */
+[data-theme="dark"] .tp-b{background:rgba(30,92,53,.22);color:var(--green3);border-color:rgba(30,92,53,.35)}
+[data-theme="dark"] .tp-l{background:rgba(30,58,107,.22);color:#7fa8e8;border-color:rgba(30,58,107,.35)}
+[data-theme="dark"] .tp-d{background:rgba(139,58,26,.22);color:var(--rust3);border-color:rgba(139,58,26,.35)}
+
+/* ── DARK MODE: nutrition badges ── */
+[data-theme="dark"] .nb-green{background:rgba(30,92,53,.22);color:var(--green3);border-color:rgba(30,92,53,.35)}
+[data-theme="dark"] .nb-amber{background:rgba(184,136,42,.2);color:var(--gold2);border-color:rgba(184,136,42,.35)}
+[data-theme="dark"] .nb-purple{background:rgba(150,80,200,.18);color:#c084fc;border-color:rgba(150,80,200,.3)}
+[data-theme="dark"] .nb-teal{background:rgba(26,92,90,.22);color:#5ecfcc;border-color:rgba(26,92,90,.35)}
+
+/* ── DARK MODE: checked row highlight ── */
+[data-theme="dark"] .check-row.done{background:rgba(45,138,78,.14)}
+
+/* ── DARK MODE: price-source badges ── */
+[data-theme="dark"] .price-source{background:rgba(45,138,78,.2);color:var(--green3);border-color:rgba(45,138,78,.35)}
+[data-theme="dark"] .price-source.est{background:rgba(184,136,42,.2);color:var(--gold2);border-color:rgba(184,136,42,.35)}
+
+/* ── DARK MODE: rating button active states ── */
+[data-theme="dark"] .rating-btn.up.active{background:rgba(45,138,78,.2);border-color:var(--green3)}
+[data-theme="dark"] .rating-btn.down.active{background:rgba(194,80,28,.2);border-color:var(--rust3)}
+
+/* ── DARK MODE: check row dividers ── */
+[data-theme="dark"] .check-row{border-bottom-color:rgba(245,239,230,.06)}
+
+/* ── DARK MODE: retailer tags ── */
+[data-theme="dark"] .rt-fl{color:#5ecfcc;border-color:rgba(26,92,90,.35)}
+
+/* ── DARK MODE: Fridge Finder badges ── */
+[data-theme="dark"] .ff-badge-gf{background:rgba(30,58,107,.2);color:#7fa8e8}
+[data-theme="dark"] .ff-badge-hf{background:rgba(139,58,26,.2);color:var(--rust3)}
 
 /* ── SPLIT SHOP STRATEGY CARD ── */
 .split-shop{
@@ -5731,7 +5762,7 @@ function _swapStart() { /* placeholder — swap feature not yet implemented */ }
 
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetShopList() {
-  if (!confirm('Reset list? This restores removed items and clears custom additions. Saved prices are kept for next week.')) return;
+  if (!confirm('Reset list? This restores removed items, clears custom additions, and resets checked states. Saved prices and carry-over items are kept.')) return;
   shopState = { deleted:[], added:{}, checked:[], prices:{} };
   _saveShop();
   location.reload();
