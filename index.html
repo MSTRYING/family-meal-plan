@@ -1318,6 +1318,7 @@ body{
 @media(hover:hover){.check-row:hover .row-carryover{opacity:.65}}
 @media(hover:none){.row-carryover{opacity:.5}}
 .row-carryover:hover,.row-carryover:focus{opacity:1;color:var(--gold)}
+.check-row.pantry .row-carryover{opacity:1!important;color:var(--green2)}
 .co-section{
   margin-bottom:1.25rem;border:1px dashed var(--gold);
   border-radius:12px;overflow:hidden;background:rgba(255,107,53,.04);
@@ -5504,11 +5505,16 @@ function _makeCheckRow(catId, id, label, price, isCustom) {
   pr.className = 'check-price';
   pr.textContent = price || '';
 
+  var tag = document.createElement('span');
+  tag.className = 'pantry-tag';
+  tag.textContent = 'have it';
+
   var delBtn = _makeDelBtn(row, catId, isCustom);
   row.appendChild(box);
   row.appendChild(lbl);
+  row.appendChild(tag);
   row.appendChild(pr);
-  if (label) row.appendChild(_makeCarryOverBtn(label)); // carry-over button for all rows
+  if (label) row.appendChild(_makePantryBtn(label)); // "already have this" button
   row.appendChild(delBtn);
   return row;
 }
@@ -5610,7 +5616,7 @@ function _updateCartTotal(pageId) {
   if (!page) return;
   var counter = document.getElementById('cart-' + pageId);
   if (!counter) return;
-  var all  = Array.from(page.querySelectorAll('.check-row')).filter(function(r){ return r.style.display !== 'none'; });
+  var all  = Array.from(page.querySelectorAll('.check-row')).filter(function(r){ return r.style.display !== 'none' && !r.classList.contains('pantry'); });
   var done = all.filter(function(r){ return r.classList.contains('done'); });
   var total = 0;
   done.forEach(function(r){ total += _parsePrice(r.querySelector('.check-price')); });
@@ -5630,7 +5636,7 @@ function _updateStickyTotal() {
     if (p.id && p.id.replace(/^w\d+-/, '') === 'shop') shopPage = p;
   });
   if (!shopPage) { bar.classList.remove('visible'); return; }
-  var rows = Array.from(shopPage.querySelectorAll('.check-row')).filter(function(r){ return r.style.display !== 'none'; });
+  var rows = Array.from(shopPage.querySelectorAll('.check-row')).filter(function(r){ return r.style.display !== 'none' && !r.classList.contains('pantry'); });
   var done = rows.filter(function(r){ return r.classList.contains('done'); });
   var total = done.reduce(function(s,r){ return s + _parsePrice(r.querySelector('.check-price')); }, 0);
   bar.querySelector('.sst-amount').textContent = 'R\u202f' + Math.round(total).toLocaleString('en-ZA');
@@ -5727,95 +5733,46 @@ function _injectShopExtras(pageId) {
 }
 
 // ── Shopping List Carry-Over ────────────────────────────────────────────────
-var CO_KEY         = 'mealplan_carryover_v1';
-var CO_CHECKED_KEY = 'mealplan_carryover_checked_v1';
+// ── "Already have this" pantry toggle ─────────────────────────────────────
+var PANTRY_KEY = 'mealplan_pantry_v1';
+function _getPantry() {
+  try { return JSON.parse(localStorage.getItem(PANTRY_KEY) || '[]'); } catch(e) { return []; }
+}
+function _savePantry(arr) { try { localStorage.setItem(PANTRY_KEY, JSON.stringify(arr)); } catch(e) {} }
 
-function _getCO() {
-  try { return JSON.parse(localStorage.getItem(CO_KEY) || '[]'); } catch(e) { return []; }
-}
-function _saveCO(arr) { localStorage.setItem(CO_KEY, JSON.stringify(arr)); }
-
-function _getCOChecked() {
-  try { return JSON.parse(localStorage.getItem(CO_CHECKED_KEY) || '[]'); } catch(e) { return []; }
-}
-function _toggleCOChecked(label) {
-  var list = _getCOChecked();
-  var idx = list.indexOf(label);
-  if (idx === -1) list.push(label); else list.splice(idx, 1);
-  try { localStorage.setItem(CO_CHECKED_KEY, JSON.stringify(list)); } catch(e) {}
-}
-
-function _addCO(label) {
-  var list = _getCO();
-  if (list.indexOf(label) === -1) { list.push(label); _saveCO(list); }
-  _refreshCOSections();
-}
-function _removeCO(label) {
-  _saveCO(_getCO().filter(function(l){ return l !== label; }));
-  // Also clear its checked state so it doesn't linger in storage
-  var list = _getCOChecked().filter(function(l){ return l !== label; });
-  try { localStorage.setItem(CO_CHECKED_KEY, JSON.stringify(list)); } catch(e) {}
-  _refreshCOSections();
-}
-
-function _refreshCOSections() {
-  document.querySelectorAll('.co-section').forEach(function(s){ s.remove(); });
-  _injectCOSections();
-}
-
-function _injectCOSections() {
-  var items = _getCO();
-  ['shop','w2-shop','w3-shop','w4-shop'].forEach(function(pid) {
-    var page = document.getElementById(pid);
-    if (!page || !items.length) return;
-    if (page.querySelector('.co-section')) return; // already injected (use _refreshCOSections to rebuild)
-    var sec = document.createElement('div');
-    sec.className = 'co-section';
-    sec.innerHTML = '<div class="co-header">🔁 Carry-over — not bought yet</div>';
-    var coChecked = _getCOChecked();
-    items.forEach(function(label) {
-      var row = document.createElement('div');
-      row.className = 'check-row';
-      if (coChecked.indexOf(label) !== -1) row.classList.add('done');
-      row.innerHTML =
-        '<div class="check-box"><svg class="tick" viewBox="0 0 10 10"><polyline points="1.5,5.5 4,8 8.5,2"/></svg></div>' +
-        '<span class="check-label">' + label + '</span>' +
-        '<span class="co-badge">carried over</span>';
-      row.addEventListener('click', function(e){
-        if (!e.target.closest('.row-del')) {
-          row.classList.toggle('done');
-          _toggleCOChecked(label);   // persist checked state across reloads
-          var pg = row.closest ? row.closest('.page') : null;
-          if (pg) _updateCartTotal(pg.id);
-        }
-      });
-      var del = document.createElement('button');
-      del.className = 'row-del co-del'; del.textContent = '×';
-      del.title = 'Remove from carry-over list';
-      del.addEventListener('click', function(e){ e.stopPropagation(); _removeCO(label); });
-      row.appendChild(del);
-      sec.appendChild(row);
-    });
-    var hdr = page.querySelector('.page-header');
-    if (hdr) hdr.parentNode.insertBefore(sec, hdr.nextSibling);
-    else page.insertBefore(sec, page.firstElementChild || null);
-  });
-}
-
-function _makeCarryOverBtn(label) {
+function _makePantryBtn(label) {
   var btn = document.createElement('button');
   btn.className = 'row-carryover';
-  btn.title = 'Carry over — didn\'t buy this';
-  btn.textContent = '↗';
+  btn.title     = 'Already have this at home — tap to toggle';
+  btn.setAttribute('aria-label', 'Mark as already have');
+  btn.textContent = '🏠';
   btn.addEventListener('click', function(e) {
     e.stopPropagation();
-    _addCO(label);
-    var orig = btn.textContent;
-    btn.textContent = '✓'; btn.style.color = 'var(--green)';
-    setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 1400);
+    var row  = btn.closest ? btn.closest('.check-row') : btn.parentNode;
+    var list = _getPantry();
+    var idx  = list.indexOf(label);
+    if (idx === -1) {
+      list.push(label);
+      row.classList.add('pantry');
+    } else {
+      list.splice(idx, 1);
+      row.classList.remove('pantry');
+    }
+    _savePantry(list);
+    // Brief feedback pulse
+    var prev = btn.textContent;
+    btn.textContent = idx === -1 ? '✓' : '↩';
+    btn.style.color = idx === -1 ? 'var(--green2)' : 'var(--ink4)';
+    setTimeout(function(){ btn.textContent = prev; btn.style.color = ''; }, 900);
+    // Refresh totals (pantry rows are excluded from basket count)
+    var pg = row.closest ? row.closest('.page') : null;
+    if (pg) _updateCartTotal(pg.id);
   });
   return btn;
 }
+
+// Legacy stub — carry-over section no longer used
+function _injectCOSections() {}
 
 // ── Meal-swap stubs (UI scaffolded; full swap feature not yet implemented) ──
 function _swapCancel() {
@@ -5870,24 +5827,39 @@ function initShopList() {
   document.querySelectorAll('.shop-items').forEach(function(cat) {
     var catId = cat.id.replace('cat-','');
 
-    // Assign data-ids, inject delete buttons, restore state for existing rows
+    // Assign data-ids, inject buttons, restore state for existing rows
+    var pantryItems = _getPantry();
     cat.querySelectorAll('.check-row').forEach(function(row, idx) {
       var id = catId + '-' + idx;
       row.setAttribute('data-id', id);
       row.appendChild(_makeDelBtn(row, catId, false));
-      // Carry-over button — insert before del button
+
       var lbl = row.querySelector('.check-label');
-      if (lbl && lbl.textContent.trim()) {
-        var coBtn = _makeCarryOverBtn(lbl.textContent.trim());
-        var delRef = row.querySelector('.row-del');
-        if (delRef) row.insertBefore(coBtn, delRef);
-        else row.appendChild(coBtn);
+      var labelText = lbl ? lbl.textContent.trim() : '';
+
+      // Inject pantry-tag span (shown via CSS when row has .pantry class)
+      if (lbl && labelText) {
+        var tag = document.createElement('span');
+        tag.className = 'pantry-tag';
+        tag.textContent = 'have it';
+        lbl.parentNode.insertBefore(tag, lbl.nextSibling);
       }
+
+      // Pantry "already have this" button — insert before del button
+      if (labelText) {
+        var pBtn = _makePantryBtn(labelText);
+        var delRef = row.querySelector('.row-del');
+        if (delRef) row.insertBefore(pBtn, delRef);
+        else row.appendChild(pBtn);
+      }
+
       if (shopState.deleted.indexOf(id) > -1) { row.style.display = 'none'; return; }
       // Restore saved actual price/label
       if (shopState.prices[id]) _applyRowPrice(row, shopState.prices[id].label, shopState.prices[id].price);
       // Restore checked state
       if (shopState.checked.indexOf(id) > -1) row.classList.add('done');
+      // Restore pantry state
+      if (labelText && pantryItems.indexOf(labelText) > -1) row.classList.add('pantry');
     });
 
     // Restore custom added items
