@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Meal Plan — Weeks 1–4</title>
 <meta name="description" content="Lablert family meal plan — 4 weeks of recipes, shopping lists, nutrition and lunchbox planning.">
-<meta name="theme-color" content="#B8882A">
+<meta name="theme-color" content="#08091C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Meal Plan">
@@ -90,6 +90,76 @@
   --sans:'Jost',system-ui,sans-serif;
 }
 
+/* ── MODERN REDESIGN — overrides the 70s warm palette ── */
+:root{
+  /* Backgrounds: clean white → cool slate */
+  --mode-bg:#FFFFFF;
+  --mode-bg2:#F5F6FA;
+  --mode-bg3:#ECEDFA;
+  /* Text: cool slate tones, not warm brown */
+  --mode-ink:#0D0E1A;
+  --mode-ink2:#2E3050;
+  --mode-ink3:#606280;
+  --mode-ink4:#9294AA;
+  --mode-ink5:#C4C5D4;
+  /* Borders: clean neutral */
+  --mode-border:rgba(13,14,26,0.09);
+  --mode-border2:rgba(13,14,26,0.16);
+  --mode-shadow:0 2px 12px rgba(13,14,26,0.07);
+  --mode-shadow2:0 8px 32px rgba(13,14,26,0.12);
+  /* Nav: deep cool navy (bold, modern) */
+  --mode-nav-bg:rgba(8,9,28,0.97);
+  --mode-nav-btn:rgba(210,212,240,0.65);
+  --mode-card-bg:#F5F6FA;
+  --mode-hero-bg:#0C0D1E;
+  --mode-hero-text:#F4F5FF;
+  /* Brand: coral-orange primary, rose-red, fresh green, modern blue */
+  --gold:#FF6B35;
+  --gold2:#E8521A;
+  --gold3:#FF9E75;
+  --rust:#E11D48;
+  --rust2:#F43F5E;
+  --rust3:#FB7185;
+  --green:#15803D;
+  --green2:#16A34A;
+  --green3:#4ADE80;
+  --blue:#2563EB;
+  --teal:#0E7490;
+  --amber:#D97706;
+  /* Shape: slightly sharper for modern feel */
+  --r:10px;
+  --rsm:6px;
+}
+[data-theme="dark"]{
+  /* Dark mode: deep navy-black (not warm brown) */
+  --mode-bg:#09091E;
+  --mode-bg2:#0F1030;
+  --mode-bg3:#181938;
+  --mode-ink:#EEEEFF;
+  --mode-ink2:#BBBBD8;
+  --mode-ink3:#8888AA;
+  --mode-ink4:#606080;
+  --mode-ink5:#404060;
+  --mode-border:rgba(180,182,255,0.10);
+  --mode-border2:rgba(180,182,255,0.18);
+  --mode-shadow:0 2px 12px rgba(0,0,0,0.50);
+  --mode-shadow2:0 8px 32px rgba(0,0,0,0.70);
+  --mode-nav-bg:rgba(4,4,14,0.98);
+  --mode-nav-btn:rgba(200,202,240,0.50);
+  --mode-card-bg:#0F1030;
+  --mode-hero-bg:#05050F;
+  --mode-hero-text:#EEEEFF;
+  --ink-faint:rgba(238,238,255,0.25);
+}
+/* Hero: coral + violet gradient (modern, bold, food-forward) */
+.hero::before{
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 80%, rgba(255,107,53,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 85% 10%, rgba(100,80,255,0.16) 0%, transparent 55%);
+}
+/* nb-amber: stay actually amber-toned in dark mode */
+[data-theme="dark"] .nb-amber{background:rgba(217,119,6,.20);color:#FCD34D;border-color:rgba(217,119,6,.30)}
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
@@ -115,14 +185,14 @@ body{
 .hero::before{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 80% 60% at 15% 80%, rgba(184,136,42,0.25) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 85% 10%, rgba(212,168,67,0.2) 0%, transparent 55%);
+    radial-gradient(ellipse 80% 60% at 15% 80%, rgba(255,107,53,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 85% 10%, rgba(100,80,255,0.16) 0%, transparent 55%);
   pointer-events:none;
 }
 .hero::after{
   content:'';position:absolute;
   left:10%;right:10%;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(184,136,42,0.6),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,107,53,0.6),transparent);
 }
 .hero-inner{position:relative;z-index:1;max-width:680px;margin:0 auto}
 .hero-eye{
@@ -148,7 +218,7 @@ body{
 }
 .hero-sub{
   font-size:13px;font-weight:300;letter-spacing:.04em;
-  color:rgba(245,239,230,.65);margin-bottom:1.6rem;
+  color:rgba(238,238,255,.60);margin-bottom:1.6rem;
   opacity:0;animation:fadeUp .6s .4s ease forwards;
 }
 .hero-pills{
@@ -156,11 +226,11 @@ body{
   opacity:0;animation:fadeUp .6s .5s ease forwards;
 }
 .hero-pill{
-  background:rgba(184,136,42,.15);
-  border:1px solid rgba(184,136,42,.4);
+  background:rgba(255,107,53,.15);
+  border:1px solid rgba(255,107,53,.4);
   border-radius:30px;padding:5px 14px;
   font-size:11px;font-weight:400;letter-spacing:.04em;
-  color:rgba(245,239,230,.8);
+  color:rgba(238,238,255,.85);
   backdrop-filter:blur(4px);
 }
 
@@ -169,7 +239,7 @@ body{
 .sticky-nav{
   position:static;
   background:var(--mode-nav-bg);
-  border-bottom:1px solid rgba(184,136,42,.2);
+  border-bottom:1px solid rgba(255,107,53,.2);
   backdrop-filter:blur(12px);
   transition:background .3s;
 }
@@ -230,8 +300,8 @@ body{
   flex-shrink:0;
 }
 .tp-b{background:rgba(30,92,53,.12);color:var(--green);border:1px solid rgba(30,92,53,.2)}
-.tp-l{background:rgba(30,58,107,.1);color:var(--blue);border:1px solid rgba(30,58,107,.2)}
-.tp-d{background:rgba(139,58,26,.1);color:var(--rust);border:1px solid rgba(139,58,26,.2)}
+.tp-l{background:rgba(37,99,235,.1);color:var(--blue);border:1px solid rgba(37,99,235,.2)}
+.tp-d{background:rgba(225,29,72,.1);color:var(--rust);border:1px solid rgba(225,29,72,.2)}
 .meal-head-name{font-family:var(--serif);font-size:1.25rem;font-weight:400;color:var(--ink)}
 
 /* ── RECIPE CARD ── */
@@ -274,8 +344,8 @@ body{
   border-color:rgba(30,92,53,.22);font-weight:600;
 }
 .chip-prep{
-  background:rgba(139,58,26,.08);color:var(--rust);
-  border-color:rgba(139,58,26,.2);font-weight:600;
+  background:rgba(225,29,72,.08);color:var(--rust);
+  border-color:rgba(225,29,72,.2);font-weight:600;
 }
 
 .rcard-desc{
@@ -336,8 +406,8 @@ body{
 
 /* ── SHOPPING PAGE ── */
 .shop-notice{
-  background:rgba(139,58,26,.07);
-  border:1px solid rgba(139,58,26,.2);
+  background:rgba(225,29,72,.07);
+  border:1px solid rgba(225,29,72,.2);
   border-radius:var(--r);padding:14px 18px;
   font-size:13px;color:var(--rust);
   margin-bottom:2rem;line-height:1.7;
@@ -440,7 +510,7 @@ body{
 }
 .total-bar::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(184,136,42,.12) 0%,transparent 60%);
+  background:linear-gradient(135deg,rgba(255,107,53,.12) 0%,transparent 60%);
   pointer-events:none;
 }
 .total-left{min-width:0;position:relative}
@@ -532,7 +602,7 @@ body{
 /* ── WEEK SWITCHER ── */
 .week-switcher{
   background:var(--mode-nav-bg);
-  border-bottom:1px solid rgba(184,136,42,.15);
+  border-bottom:1px solid rgba(255,107,53,.15);
   padding:.5rem .75rem;
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -541,7 +611,7 @@ body{
 }
 .week-btn{
   padding:.45rem .25rem;
-  border:1px solid rgba(184,136,42,.3);border-radius:30px;
+  border:1px solid rgba(255,107,53,.3);border-radius:30px;
   background:transparent;cursor:pointer;
   font-family:var(--sans);
   color:var(--mode-nav-btn);
@@ -560,11 +630,11 @@ body{
   color:#fff;
 }
 .week-btn.on .wk-d{opacity:.9}
-.week-btn:hover:not(.on){color:var(--gold3);border-color:rgba(184,136,42,.6)}
+.week-btn:hover:not(.on){color:var(--gold3);border-color:rgba(255,107,53,.6)}
 /* Share bar */
 .share-bar{
   background:var(--mode-nav-bg);
-  border-bottom:1px solid rgba(184,136,42,.15);
+  border-bottom:1px solid rgba(255,107,53,.15);
   padding:5px .75rem;display:flex;justify-content:flex-end;
   transition:background .3s;
 }
@@ -580,7 +650,7 @@ body{
 .theme-toggle{
   position:fixed;bottom:calc(22px + env(safe-area-inset-bottom, 0px));right:calc(16px + env(safe-area-inset-right, 0px));z-index:400;
   background:var(--mode-nav-bg);
-  border:1px solid rgba(184,136,42,.35);
+  border:1px solid rgba(255,107,53,.35);
   border-radius:30px;
   padding:.45rem .9rem;
   cursor:pointer;
@@ -592,7 +662,7 @@ body{
   transition:all .2s;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.theme-toggle:hover{background:rgba(184,136,42,.15)}
+.theme-toggle:hover{background:rgba(255,107,53,.15)}
 /* price accuracy note */
 .price-accuracy{
   background:rgba(122,74,10,.08);
@@ -632,9 +702,9 @@ body{
 [data-theme="dark"] .check-row:hover{background:rgba(245,239,230,.04)}
 [data-theme="dark"] .check-box{border-color:var(--mode-ink4)}
 [data-theme="dark"] .total-bar{background:rgba(245,239,230,.07);border:1px solid var(--mode-border2)}
-[data-theme="dark"] .total-bar::before{background:linear-gradient(135deg,rgba(184,136,42,.08) 0%,transparent 60%)}
+[data-theme="dark"] .total-bar::before{background:linear-gradient(135deg,rgba(255,107,53,.08) 0%,transparent 60%)}
 [data-theme="dark"] .meat-callout{background:rgba(122,74,10,.2)}
-[data-theme="dark"] .shop-notice{background:rgba(139,58,26,.15)}
+[data-theme="dark"] .shop-notice{background:rgba(225,29,72,.15)}
 [data-theme="dark"] .price-accuracy{background:rgba(122,74,10,.15)}
 [data-theme="dark"] .step-n{background:var(--mode-ink2);color:var(--mode-bg)}
 [data-theme="dark"] .chip{background:rgba(245,239,230,.07);color:var(--mode-ink3)}
@@ -642,16 +712,16 @@ body{
 [data-theme="dark"] .section-title-bar{border-color:var(--mode-border2)}
 [data-theme="dark"] .divider-rule{border-color:var(--mode-border2)}
 [data-theme="dark"] .recipe-cols{border-color:var(--mode-border2)}
-[data-theme="dark"] .rcard-svg rect:first-child{fill:#1A120A !important}
+[data-theme="dark"] .rcard-svg rect:first-child{fill:#0C0E1A !important}
 
 /* ── DARK MODE: type pills — light text on dark cards ── */
 [data-theme="dark"] .tp-b{background:rgba(30,92,53,.22);color:var(--green3);border-color:rgba(30,92,53,.35)}
-[data-theme="dark"] .tp-l{background:rgba(30,58,107,.22);color:#7fa8e8;border-color:rgba(30,58,107,.35)}
-[data-theme="dark"] .tp-d{background:rgba(139,58,26,.22);color:var(--rust3);border-color:rgba(139,58,26,.35)}
+[data-theme="dark"] .tp-l{background:rgba(37,99,235,.22);color:#7fa8e8;border-color:rgba(37,99,235,.35)}
+[data-theme="dark"] .tp-d{background:rgba(225,29,72,.22);color:var(--rust3);border-color:rgba(225,29,72,.35)}
 
 /* ── DARK MODE: nutrition badges ── */
 [data-theme="dark"] .nb-green{background:rgba(30,92,53,.22);color:var(--green3);border-color:rgba(30,92,53,.35)}
-[data-theme="dark"] .nb-amber{background:rgba(184,136,42,.2);color:var(--gold2);border-color:rgba(184,136,42,.35)}
+[data-theme="dark"] .nb-amber{background:rgba(217,119,6,.20);color:#FCD34D;border-color:rgba(217,119,6,.30)}
 [data-theme="dark"] .nb-purple{background:rgba(150,80,200,.18);color:#c084fc;border-color:rgba(150,80,200,.3)}
 [data-theme="dark"] .nb-teal{background:rgba(26,92,90,.22);color:#5ecfcc;border-color:rgba(26,92,90,.35)}
 
@@ -660,7 +730,7 @@ body{
 
 /* ── DARK MODE: price-source badges ── */
 [data-theme="dark"] .price-source{background:rgba(45,138,78,.2);color:var(--green3);border-color:rgba(45,138,78,.35)}
-[data-theme="dark"] .price-source.est{background:rgba(184,136,42,.2);color:var(--gold2);border-color:rgba(184,136,42,.35)}
+[data-theme="dark"] .price-source.est{background:rgba(217,119,6,.20);color:#FCD34D;border-color:rgba(217,119,6,.30)}
 
 /* ── DARK MODE: rating button active states ── */
 [data-theme="dark"] .rating-btn.up.active{background:rgba(45,138,78,.2);border-color:var(--green3)}
@@ -673,8 +743,8 @@ body{
 [data-theme="dark"] .rt-fl{color:#5ecfcc;border-color:rgba(26,92,90,.35)}
 
 /* ── DARK MODE: Fridge Finder badges ── */
-[data-theme="dark"] .ff-badge-gf{background:rgba(30,58,107,.2);color:#7fa8e8}
-[data-theme="dark"] .ff-badge-hf{background:rgba(139,58,26,.2);color:var(--rust3)}
+[data-theme="dark"] .ff-badge-gf{background:rgba(37,99,235,.2);color:#7fa8e8}
+[data-theme="dark"] .ff-badge-hf{background:rgba(225,29,72,.2);color:var(--rust3)}
 
 /* ── SPLIT SHOP STRATEGY CARD ── */
 .split-shop{
@@ -692,7 +762,7 @@ body{
 }
 @media(max-width:600px){.split-shop-lanes{grid-template-columns:1fr;gap:8px}}
 .split-lane{border-radius:var(--rsm);padding:.9rem 1rem;border:1px solid transparent}
-.sl-makro{background:rgba(184,136,42,.08);border-color:rgba(184,136,42,.2)}
+.sl-makro{background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.2)}
 .sl-checkers{background:rgba(30,92,53,.08);border-color:rgba(30,92,53,.2)}
 .sl-foodlovers{background:rgba(26,92,90,.08);border-color:rgba(26,92,90,.2)}
 .sl-store{display:block;font-weight:700;font-size:12px;letter-spacing:.04em;margin-bottom:.3rem}
@@ -711,13 +781,13 @@ body{
   font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap;
 }
-.rt-makro{background:rgba(184,136,42,.12);color:var(--gold);border:1px solid rgba(184,136,42,.25)}
+.rt-makro{background:rgba(255,107,53,.12);color:var(--gold);border:1px solid rgba(255,107,53,.25)}
 .rt-checkers{background:rgba(30,92,53,.1);color:var(--green2);border:1px solid rgba(30,92,53,.2)}
 .rt-fl{background:rgba(26,92,90,.1);color:var(--teal);border:1px solid rgba(26,92,90,.2)}
 .rt-mix{background:rgba(26,18,9,.06);color:var(--ink3);border:1px solid var(--border)}
 [data-theme="dark"] .rt-mix{background:rgba(245,239,230,.06)}
 [data-theme="dark"] .split-shop{background:var(--mode-bg2);border-color:var(--mode-border2)}
-[data-theme="dark"] .sl-makro{background:rgba(184,136,42,.12);border-color:rgba(184,136,42,.25)}
+[data-theme="dark"] .sl-makro{background:rgba(255,107,53,.12);border-color:rgba(255,107,53,.25)}
 [data-theme="dark"] .sl-checkers{background:rgba(30,92,53,.12);border-color:rgba(30,92,53,.25)}
 [data-theme="dark"] .sl-foodlovers{background:rgba(26,92,90,.12);border-color:rgba(26,92,90,.25)}
 
@@ -822,7 +892,7 @@ body{
 .pc-box{
   display:none;flex-wrap:wrap;align-items:center;gap:6px;
   padding:10px 1.25rem;
-  background:rgba(184,136,42,.07);
+  background:rgba(255,107,53,.07);
   border-left:3px solid var(--gold);
   border-bottom:1px solid var(--border);
   animation:fadeUp .15s ease;
@@ -849,13 +919,13 @@ body{
   cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;
 }
 .pc-skip-btn:hover{color:var(--ink3);border-color:var(--ink3)}
-[data-theme="dark"] .pc-box{background:rgba(184,136,42,.1)}
+[data-theme="dark"] .pc-box{background:rgba(255,107,53,.1)}
 [data-theme="dark"] .pc-box input{background:var(--mode-bg3);border-color:var(--mode-border2)}
 
 /* ── ACTUAL PRICE BADGE ── */
 .actual-badge{
-  background:rgba(30,58,107,.1);color:var(--blue);
-  border:1px solid rgba(30,58,107,.2);
+  background:rgba(37,99,235,.1);color:var(--blue);
+  border:1px solid rgba(37,99,235,.2);
   font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   padding:2px 7px;border-radius:20px;margin-left:4px;vertical-align:middle;
 }
@@ -872,9 +942,9 @@ body{
   padding:5px 12px;font-size:13px;cursor:pointer;
   transition:all .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;font-family:var(--sans);
 }
-.rating-btn:hover{border-color:var(--gold);background:rgba(184,136,42,.07)}
+.rating-btn:hover{border-color:var(--gold);background:rgba(255,107,53,.07)}
 .rating-btn.up.active{background:rgba(30,92,53,.12);border-color:var(--green2)}
-.rating-btn.down.active{background:rgba(139,58,26,.1);border-color:var(--rust2)}
+.rating-btn.down.active{background:rgba(225,29,72,.1);border-color:var(--rust2)}
 .rating-label{font-size:12px;color:var(--ink5);font-family:var(--sans)}
 
 /* ── SERVING SCALER ── */
@@ -890,20 +960,20 @@ body{
   cursor:pointer;font-size:17px;line-height:1;flex-shrink:0;
   transition:all .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;color:var(--ink3);
 }
-.scaler-btn:hover:not(:disabled){border-color:var(--gold);background:rgba(184,136,42,.09)}
+.scaler-btn:hover:not(:disabled){border-color:var(--gold);background:rgba(255,107,53,.09)}
 .scaler-btn:disabled{opacity:.35;cursor:default}
 .scaler-count{
   font-family:var(--serif);font-size:1.1rem;color:var(--ink);
   min-width:22px;text-align:center;
 }
 .scaler-banner{
-  background:rgba(184,136,42,.09);border-left:3px solid var(--gold);
+  background:rgba(255,107,53,.09);border-left:3px solid var(--gold);
   border-radius:0 var(--rsm) var(--rsm) 0;
   padding:7px 12px;font-size:12.5px;color:var(--amber);
   margin:.75rem 0;line-height:1.55;display:none;
 }
 .scaler-banner.visible{display:block}
-[data-theme="dark"] .scaler-banner{background:rgba(184,136,42,.14)}
+[data-theme="dark"] .scaler-banner{background:rgba(255,107,53,.14)}
 
 /* ── RECIPE NOTES ── */
 .note-callout{
@@ -1052,7 +1122,7 @@ body{
   -webkit-tap-highlight-color:transparent;
 }
 .ff-chip.active{
-  background:rgba(184,136,42,.15);
+  background:rgba(255,107,53,.15);
   border-color:var(--gold);color:var(--gold);
 }
 .ff-cat-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem}
@@ -1116,10 +1186,10 @@ body{
   padding:2px 9px;border-radius:12px;white-space:nowrap;
 }
 .ff-badge-time{background:rgba(30,92,53,.1);color:var(--green)}
-.ff-badge-cat{background:rgba(184,136,42,.12);color:var(--gold)}
+.ff-badge-cat{background:rgba(255,107,53,.12);color:var(--gold)}
 .ff-badge-v{background:rgba(30,92,53,.1);color:var(--green)}
-.ff-badge-gf{background:rgba(30,58,107,.09);color:var(--blue)}
-.ff-badge-hf{background:rgba(139,58,26,.1);color:var(--rust)}
+.ff-badge-gf{background:rgba(37,99,235,.09);color:var(--blue)}
+.ff-badge-hf{background:rgba(225,29,72,.1);color:var(--rust)}
 .ff-chevron{
   flex-shrink:0;width:22px;height:22px;
   display:flex;align-items:center;justify-content:center;
@@ -1218,7 +1288,7 @@ body{
 
 /* ── Scale notice & Budget summary ─────────────────────────────────────── */
 .scale-notice{
-  background:rgba(184,136,42,.08);border:1px solid rgba(184,136,42,.3);
+  background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.3);
   border-radius:10px;padding:9px 14px;margin-bottom:1rem;
   font-family:var(--sans);font-size:12px;color:var(--ink3);
 }
@@ -1250,17 +1320,17 @@ body{
 .row-carryover:hover,.row-carryover:focus{opacity:1;color:var(--gold)}
 .co-section{
   margin-bottom:1.25rem;border:1px dashed var(--gold);
-  border-radius:12px;overflow:hidden;background:rgba(184,136,42,.04);
+  border-radius:12px;overflow:hidden;background:rgba(255,107,53,.04);
 }
 .co-header{
   padding:8px 14px;font-family:var(--sans);font-size:11.5px;font-weight:700;
   color:var(--gold);letter-spacing:.05em;text-transform:uppercase;
-  border-bottom:1px dashed rgba(184,136,42,.35);
+  border-bottom:1px dashed rgba(255,107,53,.35);
 }
 .co-badge{
   font-family:var(--sans);font-size:10px;font-weight:600;
-  color:var(--gold);background:rgba(184,136,42,.12);
-  border:1px solid rgba(184,136,42,.25);border-radius:10px;
+  color:var(--gold);background:rgba(255,107,53,.12);
+  border:1px solid rgba(255,107,53,.25);border-radius:10px;
   padding:2px 8px;flex-shrink:0;white-space:nowrap;
 }
 .co-del{margin-left:6px;opacity:.55!important}
@@ -1272,7 +1342,7 @@ body{
   border-radius:6px;transition:all .15s;flex-shrink:0;
   -webkit-tap-highlight-color:transparent;color:var(--ink3);
 }
-.swap-btn:hover,.swap-btn:focus{opacity:1;background:rgba(184,136,42,.12);color:var(--gold)}
+.swap-btn:hover,.swap-btn:focus{opacity:1;background:rgba(255,107,53,.12);color:var(--gold)}
 .meal-block.swap-select .swap-btn{opacity:1;color:var(--gold)}
 .meal-block.swap-select{
   outline:2px dashed var(--gold);outline-offset:4px;border-radius:10px;
@@ -1415,12 +1485,12 @@ body{
 /* 1 ── Meal-type left accent bar */
 .meal-block{border-left:3px solid transparent;padding-left:14px;transition:border-left-color .3s}
 .meal-block:has(.tp-b){border-left-color:var(--green2)}
-.meal-block:has(.tp-l){border-left-color:rgba(30,58,107,.55)}
+.meal-block:has(.tp-l){border-left-color:rgba(37,99,235,.55)}
 .meal-block:has(.tp-d){border-left-color:var(--rust2)}
 
 /* 2 ── Recipe card hover warm amber glow */
 @media(hover:hover){
-  .rcard:hover{box-shadow:var(--shadow2),0 0 0 1px rgba(184,136,42,.12);transform:translateY(-2px)}
+  .rcard:hover{box-shadow:var(--shadow2),0 0 0 1px rgba(255,107,53,.12);transform:translateY(-2px)}
 }
 
 /* 3 ── Animated strikethrough on checked items */
@@ -1433,7 +1503,7 @@ body{
 .section-title-bar::after{content:'';display:block;width:44px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:5px;border-radius:1px}
 
 /* 5 ── Nav active pill highlight */
-.nav-btn.on{background:rgba(184,136,42,.1);border-radius:6px 6px 0 0;border-bottom-width:3px}
+.nav-btn.on{background:rgba(255,107,53,.1);border-radius:6px 6px 0 0;border-bottom-width:3px}
 
 /* 6 ── SVG-to-body gradient bleed */
 .rcard-body{position:relative}
@@ -1441,8 +1511,8 @@ body{
 
 /* 7 ── Shop card hover border glow */
 @media(hover:hover){
-  .shop-card:hover{border-color:rgba(184,136,42,.28)}
-  .shop-card:hover .shop-card-header{background:rgba(184,136,42,.04)}
+  .shop-card:hover{border-color:rgba(255,107,53,.28)}
+  .shop-card:hover .shop-card-header{background:rgba(255,107,53,.04)}
 }
 
 /* 8 ── Ingredient list diamond bullet */
@@ -1459,7 +1529,7 @@ body{
 
 /* 12 ── Dark mode card hover warm amber glow */
 @media(hover:hover){
-  [data-theme="dark"] .rcard:hover{box-shadow:var(--shadow2),0 0 0 1px rgba(184,136,42,.22)}
+  [data-theme="dark"] .rcard:hover{box-shadow:var(--shadow2),0 0 0 1px rgba(255,107,53,.22)}
 }
 
 /* 13 ── Sticky nav right-edge scroll indicator */
@@ -1666,7 +1736,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">Prep night before</span><span class="chip">No fridge needed</span></div>
         <p class="rcard-desc">One person builds sandwiches while the other preps dinner. Wrap tightly in foil — stays fresh and unbruised all day. Tonight's dinner is pasta bake, so this prep is quick.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Prep the night before while dinner cools — 10 min total. Wrap each sandwich in foil. Pack fruit and snack in a small ziplock.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Prep the night before while dinner cools — 10 min total. Wrap each sandwich in foil. Pack fruit and snack in a small ziplock.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -1871,7 +1941,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Wraps stay fresh</span></div>
         <p class="rcard-desc">Wraps travel better than open sandwiches and don't get soggy. Roll tightly, cut in half and wrap in foil. Tonight's curry simmers — but lunch uses last night's pasta bake, so prep is simple and quick.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Tortillas don't need toasting — spread, roll, wrap. Takes 5 min for the adults. Pre-warm CJ's flask with boiling water then fill with reheated pasta bake — add meat of choice on top. Miguel and Niki use leftover pasta bake filling in their wraps — just divide it evenly between two tortillas with fresh spinach.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Tortillas don't need toasting — spread, roll, wrap. Takes 5 min for the adults. Pre-warm CJ's flask with boiling water then fill with reheated pasta bake — add meat of choice on top. Miguel and Niki use leftover pasta bake filling in their wraps — just divide it evenly between two tortillas with fresh spinach.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -2070,7 +2140,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Dressing packed separately</span></div>
         <p class="rcard-desc">Wednesday's dinner is noodles — quick to cook, giving time for a proper lunch prep. Pack dressings in a small screw-top container so the salad stays crisp all day.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Pack chickpea salad while noodles are cooking — it's quick to toss together. Miguel and Niki share the same salad base, just split into two containers. Sarah's cheese sandwich is the quickest: bread, fill, wrap. CJ's flask gets last night's curry — pre-warm first.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Pack chickpea salad while noodles are cooking — it's quick to toss together. Miguel and Niki share the same salad base, just split into two containers. Sarah's cheese sandwich is the quickest: bread, fill, wrap. CJ's flask gets last night's curry — pre-warm first.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -2282,7 +2352,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 8 min</span><span class="chip">Flask for noodles</span><span class="chip">No fridge needed</span></div>
         <p class="rcard-desc">CJ gets last night's noodles in a flask. Sarah gets her favourite cheese sandwich. Miguel and Niki get a hearty cheddar, tomato and lettuce sandwich. Tonight's kidney bean rice bowl is an easy dinner — plenty of time to pack bags calmly.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Pre-warm CJ's flask with boiling water, tip it out, then fill with reheated egg noodles and meat of choice — keeps warm for 5+ hours. While the flask fills, make three sandwiches in one go: Sarah's cheese, Miguel's cheddar &amp; tomato, Niki's cheddar &amp; tomato.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Pre-warm CJ's flask with boiling water, tip it out, then fill with reheated egg noodles and meat of choice — keeps warm for 5+ hours. While the flask fills, make three sandwiches in one go: Sarah's cheese, Miguel's cheddar &amp; tomato, Niki's cheddar &amp; tomato.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -2466,7 +2536,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Friday treat day</span></div>
         <p class="rcard-desc">Friday lunch gets a slight treat upgrade — an extra biscuit or special spread makes the end of week feel special. Tonight's homemade pizza means the cook has time while dough rests.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Tonight is pizza night — but lunch uses pantry staples so there's no cooking required. Build Miguel and Niki's wraps in under 5 min while CJ's flask warms up. Use the same knife for all spreads to save washing up.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Tonight is pizza night — but lunch uses pantry staples so there's no cooking required. Build Miguel and Niki's wraps in under 5 min while CJ's flask warms up. Use the same knife for all spreads to save washing up.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -3437,7 +3507,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Week 2</span></div>
         <p class="rcard-desc">Monday of Week 2 — dinner is mushroom risotto (needs attention) so lunch is prepped quickly during the 20 min stirring phase. Simple fillings keep it stress-free.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Spread cream cheese generously on two tortillas, add a handful of baby spinach, sliced cucumber and season with salt and pepper — done in 5 min for both adults. Do this while CJ's flask pre-warms.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Spread cream cheese generously on two tortillas, add a handful of baby spinach, sliced cucumber and season with salt and pepper — done in 5 min for both adults. Do this while CJ's flask pre-warms.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -3656,7 +3726,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Week 2</span></div>
         <p class="rcard-desc">Tuesday's black bean taco dinner is quick — use the 10 min taco prep time to build lunchboxes. Sarah gets her favourite salad sandwich. CJ gets last night's risotto in a flask. Miguel and Niki get something more creative.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> The chickpea mayo filling takes 2 min to mash and spreads across both Miguel and Niki's sandwiches at once — far quicker than making two different fillings. It tastes like tuna mayo and travels brilliantly.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> The chickpea mayo filling takes 2 min to mash and spreads across both Miguel and Niki's sandwiches at once — far quicker than making two different fillings. It tastes like tuna mayo and travels brilliantly.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -3859,7 +3929,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Week 2</span></div>
         <p class="rcard-desc">Wednesday's dhal almost runs itself once it's simmering. Miguel and Niki's orzo pasta salad is best made the evening before — just 10 min on Tuesday night and it's ready to grab and pack Wednesday morning.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Tuesday evening: cook orzo, drain, toss hot with feta, cherry tomatoes, olives, olive oil, lemon juice and oregano. Split into 2 sealed containers and refrigerate overnight — it tastes even better after a few hours in the fridge. Wednesday morning, just grab and pack.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Tuesday evening: cook orzo, drain, toss hot with feta, cherry tomatoes, olives, olive oil, lemon juice and oregano. Split into 2 sealed containers and refrigerate overnight — it tastes even better after a few hours in the fridge. Wednesday morning, just grab and pack.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -4115,7 +4185,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 5 min (muffins pre-baked)</span><span class="chip">No fridge needed</span><span class="chip">Week 2</span></div>
         <p class="rcard-desc">Thursday's egg muffins were baked this morning — pack 2–3 per person for Miguel and Niki. They're safe at room temperature for up to 4 hours. Sarah gets a sandwich. CJ gets last night's dhal in a flask.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Egg muffins were baked this morning — simply set aside 2–3 extra per adult before serving breakfast. Safe at room temperature for 4 hours. Make Sarah's sandwich while the muffins cool. For CJ: pre-warm flask and fill with last night's dhal. Add meat of choice.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Egg muffins were baked this morning — simply set aside 2–3 extra per adult before serving breakfast. Safe at room temperature for 4 hours. Make Sarah's sandwich while the muffins cool. For CJ: pre-warm flask and fill with last night's dhal. Add meat of choice.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
@@ -4317,7 +4387,7 @@ body{
       <div class="rcard-body">
         <div class="rcard-chips"><span class="chip">Prep 10 min</span><span class="chip">No fridge needed</span><span class="chip">Week 2 Friday</span></div>
         <p class="rcard-desc">Friday's shakshuka is a quick dinner — prep lunchboxes while the sauce simmers. Friday treat: grapes or a small chocolate. CJ gets last night's stuffed peppers; Sarah keeps it simple with a sandwich. Miguel and Niki go creative.</p>
-        <div class="meat-callout" style="background:rgba(30,58,107,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Miguel and Niki's wraps use only pantry staples — no cooking. While the shakshuka sauce simmers, each person builds their own wrap. Two different flavours, same 5-minute window.</div>
+        <div class="meat-callout" style="background:rgba(37,99,235,.07);border-left-color:#1D4ED8;color:#1E3A6B"><strong>Prep tip:</strong> Miguel and Niki's wraps use only pantry staples — no cooking. While the shakshuka sauce simmers, each person builds their own wrap. Two different flavours, same 5-minute window.</div>
         <div class="recipe-cols">
           <div>
             <p class="col-label">Lunchbox contents</p>
