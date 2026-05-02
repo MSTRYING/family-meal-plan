@@ -1408,6 +1408,74 @@ body{
   font-family:var(--sans);margin-top:2px;letter-spacing:.01em;
 }
 
+/* ══════════════════════════════════════════════════════
+   VISUAL POLISH — 15 improvements
+   ══════════════════════════════════════════════════════ */
+
+/* 1 ── Meal-type left accent bar */
+.meal-block{border-left:3px solid transparent;padding-left:14px;transition:border-left-color .3s}
+.meal-block:has(.tp-b){border-left-color:var(--green2)}
+.meal-block:has(.tp-l){border-left-color:rgba(30,58,107,.55)}
+.meal-block:has(.tp-d){border-left-color:var(--rust2)}
+
+/* 2 ── Recipe card hover warm amber glow */
+@media(hover:hover){
+  .rcard:hover{box-shadow:var(--shadow2),0 0 0 1px rgba(184,136,42,.12);transform:translateY(-2px)}
+}
+
+/* 3 ── Animated strikethrough on checked items */
+.check-label{position:relative}
+.check-label::after{content:'';position:absolute;left:0;top:50%;width:0;height:1.5px;background:var(--ink3);transition:width .28s ease;border-radius:1px;transform:translateY(-50%)}
+.check-row.done .check-label{text-decoration:none}
+.check-row.done .check-label::after{width:100%}
+
+/* 4 ── Section title decorative gold rule */
+.section-title-bar::after{content:'';display:block;width:44px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:5px;border-radius:1px}
+
+/* 5 ── Nav active pill highlight */
+.nav-btn.on{background:rgba(184,136,42,.1);border-radius:6px 6px 0 0;border-bottom-width:3px}
+
+/* 6 ── SVG-to-body gradient bleed */
+.rcard-body{position:relative}
+.rcard-body::before{content:'';position:absolute;left:0;right:0;top:-28px;height:28px;background:linear-gradient(to bottom,transparent,var(--paper2));pointer-events:none;z-index:1}
+
+/* 7 ── Shop card hover border glow */
+@media(hover:hover){
+  .shop-card:hover{border-color:rgba(184,136,42,.28)}
+  .shop-card:hover .shop-card-header{background:rgba(184,136,42,.04)}
+}
+
+/* 8 ── Ingredient list diamond bullet */
+.ing-list li::before{width:5px;height:5px;border-radius:1px;transform:rotate(45deg);margin-top:7px}
+
+/* 9 ── Page title gold underline ornament */
+.page-title::after{content:'';display:block;width:48px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:6px;border-radius:1px}
+
+/* 10 ── Column label wider tracking + gold accent bar */
+.col-label{letter-spacing:.22em;border-left:2px solid var(--gold);padding-left:8px}
+
+/* 11 ── Dark mode subtle noise texture */
+[data-theme="dark"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E")}
+
+/* 12 ── Dark mode card hover warm amber glow */
+@media(hover:hover){
+  [data-theme="dark"] .rcard:hover{box-shadow:var(--shadow2),0 0 0 1px rgba(184,136,42,.22)}
+}
+
+/* 13 ── Sticky nav right-edge scroll indicator */
+.sticky-nav{position:relative}
+.sticky-nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:44px;background:linear-gradient(to right,transparent,var(--mode-nav-bg));pointer-events:none;z-index:2}
+
+/* 14 ── SVG card background tint by day of week */
+#mon .rcard-svg rect:first-child,#w2-mon .rcard-svg rect:first-child{fill:#F2EAE0}
+#tue .rcard-svg rect:first-child,#w2-tue .rcard-svg rect:first-child{fill:#E8F2EA}
+#wed .rcard-svg rect:first-child,#w2-wed .rcard-svg rect:first-child{fill:#EAE8F2}
+#thu .rcard-svg rect:first-child,#w2-thu .rcard-svg rect:first-child{fill:#F2F0E2}
+#fri .rcard-svg rect:first-child,#w2-fri .rcard-svg rect:first-child{fill:#E4EEF5}
+#sat .rcard-svg rect:first-child,#w2-sat .rcard-svg rect:first-child{fill:#F5EDE5}
+#sun .rcard-svg rect:first-child,#w2-sun .rcard-svg rect:first-child{fill:#E8F0E5}
+/* Dark mode: existing !important rule already overrides the above */
+
 </style>
 
 </head>
@@ -5994,8 +6062,14 @@ function _renderFavs() {
   if (!list) return;
   var liked  = Object.keys(_ratings).filter(function(k){ return _ratings[k].v === 1; });
   if (!liked.length) {
-    list.innerHTML = '<p style="text-align:center;color:var(--ink4);font-family:var(--sans);padding:2rem 1rem">' +
-      'No favourites yet — tap 👍 on any recipe to save it here.</p>';
+    list.innerHTML = '<div style="text-align:center;padding:3rem 1rem 2rem;font-family:var(--sans)">' +
+      '<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 1.2rem">' +
+        '<circle cx="36" cy="36" r="34" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="6 4" opacity=".5"/>' +
+        '<path d="M36 20l3.9 7.9 8.7 1.3-6.3 6.1 1.5 8.7L36 39.9l-7.8 4.1 1.5-8.7-6.3-6.1 8.7-1.3z" fill="var(--gold)" opacity=".22" stroke="var(--gold)" stroke-width="1.2" stroke-linejoin="round"/>' +
+      '</svg>' +
+      '<p style="font-size:14px;color:var(--ink3);margin:0 0 .4rem;font-weight:500">No favourites yet</p>' +
+      '<p style="font-size:12px;color:var(--ink5);margin:0">Tap <strong style="color:var(--green2)">👍</strong> on any recipe to save it here.</p>' +
+    '</div>';
     return;
   }
   list.innerHTML = liked.map(function(k) {
