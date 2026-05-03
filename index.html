@@ -1888,7 +1888,7 @@ body.cj-hidden .cj-note{display:none!important}
 }
 .hero-inner > *{
   opacity: 0;
-  animation: glassFadeUp 0.7s var(--ease-out) forwards;
+  animation: glassFadeUp 0.7s var(--ease-out) both;
 }
 .hero-inner > :nth-child(1){ animation-delay: 0.05s; }
 .hero-inner > :nth-child(2){ animation-delay: 0.18s; }
@@ -1897,10 +1897,12 @@ body.cj-hidden .cj-note{display:none!important}
 .hero-inner > :nth-child(5){ animation-delay: 0.54s; }
 .hero-inner > :nth-child(6){ animation-delay: 0.66s; }
 
-/* Stagger meal blocks on first paint of any active page */
+/* Stagger meal blocks on first paint of any active page.
+   fill-mode:both ensures opacity is held at the keyframe values during
+   delay (0) and after the animation ends (1) — prevents flashing. */
 .page.on .meal-block{
   opacity: 0;
-  animation: glassFadeUp 0.6s var(--ease-out) forwards;
+  animation: glassFadeUp 0.6s var(--ease-out) both;
 }
 .page.on .meal-block:nth-of-type(1){ animation-delay: 0.05s; }
 .page.on .meal-block:nth-of-type(2){ animation-delay: 0.14s; }
@@ -1923,7 +1925,7 @@ body.cj-hidden .cj-note{display:none!important}
     radial-gradient(ellipse at 70% 60%, rgba(225,29,72,0.22), transparent 55%),
     radial-gradient(ellipse at 50% 80%, rgba(251,191,36,0.16), transparent 55%);
   filter: blur(70px);
-  border-radius: 50%;
+  /* no border-radius — the radial-gradient stack already shapes the blob */
   animation: heroSpin 24s linear infinite;
   opacity: 0.85;
   z-index: -1;
@@ -1978,6 +1980,8 @@ html.boot-pending .hero-inner > *{ visibility: visible; } /* visible immediately
   transform: scale(0.96);
   transition: transform 0.12s var(--ease-spring) !important;
 }
+/* Don't shrink the chevron with its parent header — it has its own rotation */
+.shop-card-header:active .chevron{ transform: none; }
 
 /* ════════════════════════════════════════════════════════════════════════════
    8 · ANIMATED CHECK POP + GREEN HALO  (no JS change — pure CSS on .done)
@@ -2048,16 +2052,25 @@ html[data-vt-mode="back"]::view-transition-new(root){
 }
 .rcard-svg.in-view{ transform: scale(1.04); }
 
-/* Soft top-light gradient sheen on every recipe SVG (#15) */
-.rcard-svg{ position: relative; overflow: hidden; }
-.rcard-svg::after{
+/* Soft top-light gradient sheen on every recipe SVG (#15) — applied to the
+   .rcard-svg-wrap div that JS injects around every <svg class="rcard-svg">.
+   Pseudo-elements don't render on SVG elements, so the wrap is required. */
+.rcard-svg-wrap{
+  position: relative;  /* anchor for the ::after gradient overlay */
+  /* no overflow:hidden — .rcard already has it (clips to 18px round) */
+  /* no border-radius — .rcard's outer clip handles all rounding */
+  /* no display: block override — the existing .rcard>div:first-child rule
+     sets display:flex which is harmless for our single-child layout */
+}
+.rcard-svg-wrap::after{
   content:''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 35%, rgba(0,0,0,0.06) 100%);
   mix-blend-mode: overlay;
 }
-[data-theme="dark"] .rcard-svg::after{
+[data-theme="dark"] .rcard-svg-wrap::after{
   background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.18) 100%);
 }
+.rcard-svg{ display: block; }
 
 /* ════════════════════════════════════════════════════════════════════════════
    16 · GLASS TYPE PILLS  (Breakfast / Lunch / Dinner)
@@ -2119,6 +2132,115 @@ html[data-vt-mode="back"]::view-transition-new(root){
 }
 
 /* ── END GLASS REDESIGN ─────────────────────────────────────────────────── */
+
+/* ════════════════════════════════════════════════════════════════════════════
+   IN-APP PERSISTENT TIMER (v25)
+   Floating glass stack at top-right; supports multiple concurrent timers.
+   ════════════════════════════════════════════════════════════════════════════ */
+#mp-timer-stack{
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 76px);  /* below sticky nav */
+  right: 10px;
+  z-index: 9997;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+  max-width: calc(100vw - 20px);
+}
+.mp-timer{
+  pointer-events: auto;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: var(--glass-shadow-l);
+  padding: 9px 12px;
+  font-family: var(--sans);
+  color: var(--ink);
+  min-width: 180px; max-width: 320px;
+  animation: mpTimerSlideIn 0.4s var(--ease-spring) both;
+  position: relative; overflow: hidden;
+}
+@keyframes mpTimerSlideIn{
+  from{ opacity: 0; transform: translateX(40px) scale(0.92); }
+  to  { opacity: 1; transform: translateX(0)     scale(1); }
+}
+.mp-timer-info{ flex: 1; min-width: 0; }
+.mp-timer-time{
+  font-size: 19px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.mp-timer-label{
+  font-size: 10.5px; color: var(--ink4);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-top: 3px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mp-timer-btn{
+  background: rgba(0,0,0,0.06);
+  border: none; color: inherit;
+  width: 32px; height: 32px; border-radius: 9px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0; flex-shrink: 0;
+  font-size: 14px; line-height: 1;
+  transition: background 0.18s ease, transform 0.12s var(--ease-spring);
+  font-family: var(--sans); font-weight: 600;
+}
+[data-theme="dark"] .mp-timer-btn{ background: rgba(255,255,255,0.10); }
+.mp-timer-btn:active{ transform: scale(0.92); background: rgba(0,0,0,0.12); }
+.mp-timer-btn.x{ background: transparent; opacity: 0.55; }
+.mp-timer-btn.x:active{ opacity: 1; }
+
+/* Compact mode (default) — only show time + close + tap-to-expand */
+.mp-timer:not(.expanded) .mp-timer-controls{ display: none; }
+.mp-timer:not(.expanded){ cursor: pointer; }
+
+/* Progress bar overlay */
+.mp-timer-bar{
+  position: absolute; left: 0; bottom: 0; height: 3px;
+  background: linear-gradient(90deg, #FF6B35, #E11D48);
+  border-radius: 0 0 0 14px;
+  transition: width 0.25s linear;
+  pointer-events: none;
+}
+
+/* Done state — alarm flash */
+.mp-timer.done{
+  background: linear-gradient(180deg, rgba(225,29,72,0.95), rgba(190,18,60,0.95));
+  color: #fff;
+  border-color: rgba(255,255,255,0.4);
+  animation: mpTimerFlash 1s ease-in-out infinite alternate;
+}
+.mp-timer.done .mp-timer-label{ color: rgba(255,255,255,0.85); }
+.mp-timer.done .mp-timer-btn{ background: rgba(255,255,255,0.18); color: #fff; }
+@keyframes mpTimerFlash{
+  from{ box-shadow: var(--glass-shadow-l), 0 0 0 0 rgba(225,29,72,0.5); }
+  to  { box-shadow: var(--glass-shadow-l), 0 0 0 14px rgba(225,29,72,0); }
+}
+
+/* Paused state — softer tone */
+.mp-timer.paused{ opacity: 0.72; }
+.mp-timer.paused .mp-timer-bar{ background: var(--ink4); }
+
+/* Existing .timer-btn styling tweak — make it pop a bit more so users discover it */
+.timer-btn{
+  background: rgba(255,107,53,0.12);
+  border: 1px solid rgba(255,107,53,0.25);
+  border-radius: 6px;
+  padding: 1px 5px; margin-left: 4px;
+  font-size: 14px; cursor: pointer;
+  transition: all 0.18s var(--ease-spring);
+  vertical-align: -2px;
+}
+.timer-btn:hover{ background: rgba(255,107,53,0.22); transform: scale(1.05); }
+.timer-btn:active{ transform: scale(0.92); }
+[data-theme="dark"] .timer-btn{
+  background: rgba(255,107,53,0.18);
+  border-color: rgba(255,107,53,0.35);
+}
 
 </style>
 
@@ -8902,8 +9024,7 @@ function _injectTimerBtns() {
         if (/hrs?|hours?/i.test(unit)) m2 *= 60;
         mins = Math.round((mins + m2) / 2);
       }
-      var url = 'https://www.google.com/search?q=' + encodeURIComponent(mins + ' minute timer');
-      return match + ' <button class="timer-btn" onclick="window.open(\'' + url + '\',\'_blank\')" title="Start ' + mins + ' min timer">⏱</button>';
+      return match + ' <button class="timer-btn" onclick="event.stopPropagation(); _mpStartTimer(' + mins + ')" title="Start ' + mins + ' min timer">⏱</button>';
     });
   });
 }
@@ -9124,19 +9245,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // GLASS REDESIGN — runtime behaviors
 // ════════════════════════════════════════════════════════════════════════════
 
-// ── 9 · Count-up tween for currency text ──────────────────────────────────
+// ── 9 · Count-up tween for currency text (R 1,234 format, locale-en-ZA) ──
 function _glassTweenNum(el, to, dur){
   if (!el) return;
-  var raw = (el.textContent || '').replace(/[^0-9.]/g, '');
-  var from = parseFloat(raw) || 0;
-  if (Math.abs(from - to) < 0.01) { el.textContent = 'R' + to.toFixed(2); return; }
-  dur = dur || 380;
+  var fmt = function(v){ return 'R\u202f' + Math.round(v).toLocaleString('en-ZA'); };
+  var raw = (el.textContent || '').replace(/[^0-9]/g, '');
+  var from = parseInt(raw, 10) || 0;
+  if (Math.abs(from - to) < 1) { el.textContent = fmt(to); return; }
+  dur = dur || 480;
   var t0 = performance.now();
   function step(t){
     var p = Math.min(1, (t - t0) / dur);
     var e = 1 - Math.pow(1 - p, 3);                  // easeOutCubic
     var v = from + (to - from) * e;
-    el.textContent = 'R' + v.toFixed(2);
+    el.textContent = fmt(v);
     if (p < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -9150,11 +9272,11 @@ document.addEventListener('DOMContentLoaded', function(){
     orig.apply(this, arguments);
     var bar = document.getElementById('sticky-shop-total');
     if (!bar) return;
-    var amtEl = bar.querySelector('.sticky-amt') || bar.querySelector('strong') || bar;
+    var amtEl = bar.querySelector('.sst-amount');
     if (!amtEl) return;
-    var raw = (amtEl.textContent || '').replace(/[^0-9.]/g, '');
-    var newVal = parseFloat(raw) || 0;
-    if (amtEl._lastVal != null && Math.abs(newVal - amtEl._lastVal) > 0.01){
+    var raw = (amtEl.textContent || '').replace(/[^0-9]/g, '');
+    var newVal = parseInt(raw, 10) || 0;
+    if (amtEl._lastVal != null && Math.abs(newVal - amtEl._lastVal) > 0){
       _glassTweenNum(amtEl, newVal);
     }
     amtEl._lastVal = newVal;
@@ -9254,11 +9376,9 @@ document.addEventListener('DOMContentLoaded', function(){
   if (typeof navTo === 'function'){
     var origN = navTo;
     navTo = function(slug, btn){
-      // Skip transition for the very first call (initial route)
-      if (!window._glassNavReady) { window._glassNavReady = true; return origN.apply(this, arguments); }
       try{
         document.documentElement.removeAttribute('data-vt-mode');
-        document.startViewTransition(function(){ origN.call(this, slug, btn); });
+        document.startViewTransition(function(){ origN.call(window, slug, btn); });
       } catch(e){ origN.apply(this, arguments); }
     };
   }
@@ -9267,33 +9387,33 @@ document.addEventListener('DOMContentLoaded', function(){
     switchWeek = function(n, btn){
       try{
         document.documentElement.removeAttribute('data-vt-mode');
-        document.startViewTransition(function(){ origW.call(this, n, btn); });
+        document.startViewTransition(function(){ origW.call(window, n, btn); });
       } catch(e){ origW.apply(this, arguments); }
     };
   }
 });
 
-// ── 12 · Theme crossfade via View Transitions ─────────────────────────────
-document.addEventListener('DOMContentLoaded', function(){
-  if (!document.startViewTransition || typeof toggleTheme !== 'function') return;
-  var orig = toggleTheme;
-  window.toggleTheme = toggleTheme = function(btn){
-    try{
-      document.documentElement.setAttribute('data-vt-mode', 'theme');
-      var t = document.startViewTransition(function(){ orig.call(this, btn); });
-      if (t && t.finished) t.finished.finally(function(){
-        document.documentElement.removeAttribute('data-vt-mode');
-      });
-    } catch(e){ orig.apply(this, arguments); }
-  };
-});
+// ── 12 · Theme crossfade is now handled inside the icon-swap wrap (#14)
+//        so the icon update happens INSIDE the View Transition callback,
+//        avoiding the stale-data-theme race that the standalone wrap had.
 
-// ── 13 · Scroll-driven parallax: scale recipe SVGs when in view ───────────
+// ── 13 · Scroll-driven parallax + Bug-D-fix wrap: every <svg class="rcard-svg">
+//        gets wrapped in a <div class="rcard-svg-wrap"> so the sheen pseudo
+//        (CSS) has somewhere to render (SVG elements don't support ::after).
 (function(){
   if (!('IntersectionObserver' in window)) return;
   var seen = new WeakSet();
+  function ensureWrap(svg){
+    var p = svg.parentNode;
+    if (!p || (p.classList && p.classList.contains('rcard-svg-wrap'))) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'rcard-svg-wrap';
+    p.insertBefore(wrap, svg);
+    wrap.appendChild(svg);
+  }
   function setup(){
     document.querySelectorAll('.rcard-svg').forEach(function(svg){
+      ensureWrap(svg);
       if (seen.has(svg)) return;
       seen.add(svg);
       var io = new IntersectionObserver(function(entries){
@@ -9405,37 +9525,311 @@ document.addEventListener('DOMContentLoaded', function(){
     moon: '<svg class="icn" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
     sun: '<svg class="icn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l1.4 1.4M16.6 16.6 18 18M6 18l1.4-1.4M16.6 7.4 18 6"/></svg>'
   };
-  var swaps = [
-    ['onclick="navTo(\'chef\',this)">🧑‍🍳 Chef',       'onclick="navTo(\'chef\',this)">' + SVG.chef + '<span>Chef</span>'],
-    ['onclick="navTo(\'favs\',this)">⭐ Favourites',          'onclick="navTo(\'favs\',this)">' + SVG.star + '<span>Favourites</span>'],
-    ['onclick="navTo(\'search\',this)">🔍 Search',           'onclick="navTo(\'search\',this)">' + SVG.search + '<span>Search</span>']
-  ];
-  swaps.forEach(function(pair){
-    document.querySelectorAll('.nav-btn').forEach(function(b){
-      // Match by current visible text since onclick is on the element
-      var t = b.textContent.trim();
-      if (pair[0].indexOf('Chef')   >= 0 && /^🧑.*Chef$/.test(t))      b.innerHTML = SVG.chef       + '<span>Chef</span>';
-      if (pair[0].indexOf('Favour') >= 0 && /^⭐.*Favourites$/.test(t)) b.innerHTML = SVG.star       + '<span>Favourites</span>';
-      if (pair[0].indexOf('Search') >= 0 && /^🔍.*Search$/.test(t))    b.innerHTML = SVG.search     + '<span>Search</span>';
-    });
+  // Single-pass nav-btn icon swap (text-content match)
+  document.querySelectorAll('.nav-btn').forEach(function(b){
+    var t = b.textContent.trim();
+    if (/^🧑.*Chef$/.test(t))         b.innerHTML = SVG.chef   + '<span>Chef</span>';
+    else if (/^⭐.*Favourites$/.test(t)) b.innerHTML = SVG.star   + '<span>Favourites</span>';
+    else if (/^🔍.*Search$/.test(t))    b.innerHTML = SVG.search + '<span>Search</span>';
   });
   // CJ toggle button (drumstick)
   var cj = document.getElementById('cj-toggle');
   if (cj && cj.textContent.trim() === '🍗') cj.innerHTML = SVG.drumstick;
-  // Theme toggle (moon/sun) — wrap toggleTheme to swap icon at runtime
+  // Theme toggle (moon/sun) — wraps toggleTheme to swap icon AND run the
+  // View Transition crossfade inside ONE callback, so the icon read sees the
+  // post-toggle data-theme value (Bug E fix).
   var themeBtn = document.getElementById('theme-btn');
   if (themeBtn){
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    themeBtn.innerHTML = (isDark ? SVG.sun + '<span>Light</span>' : SVG.moon + '<span>Dark</span>');
+    var isDark0 = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeBtn.innerHTML = (isDark0 ? SVG.sun + '<span>Light</span>' : SVG.moon + '<span>Dark</span>');
     if (typeof toggleTheme === 'function'){
       var origT = toggleTheme;
       window.toggleTheme = toggleTheme = function(btn){
-        origT.call(this, btn);
-        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (themeBtn) themeBtn.innerHTML = (dark ? SVG.sun + '<span>Light</span>' : SVG.moon + '<span>Dark</span>');
+        function _swap(){
+          origT.call(window, btn);
+          var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+          themeBtn.innerHTML = (dark ? SVG.sun + '<span>Light</span>' : SVG.moon + '<span>Dark</span>');
+        }
+        if (document.startViewTransition){
+          document.documentElement.setAttribute('data-vt-mode', 'theme');
+          var t = document.startViewTransition(_swap);
+          if (t && t.finished) t.finished.finally(function(){
+            document.documentElement.removeAttribute('data-vt-mode');
+          });
+        } else {
+          _swap();
+        }
       };
     }
   }
+});
+</script>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+// IN-APP PERSISTENT TIMER (v25)
+//
+// Public API:
+//   _mpStartTimer(mins [, label])  → spawn a new timer
+//   _mpToggleTimer(id)             → pause/resume
+//   _mpAddMin(id, delta)           → +1 / -1 minute
+//   _mpCloseTimer(id)              → remove
+//
+// State is kept in window._mpTimers[] and persisted to
+// localStorage('mealplan_timers_v1') so reloads pick up where they left off.
+// ════════════════════════════════════════════════════════════════════════════
+
+window._mpTimers = window._mpTimers || [];
+var _MP_KEY = 'mealplan_timers_v1';
+
+function _mpSaveTimers(){
+  try { localStorage.setItem(_MP_KEY, JSON.stringify(window._mpTimers)); } catch(e){}
+}
+function _mpLoadTimers(){
+  try {
+    var raw = localStorage.getItem(_MP_KEY);
+    if (!raw) return;
+    var arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return;
+    // Filter out timers that ended more than 5 minutes ago
+    var now = Date.now();
+    window._mpTimers = arr.filter(function(t){
+      if (!t) return false;
+      var elapsed = (t.pausedAt || now) - t.startedAt - (t.pausedTotal || 0);
+      var remaining = t.duration - elapsed;
+      return remaining > -5*60*1000;  // keep up to 5min after end
+    });
+  } catch(e){ window._mpTimers = []; }
+}
+
+function _mpStartTimer(mins, label){
+  if (!mins || mins < 1) return;
+  if (window._mpTimers.length >= 6) {
+    // cap at 6 concurrent timers
+    if (typeof showToast === 'function') showToast('Max 6 timers');
+    return;
+  }
+  var id = 't' + Date.now() + Math.floor(Math.random()*1000);
+  window._mpTimers.push({
+    id: id,
+    label: label || (mins + ' min'),
+    duration: mins * 60 * 1000,
+    startedAt: Date.now(),
+    pausedAt: null,
+    pausedTotal: 0,
+    notified: false
+  });
+  _mpSaveTimers();
+  _mpRenderTimers();
+  _mpStartLoop();
+  // Visual feedback near the source button
+  if (navigator.vibrate) navigator.vibrate(15);
+  // Prime audio context with a silent ping (iOS gesture unlock)
+  _mpPrimeAudio();
+}
+
+function _mpToggleTimer(id){
+  var t = window._mpTimers.find(function(x){ return x.id === id; });
+  if (!t) return;
+  var now = Date.now();
+  if (t.pausedAt){
+    // Resume: shift startedAt forward by the paused duration
+    t.pausedTotal += (now - t.pausedAt);
+    t.pausedAt = null;
+  } else {
+    t.pausedAt = now;
+  }
+  _mpSaveTimers(); _mpRenderTimers();
+  if (navigator.vibrate) navigator.vibrate(15);
+}
+
+function _mpAddMin(id, delta){
+  var t = window._mpTimers.find(function(x){ return x.id === id; });
+  if (!t) return;
+  t.duration = Math.max(60*1000, t.duration + delta * 60 * 1000);
+  // Update label if it was the auto-generated "X min" one
+  if (/^\d+ min$/.test(t.label)){
+    t.label = Math.round(t.duration / 60000) + ' min';
+  }
+  // If timer was done, reset to running so it can finish again
+  if (t.notified){
+    t.notified = false;
+    t.startedAt = Date.now() - (t.duration - delta * 60 * 1000);
+    if (delta > 0) t.startedAt = Date.now();  // restart from now if adding time after done
+  }
+  _mpSaveTimers(); _mpRenderTimers();
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function _mpCloseTimer(id){
+  window._mpTimers = window._mpTimers.filter(function(t){ return t.id !== id; });
+  _mpSaveTimers(); _mpRenderTimers();
+  if (window._mpTimers.length === 0) _mpStopLoop();
+}
+
+function _mpExpandTimer(el){
+  el.classList.toggle('expanded');
+}
+
+function _mpRemaining(t){
+  var ref = t.pausedAt || Date.now();
+  var elapsed = ref - t.startedAt - (t.pausedTotal || 0);
+  return t.duration - elapsed;
+}
+
+function _mpFormatTime(ms){
+  if (ms < 0) ms = 0;
+  var totalSec = Math.ceil(ms / 1000);
+  var h = Math.floor(totalSec / 3600);
+  var m = Math.floor((totalSec % 3600) / 60);
+  var s = totalSec % 60;
+  if (h > 0) return h + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function _mpRenderTimers(){
+  var stack = document.getElementById('mp-timer-stack');
+  if (!stack){
+    stack = document.createElement('div');
+    stack.id = 'mp-timer-stack';
+    stack.setAttribute('role', 'timer');
+    stack.setAttribute('aria-live', 'polite');
+    document.body.appendChild(stack);
+  }
+  // Diff: keep existing nodes if id matches; remove stale; add new
+  var existingIds = {};
+  Array.from(stack.children).forEach(function(node){
+    var id = node.dataset.tid;
+    if (window._mpTimers.find(function(t){ return t.id === id; })) {
+      existingIds[id] = node;
+    } else {
+      node.remove();
+    }
+  });
+  window._mpTimers.forEach(function(t){
+    var node = existingIds[t.id];
+    if (!node){
+      node = document.createElement('div');
+      node.className = 'mp-timer';
+      node.dataset.tid = t.id;
+      node.onclick = function(e){
+        if (e.target.closest('.mp-timer-btn')) return;
+        _mpExpandTimer(node);
+      };
+      stack.appendChild(node);
+    }
+    var remaining = _mpRemaining(t);
+    var paused = !!t.pausedAt;
+    var done = remaining <= 0;
+    node.classList.toggle('paused', paused && !done);
+    node.classList.toggle('done', done);
+    var pct = Math.max(0, Math.min(100, ((t.duration - remaining) / t.duration) * 100));
+    node.innerHTML =
+      '<div class="mp-timer-info">' +
+        '<div class="mp-timer-time">' + (done ? 'TIME!' : _mpFormatTime(remaining)) + '</div>' +
+        '<div class="mp-timer-label">' + _mpEsc(t.label) + (paused ? ' · paused' : '') + '</div>' +
+      '</div>' +
+      '<div class="mp-timer-controls">' +
+        '<button class="mp-timer-btn" onclick="event.stopPropagation();_mpAddMin(\'' + t.id + '\',-1)" aria-label="Subtract 1 minute">−1</button>' +
+        '<button class="mp-timer-btn" onclick="event.stopPropagation();_mpToggleTimer(\'' + t.id + '\')" aria-label="' + (paused ? 'Resume' : 'Pause') + '">' + (paused ? '▶' : '❙❙') + '</button>' +
+        '<button class="mp-timer-btn" onclick="event.stopPropagation();_mpAddMin(\'' + t.id + '\',1)" aria-label="Add 1 minute">+1</button>' +
+      '</div>' +
+      '<button class="mp-timer-btn x" onclick="event.stopPropagation();_mpCloseTimer(\'' + t.id + '\')" aria-label="Close timer">✕</button>' +
+      '<div class="mp-timer-bar" style="width:' + pct + '%"></div>';
+  });
+}
+
+function _mpEsc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _mpStartLoop(){
+  if (window._mpTimerLoop) return;
+  window._mpTimerLoop = setInterval(_mpTick, 250);
+}
+function _mpStopLoop(){
+  if (window._mpTimerLoop){ clearInterval(window._mpTimerLoop); window._mpTimerLoop = null; }
+}
+
+function _mpTick(){
+  if (!window._mpTimers.length){ _mpStopLoop(); return; }
+  var anyDone = false;
+  window._mpTimers.forEach(function(t){
+    var remaining = _mpRemaining(t);
+    if (remaining <= 0 && !t.notified){
+      t.notified = true;
+      anyDone = true;
+      _mpAlarm(t);
+    }
+  });
+  _mpRenderTimers();
+  if (anyDone) _mpSaveTimers();
+}
+
+// ── Audio + vibration alarm ────────────────────────────────────────────────
+var _mpAudioCtx = null;
+function _mpPrimeAudio(){
+  if (_mpAudioCtx) return;
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    _mpAudioCtx = new Ctx();
+    if (_mpAudioCtx.state === 'suspended') _mpAudioCtx.resume();
+  } catch(e){ _mpAudioCtx = null; }
+}
+
+function _mpBeep(freq, dur, vol){
+  if (!_mpAudioCtx) _mpPrimeAudio();
+  if (!_mpAudioCtx) return;
+  try {
+    var osc = _mpAudioCtx.createOscillator();
+    var gain = _mpAudioCtx.createGain();
+    osc.frequency.value = freq || 880;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0, _mpAudioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(vol || 0.3, _mpAudioCtx.currentTime + 0.01);
+    gain.gain.linearRampToValueAtTime(0, _mpAudioCtx.currentTime + (dur || 0.2));
+    osc.connect(gain).connect(_mpAudioCtx.destination);
+    osc.start();
+    osc.stop(_mpAudioCtx.currentTime + (dur || 0.2) + 0.05);
+  } catch(e){}
+}
+
+function _mpAlarm(t){
+  // Three-tone melody
+  _mpBeep(880, 0.18, 0.35);
+  setTimeout(function(){ _mpBeep(1100, 0.18, 0.35); }, 220);
+  setTimeout(function(){ _mpBeep(1320, 0.32, 0.35); }, 440);
+  // Vibration pattern
+  if (navigator.vibrate) navigator.vibrate([200, 80, 200, 80, 400]);
+  // Repeat audio twice more (every 3s) until user dismisses
+  var reps = 0;
+  var interval = setInterval(function(){
+    var still = window._mpTimers.find(function(x){ return x.id === t.id && x.notified; });
+    if (!still || reps >= 4){ clearInterval(interval); return; }
+    reps++;
+    _mpBeep(880, 0.18, 0.3);
+    setTimeout(function(){ _mpBeep(1320, 0.28, 0.3); }, 220);
+    if (navigator.vibrate) navigator.vibrate([200, 80, 400]);
+  }, 4000);
+}
+
+// ── Bootstrap on DOMContentLoaded ──────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  _mpLoadTimers();
+  if (window._mpTimers.length){
+    _mpRenderTimers();
+    _mpStartLoop();
+  }
+  // Prime audio on first user gesture (iOS requires it)
+  var primer = function(){
+    _mpPrimeAudio();
+    document.removeEventListener('click', primer);
+    document.removeEventListener('touchstart', primer);
+  };
+  document.addEventListener('click', primer, { once: true });
+  document.addEventListener('touchstart', primer, { once: true, passive: true });
 });
 </script>
 
