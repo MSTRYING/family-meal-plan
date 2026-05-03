@@ -1629,6 +1629,54 @@ body.cj-hidden .cj-note{display:none!important}
 
 /* ══ END MOBILE IMPROVEMENTS ══ */
 
+/* ── Prep planner card ────────────────────────────────────────────────────── */
+.prep-group-label{
+  font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink4);
+  padding:10px 1.25rem 6px;border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,.015)
+}
+[data-theme="dark"] .prep-group-label{background:rgba(255,255,255,.03)}
+.prep-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 1.25rem;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+  -webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none
+}
+.prep-item:active{background:rgba(0,0,0,.04)}
+.prep-item-check{
+  font-size:17px;color:var(--ink4);flex-shrink:0;line-height:1.25;
+  margin-top:1px;transition:color .2s
+}
+.prep-item-bar{
+  width:3px;border-radius:2px;align-self:stretch;
+  flex-shrink:0;min-height:22px;margin-top:2px
+}
+.prep-item-body{flex:1;min-width:0}
+.prep-item-name{
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  color:var(--ink);line-height:1.3;transition:color .2s
+}
+.prep-item-meta{
+  font-family:var(--sans);font-size:11px;color:var(--ink4);
+  margin:2px 0 4px
+}
+.prep-item-note{
+  font-family:var(--sans);font-size:11.5px;color:var(--ink3);
+  line-height:1.6;margin:0;padding:4px 8px;
+  background:rgba(0,0,0,.03);border-radius:var(--rsm);
+  border-left:2px solid var(--border)
+}
+[data-theme="dark"] .prep-item-note{background:rgba(255,255,255,.04)}
+.prep-done{opacity:.42}
+.prep-done .prep-item-name{text-decoration:line-through;color:var(--ink4)}
+.prep-done .prep-item-check{color:var(--green2)}
+.prep-footer{
+  padding:8px 1.25rem 12px;font-family:var(--sans);
+  font-size:11px;color:var(--ink4);font-style:italic
+}
+/* ── End prep planner ── */
+
 </style>
 
 </head>
@@ -8419,6 +8467,213 @@ function _injectTimerBtns() {
 document.addEventListener('DOMContentLoaded', _injectTimerBtns);
 
 // ════════════════════════════════════════════════════════════════════════════
+</script>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+// PREP PLANNER — Sunday summary card
+// Scans each week's meal pages for make-ahead / prep-ahead requirements and
+// injects a grouped checklist onto that week's Sunday page.
+// ════════════════════════════════════════════════════════════════════════════
+
+function _renderPrepCard(wkNum) {
+  var DAYS       = ['mon','tue','wed','thu','fri','sat','sun'];
+  var DAYNAMES   = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  // Night before each day (what you prep the evening prior)
+  var PREPNIGHTS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  // Matches language that signals a prep-ahead requirement
+  var PREP_RX = /night\s*before|make[\s-]ahead|prep[\s-]ahead|overnight|marinate|soak[\s\w]*night|pre-?cook|batch\s*cook|refrigerate\s*over|prepare\s*the\s*night/i;
+
+  // Requires at least one action verb — filters out passive descriptions like
+  // "the flavours have deepened overnight" (no cooking required).
+  var ACTION_RX = /soak|mix|refrigerat|marinat|cook|boil|prep|prepar|make|blend|wrap|pack|slice|chop|combine|drain|toss|pour|stir|cover/i;
+
+  // Chip text to skip even if PREP_RX matches
+  var CHIP_SKIP = /prep\s+\d+\s*min|quick|no\s*fridge|pack\b|flask|week\s+\d|day\s+\d|leftover/i;
+
+  var TYPE_COL = { Breakfast: '#16A34A', Lunch: '#3B82F6', Dinner: '#E11D48' };
+
+  // ── Scan all 7 days ──────────────────────────────────────────────────────
+  var items = [];
+  DAYS.forEach(function(d, i) {
+    var pageId = wkNum === 1 ? d : 'w' + wkNum + '-' + d;
+    var page   = document.getElementById(pageId);
+    if (!page) return;
+
+    page.querySelectorAll('.meal-block').forEach(function(mb) {
+      var nameEl = mb.querySelector('.meal-head-name');
+      var pillEl = mb.querySelector('.type-pill');
+      var descEl = mb.querySelector('.rcard-desc');
+      var mealName = nameEl ? nameEl.textContent.trim() : '';
+      var mealType = pillEl ? pillEl.textContent.trim() : '';
+      if (!mealName) return;
+
+      var hasPrep  = false;
+      var prepNote = '';
+
+      // 1. Chips — most explicit signal
+      mb.querySelectorAll('.rcard-chips .chip').forEach(function(chip) {
+        var t = chip.textContent.trim();
+        if (!CHIP_SKIP.test(t) && PREP_RX.test(t) && ACTION_RX.test(t)) hasPrep = true;
+      });
+
+      // 2. Step text — most actionable note source
+      mb.querySelectorAll('.steps-list li, .method-list li').forEach(function(li) {
+        // Strip leading step-number (the .step-n counter circle renders as text)
+        var t = li.textContent.replace(/^\s*\d+\s*/, '').trim();
+        if (PREP_RX.test(t) && ACTION_RX.test(t)) {
+          hasPrep = true;
+          if (!prepNote && t.length > 12 && t.length < 240) prepNote = t;
+        }
+      });
+
+      // 3. Meat-callout / CJ note
+      var callout = mb.querySelector('.meat-callout, .cj-note');
+      if (callout) {
+        var ct = callout.textContent.replace(/Prep\s+tip\s*:\s*/i, '').trim();
+        if (PREP_RX.test(ct) && ACTION_RX.test(ct)) {
+          hasPrep = true;
+          if (!prepNote && ct.length < 240) prepNote = ct;
+        }
+      }
+
+      // 4. rcard-desc — fallback note source
+      if (descEl) {
+        var dt = descEl.textContent.trim();
+        if (PREP_RX.test(dt) && ACTION_RX.test(dt)) {
+          hasPrep = true;
+          if (!prepNote && dt.length < 200) prepNote = dt;
+        }
+      }
+
+      if (!hasPrep) return;
+
+      // Truncate long notes
+      if (prepNote.length > 200) prepNote = prepNote.slice(0, 197) + '…';
+
+      items.push({
+        day:       DAYNAMES[i],
+        dayIdx:    i,
+        prepNight: PREPNIGHTS[i],
+        daySlug:   d,
+        meal:      mealName,
+        type:      mealType,
+        note:      prepNote
+      });
+    });
+  });
+
+  // ── Find Sunday page for this week ──────────────────────────────────────
+  var sunId   = wkNum === 1 ? 'sun' : 'w' + wkNum + '-sun';
+  var sunPage = document.getElementById(sunId);
+  if (!sunPage) return;
+
+  // Remove existing card
+  var old = document.getElementById('prep-card-w' + wkNum);
+  if (old) old.remove();
+
+  var card = document.createElement('div');
+  card.id        = 'prep-card-w' + wkNum;
+  card.className = 'shop-card';
+  card.style.marginBottom = '1rem';
+
+  // ── Build card body ──────────────────────────────────────────────────────
+  var bodyHtml;
+  if (!items.length) {
+    bodyHtml =
+      '<div style="padding:1.1rem 1.25rem;font-family:var(--sans);font-size:13px;' +
+      'color:var(--ink3);line-height:1.7">' +
+      '🎉 Every meal this week is quick to prep on the day — nothing needed ahead of time!</div>';
+  } else {
+    // Group by prep night, preserving order (Sun → Sat)
+    var nightOrder = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var groups = {};
+    items.forEach(function(item) {
+      if (!groups[item.prepNight]) groups[item.prepNight] = [];
+      groups[item.prepNight].push(item);
+    });
+
+    bodyHtml = nightOrder.filter(function(n){ return groups[n]; }).map(function(night) {
+      var nightItems = groups[night];
+      var rowsHtml = nightItems.map(function(item, idx) {
+        var col  = TYPE_COL[item.type] || 'var(--border)';
+        var eid  = 'pi-w' + wkNum + '-' + item.dayIdx + '-' + idx;
+        var noteHtml = item.note
+          ? '<p class="prep-item-note">' + _prepEsc(item.note) + '</p>'
+          : '';
+        return (
+          '<div class="prep-item" id="' + eid + '" onclick="_togglePrepItem(this)" role="checkbox" aria-checked="false">' +
+            '<div class="prep-item-check" aria-hidden="true">☐</div>' +
+            '<div class="prep-item-bar" style="background:' + col + '"></div>' +
+            '<div class="prep-item-body">' +
+              '<div class="prep-item-name">' + _prepEsc(item.meal) + '</div>' +
+              '<div class="prep-item-meta">' + _prepEsc(item.type) + ' &middot; ' + item.day + '</div>' +
+              noteHtml +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+
+      // Label is "Sunday night", "Monday night", etc.
+      // If it's the same as the current day of week, add "(tonight)"
+      var todayNight = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'][new Date().getDay()];
+      var suffix = night === todayNight ? ' <span style="color:var(--gold);font-weight:800">← tonight</span>' : '';
+
+      return (
+        '<div class="prep-group">' +
+          '<div class="prep-group-label">' + night + ' night' + suffix + '</div>' +
+          rowsHtml +
+        '</div>'
+      );
+    }).join('');
+
+    bodyHtml += '<div class="prep-footer">Tap a task to tick it off as you prep.</div>';
+  }
+
+  card.innerHTML =
+    '<div class="shop-card-header" onclick="toggleCat(\'prep-inner-w' + wkNum + '\')" style="cursor:pointer">' +
+      '<span class="shop-card-icon">📋</span>' +
+      '<span class="shop-card-title">Week ' + wkNum + ' prep planner</span>' +
+      (items.length
+        ? '<span class="shop-card-total" style="color:var(--ink4)">' +
+            items.length + '&thinsp;task' + (items.length !== 1 ? 's' : '') +
+          '</span>'
+        : '') +
+      '<svg class="chevron open" id="chev-prep-inner-w' + wkNum + '" ' +
+        'viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">' +
+        '<path d="M4 6l4 4 4-4"/></svg>' +
+    '</div>' +
+    '<div class="shop-items open" id="cat-prep-inner-w' + wkNum + '">' +
+      bodyHtml +
+    '</div>';
+
+  // Inject after the page-header on Sunday
+  var hdr = sunPage.querySelector('.page-header');
+  if (hdr) hdr.parentNode.insertBefore(card, hdr.nextSibling);
+}
+
+// Escape text for safe innerHTML insertion
+function _prepEsc(t) {
+  return String(t)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Toggle a prep-item checked state (in-memory, resets on reload)
+function _togglePrepItem(el) {
+  var done = el.classList.toggle('prep-done');
+  var chk  = el.querySelector('.prep-item-check');
+  if (chk) chk.textContent = done ? '☑' : '☐';
+  el.setAttribute('aria-checked', done ? 'true' : 'false');
+}
+
+// Render all 4 weeks' prep cards on page load
+document.addEventListener('DOMContentLoaded', function() {
+  [1, 2, 3, 4].forEach(_renderPrepCard);
+});
 </script>
 
 </body>
