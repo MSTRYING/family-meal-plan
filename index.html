@@ -1677,6 +1677,449 @@ body.cj-hidden .cj-note{display:none!important}
 }
 /* ── End prep planner ── */
 
+/* ════════════════════════════════════════════════════════════════════════════
+   GLASS REDESIGN — Apple iOS frosted-glass aesthetic
+   Adds backdrop-filter glass surfaces, spring micro-interactions,
+   View Transitions, hero entry animations, and confetti.
+   This block lives at the END of the stylesheet and overrides earlier rules.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Cubic-beziers used everywhere ──────────────────────────────────────────
+   --ease-spring : iOS-natural overshoot
+   --ease-out    : silky decel for entries
+   --ease-in     : crisp tap-down */
+:root{
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --glass-bg:        rgba(255,255,255,0.62);
+  --glass-bg-strong: rgba(255,255,255,0.82);
+  --glass-border:    rgba(255,255,255,0.55);
+  --glass-stroke:    rgba(255,255,255,0.85);
+  --glass-shadow:    0 12px 32px -16px rgba(15,23,42,0.18), 0 2px 6px -2px rgba(15,23,42,0.06);
+  --glass-shadow-l:  0 24px 56px -20px rgba(15,23,42,0.28), 0 4px 12px -4px rgba(15,23,42,0.10);
+}
+[data-theme="dark"]{
+  --glass-bg:        rgba(20,22,40,0.62);
+  --glass-bg-strong: rgba(20,22,40,0.85);
+  --glass-border:    rgba(255,255,255,0.10);
+  --glass-stroke:    rgba(255,255,255,0.12);
+  --glass-shadow:    0 12px 32px -16px rgba(0,0,0,0.6), 0 2px 6px -2px rgba(0,0,0,0.3);
+  --glass-shadow-l:  0 24px 56px -20px rgba(0,0,0,0.75), 0 4px 12px -4px rgba(0,0,0,0.4);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   1 · FROSTED GLASS NAV BAR
+   ════════════════════════════════════════════════════════════════════════════ */
+.sticky-nav{
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--glass-border) !important;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 8px 28px -16px rgba(0,0,0,0.12) !important;
+  position: sticky; z-index: 100;
+}
+.sticky-nav::after{
+  content:''; position:absolute; left:0; right:0; bottom:-1px; height:1px;
+  background: linear-gradient(90deg, transparent, var(--glass-stroke), transparent);
+  pointer-events:none;
+}
+
+/* Glass nav buttons - liquid pill on active */
+.nav-btn{
+  position:relative;
+  transition: transform 0.32s var(--ease-spring),
+              background 0.28s ease,
+              color 0.28s ease,
+              box-shadow 0.28s ease !important;
+  border-radius: 14px !important;
+}
+.nav-btn.on{
+  background: linear-gradient(180deg, rgba(255,107,53,0.96), rgba(225,29,72,0.96)) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 18px -6px rgba(255,107,53,0.55),
+              inset 0 1px 0 rgba(255,255,255,0.35),
+              inset 0 -1px 0 rgba(0,0,0,0.15) !important;
+  transform: scale(1.04);
+}
+.nav-btn:not(.on):hover{
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="dark"] .nav-btn:not(.on):hover{
+  background: rgba(255,255,255,0.06);
+}
+
+/* Glass week switcher */
+.week-switcher{
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--glass-border) !important;
+  position: sticky; z-index: 99;
+}
+.week-btn{
+  transition: transform 0.32s var(--ease-spring),
+              background 0.28s ease,
+              box-shadow 0.28s ease !important;
+  border-radius: 14px !important;
+}
+.week-btn.on{
+  background: linear-gradient(180deg, rgba(255,107,53,0.96), rgba(225,29,72,0.96)) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 22px -8px rgba(255,107,53,0.6),
+              inset 0 1px 0 rgba(255,255,255,0.35),
+              inset 0 -1px 0 rgba(0,0,0,0.18) !important;
+  transform: scale(1.05);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   2 · GLASS MEAL CARDS & RECIPE CARDS & SHOP CARDS
+   ════════════════════════════════════════════════════════════════════════════ */
+.rcard, .meal-block, .shop-card, .pantry-card, #prep-card-w1, #prep-card-w2,
+#prep-card-w3, #prep-card-w4, .nut-card, .week-glance-card{
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 1px 0 var(--glass-stroke) inset,
+    0 -1px 0 rgba(0,0,0,0.04) inset,
+    var(--glass-shadow) !important;
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.3s ease;
+}
+[data-theme="dark"] .rcard,
+[data-theme="dark"] .meal-block,
+[data-theme="dark"] .shop-card,
+[data-theme="dark"] .pantry-card,
+[data-theme="dark"] #prep-card-w1,
+[data-theme="dark"] #prep-card-w2,
+[data-theme="dark"] #prep-card-w3,
+[data-theme="dark"] #prep-card-w4,
+[data-theme="dark"] .nut-card,
+[data-theme="dark"] .week-glance-card{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    var(--glass-shadow) !important;
+}
+
+/* Hairline highlight on top edge of meal blocks (catches light) */
+.meal-block::before{
+  content:''; position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+  pointer-events: none; border-radius: 1px;
+}
+[data-theme="dark"] .meal-block::before{
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+}
+.meal-block{ position: relative; overflow: hidden; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   3 · GLASS ACTION SHEETS  (replaces native confirm() dialogs)
+   ════════════════════════════════════════════════════════════════════════════ */
+.glass-sheet-overlay{
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(15,17,33,0.22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.glass-sheet-overlay.show{ opacity: 1; pointer-events: auto; }
+
+.glass-sheet{
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9999;
+  max-width: 480px; margin: 0 auto;
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  border-radius: 22px 22px 0 0;
+  border-top: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-l);
+  padding: 14px 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+  transform: translateY(100%);
+  transition: transform 0.42s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.glass-sheet.show{ transform: translateY(0); }
+.glass-sheet-handle{
+  width: 36px; height: 5px; border-radius: 3px;
+  background: rgba(0,0,0,0.18);
+  margin: 0 auto 14px;
+}
+[data-theme="dark"] .glass-sheet-handle{ background: rgba(255,255,255,0.22); }
+.glass-sheet-title{
+  font-family: var(--sans); font-size: 17px; font-weight: 700;
+  color: var(--ink); text-align: center; margin: 0 0 8px;
+}
+.glass-sheet-msg{
+  font-family: var(--sans); font-size: 14px; color: var(--ink3);
+  text-align: center; line-height: 1.5; margin: 0 0 1.25rem;
+}
+.glass-sheet-btns{ display: flex; gap: 10px; }
+.glass-sheet-btn{
+  flex: 1; padding: 14px 16px; border-radius: 14px;
+  font-family: var(--sans); font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer; touch-action: manipulation;
+  transition: transform 0.18s var(--ease-spring), background 0.18s ease, box-shadow 0.18s ease;
+}
+.glass-sheet-btn.cancel{
+  background: rgba(0,0,0,0.06); color: var(--ink);
+}
+[data-theme="dark"] .glass-sheet-btn.cancel{
+  background: rgba(255,255,255,0.08); color: var(--ink);
+}
+.glass-sheet-btn.confirm{
+  background: linear-gradient(180deg, #FF6B35, #E11D48); color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(255,107,53,0.55),
+              inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.glass-sheet-btn.danger{
+  background: linear-gradient(180deg, #E11D48, #BE123C); color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(225,29,72,0.55),
+              inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.glass-sheet-btn:active{ transform: scale(0.96); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   4 · STAGED HERO ENTRY  (cascade of items fades up + scales in)
+   ════════════════════════════════════════════════════════════════════════════ */
+@keyframes glassFadeUp{
+  from{ opacity: 0; transform: translateY(18px) scale(0.98); }
+  to  { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.hero-inner > *{
+  opacity: 0;
+  animation: glassFadeUp 0.7s var(--ease-out) forwards;
+}
+.hero-inner > :nth-child(1){ animation-delay: 0.05s; }
+.hero-inner > :nth-child(2){ animation-delay: 0.18s; }
+.hero-inner > :nth-child(3){ animation-delay: 0.30s; }
+.hero-inner > :nth-child(4){ animation-delay: 0.42s; }
+.hero-inner > :nth-child(5){ animation-delay: 0.54s; }
+.hero-inner > :nth-child(6){ animation-delay: 0.66s; }
+
+/* Stagger meal blocks on first paint of any active page */
+.page.on .meal-block{
+  opacity: 0;
+  animation: glassFadeUp 0.6s var(--ease-out) forwards;
+}
+.page.on .meal-block:nth-of-type(1){ animation-delay: 0.05s; }
+.page.on .meal-block:nth-of-type(2){ animation-delay: 0.14s; }
+.page.on .meal-block:nth-of-type(3){ animation-delay: 0.23s; }
+.page.on .meal-block:nth-of-type(4){ animation-delay: 0.32s; }
+.page.on .meal-block:nth-of-type(5){ animation-delay: 0.41s; }
+/* Once user has viewed the page, suppress re-runs */
+.page.animated .meal-block{ opacity: 1 !important; animation: none !important; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   5 · ANIMATED BRAND-MARK BLOB BEHIND HERO
+   ════════════════════════════════════════════════════════════════════════════ */
+.hero{ position: relative; overflow: hidden; isolation: isolate; }
+.hero::before{
+  content:''; position: absolute;
+  top: -45%; left: 50%; transform: translateX(-50%) rotate(0);
+  width: 130%; aspect-ratio: 1; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(255,107,53,0.28), transparent 55%),
+    radial-gradient(ellipse at 70% 60%, rgba(225,29,72,0.22), transparent 55%),
+    radial-gradient(ellipse at 50% 80%, rgba(251,191,36,0.16), transparent 55%);
+  filter: blur(70px);
+  border-radius: 50%;
+  animation: heroSpin 24s linear infinite;
+  opacity: 0.85;
+  z-index: -1;
+}
+[data-theme="dark"] .hero::before{
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(255,107,53,0.34), transparent 55%),
+    radial-gradient(ellipse at 70% 60%, rgba(225,29,72,0.28), transparent 55%),
+    radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.20), transparent 55%);
+  opacity: 0.7;
+}
+@keyframes heroSpin{
+  from{ transform: translateX(-50%) rotate(0deg); }
+  to  { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   6 · SHIMMER SKELETON  (utility class — applied programmatically before paint)
+   ════════════════════════════════════════════════════════════════════════════ */
+@keyframes shimmer{
+  from{ background-position: 200% 0; }
+  to  { background-position: -200% 0; }
+}
+.shimmer-skel{
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0.04) 0%,
+    rgba(0,0,0,0.10) 50%,
+    rgba(0,0,0,0.04) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 12px; min-height: 80px;
+}
+[data-theme="dark"] .shimmer-skel{
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.10) 50%,
+    rgba(255,255,255,0.04) 100%);
+}
+
+/* Boot-flash: hide content until JS runs (prevents FOUC during entry stagger) */
+html.boot-pending .hero-inner > *{ visibility: hidden; }
+html.boot-pending .hero-inner > *{ visibility: visible; } /* visible immediately so animation can apply */
+
+/* ════════════════════════════════════════════════════════════════════════════
+   7 · SPRING-PHYSICS TAP FEEDBACK (every interactive surface)
+   ════════════════════════════════════════════════════════════════════════════ */
+.nav-btn:active, .week-btn:active, .shop-card-header:active,
+.share-week-btn:active, .check-row:active, .add-item-btn:active,
+.fz-btn:active, .cj-toggle-btn:active, .rating-btn:active,
+.swap-btn:active, .pantry-card-clear:active, .row-del:active,
+.row-carryover:active, .glass-sheet-btn:active, .prep-item:active{
+  transform: scale(0.96);
+  transition: transform 0.12s var(--ease-spring) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   8 · ANIMATED CHECK POP + GREEN HALO  (no JS change — pure CSS on .done)
+   ════════════════════════════════════════════════════════════════════════════ */
+.check-row .check-box{
+  transition: background 0.25s ease, border-color 0.25s ease,
+              transform 0.4s var(--ease-spring) !important;
+  position: relative;
+}
+.check-row.done .check-box{
+  animation: checkPop 0.5s var(--ease-spring);
+}
+.check-row.done .check-box::after{
+  content:''; position: absolute; inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(22,163,74,0.35) 0%, transparent 70%);
+  pointer-events: none;
+  animation: haloFlash 0.7s ease-out;
+}
+@keyframes checkPop{
+  0%   { transform: scale(1) rotate(0); }
+  45%  { transform: scale(1.45) rotate(-8deg); }
+  70%  { transform: scale(0.92) rotate(4deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes haloFlash{
+  0%   { opacity: 1; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   11 · VIEW TRANSITIONS  (slide+fade for day/week swaps, crossfade for theme)
+   ════════════════════════════════════════════════════════════════════════════ */
+@keyframes vtFadeOutLeft  { to   { opacity: 0; transform: translateX(-14px); } }
+@keyframes vtFadeInRight  { from { opacity: 0; transform: translateX(14px); }  }
+@keyframes vtFadeOutRight { to   { opacity: 0; transform: translateX(14px); }  }
+@keyframes vtFadeInLeft   { from { opacity: 0; transform: translateX(-14px); } }
+@keyframes vtCrossfade    { from { opacity: 0; } }
+@keyframes vtCrossfadeOut { to   { opacity: 0; } }
+
+::view-transition-old(root){
+  animation: vtFadeOutLeft 0.28s var(--ease-in) forwards;
+}
+::view-transition-new(root){
+  animation: vtFadeInRight 0.32s var(--ease-out) forwards;
+}
+/* Theme toggle uses pure crossfade (no slide) */
+html[data-vt-mode="theme"]::view-transition-old(root){
+  animation: vtCrossfadeOut 0.4s ease forwards;
+}
+html[data-vt-mode="theme"]::view-transition-new(root){
+  animation: vtCrossfade 0.4s ease forwards;
+}
+/* Reverse direction for back-nav */
+html[data-vt-mode="back"]::view-transition-old(root){
+  animation: vtFadeOutRight 0.28s var(--ease-in) forwards;
+}
+html[data-vt-mode="back"]::view-transition-new(root){
+  animation: vtFadeInLeft 0.32s var(--ease-out) forwards;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   13 · SCROLL-DRIVEN PARALLAX  (recipe SVGs scale on intersection)
+   ════════════════════════════════════════════════════════════════════════════ */
+.rcard-svg{
+  transition: transform 0.9s var(--ease-out);
+  transform-origin: center;
+}
+.rcard-svg.in-view{ transform: scale(1.04); }
+
+/* Soft top-light gradient sheen on every recipe SVG (#15) */
+.rcard-svg{ position: relative; overflow: hidden; }
+.rcard-svg::after{
+  content:''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 35%, rgba(0,0,0,0.06) 100%);
+  mix-blend-mode: overlay;
+}
+[data-theme="dark"] .rcard-svg::after{
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.18) 100%);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   16 · GLASS TYPE PILLS  (Breakfast / Lunch / Dinner)
+   ════════════════════════════════════════════════════════════════════════════ */
+.type-pill, .tp-b, .tp-l, .tp-d{
+  background: var(--glass-bg-strong) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  backdrop-filter: blur(8px) saturate(150%);
+  border: 1px solid var(--glass-border) !important;
+  position: relative; overflow: hidden;
+  box-shadow: 0 1px 0 var(--glass-stroke) inset,
+              0 4px 10px -4px rgba(15,23,42,0.12) !important;
+}
+.tp-b{ color: #15803D !important; }
+.tp-l{ color: #1E40AF !important; }
+.tp-d{ color: #9F1239 !important; }
+.tp-b::before, .tp-l::before, .tp-d::before{
+  content:''; position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none;
+}
+.tp-b::before{ background: radial-gradient(at top, rgba(22,163,74,0.20), transparent 65%); }
+.tp-l::before{ background: radial-gradient(at top, rgba(59,130,246,0.20), transparent 65%); }
+.tp-d::before{ background: radial-gradient(at top, rgba(225,29,72,0.20), transparent 65%); }
+
+[data-theme="dark"] .type-pill,
+[data-theme="dark"] .tp-b,
+[data-theme="dark"] .tp-l,
+[data-theme="dark"] .tp-d{
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+[data-theme="dark"] .tp-b{ color: #4ADE80 !important; }
+[data-theme="dark"] .tp-l{ color: #93C5FD !important; }
+[data-theme="dark"] .tp-d{ color: #FB7185 !important; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   14 · MONOLINE SF-STYLE NAV ICONS
+   ════════════════════════════════════════════════════════════════════════════ */
+.icn{
+  display: inline-block; width: 17px; height: 17px;
+  vertical-align: -3px; margin-right: 4px;
+  stroke: currentColor; stroke-width: 1.6;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.cj-toggle-btn .icn{ width: 19px; height: 19px; margin-right: 0; }
+.nav-btn.on .icn{ stroke: #fff; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   Reduced-motion respect (accessibility)
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .hero::before{ animation: none !important; }
+  .rcard-svg.in-view{ transform: none !important; }
+}
+
+/* ── END GLASS REDESIGN ─────────────────────────────────────────────────── */
+
 </style>
 
 </head>
@@ -8673,6 +9116,326 @@ function _togglePrepItem(el) {
 // Render all 4 weeks' prep cards on page load
 document.addEventListener('DOMContentLoaded', function() {
   [1, 2, 3, 4].forEach(_renderPrepCard);
+});
+</script>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+// GLASS REDESIGN — runtime behaviors
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── 9 · Count-up tween for currency text ──────────────────────────────────
+function _glassTweenNum(el, to, dur){
+  if (!el) return;
+  var raw = (el.textContent || '').replace(/[^0-9.]/g, '');
+  var from = parseFloat(raw) || 0;
+  if (Math.abs(from - to) < 0.01) { el.textContent = 'R' + to.toFixed(2); return; }
+  dur = dur || 380;
+  var t0 = performance.now();
+  function step(t){
+    var p = Math.min(1, (t - t0) / dur);
+    var e = 1 - Math.pow(1 - p, 3);                  // easeOutCubic
+    var v = from + (to - from) * e;
+    el.textContent = 'R' + v.toFixed(2);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Wrap _updateStickyTotal so the sticky bar tweens instead of snaps
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof _updateStickyTotal !== 'function') return;
+  var orig = _updateStickyTotal;
+  _updateStickyTotal = function(){
+    orig.apply(this, arguments);
+    var bar = document.getElementById('sticky-shop-total');
+    if (!bar) return;
+    var amtEl = bar.querySelector('.sticky-amt') || bar.querySelector('strong') || bar;
+    if (!amtEl) return;
+    var raw = (amtEl.textContent || '').replace(/[^0-9.]/g, '');
+    var newVal = parseFloat(raw) || 0;
+    if (amtEl._lastVal != null && Math.abs(newVal - amtEl._lastVal) > 0.01){
+      _glassTweenNum(amtEl, newVal);
+    }
+    amtEl._lastVal = newVal;
+  };
+});
+
+// ── 10 · Confetti when last unchecked shop item is ticked ─────────────────
+function _glassConfetti(){
+  if (window._confettiActive) return;
+  window._confettiActive = true;
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999';
+  document.body.appendChild(canvas);
+  var W = canvas.width  = window.innerWidth;
+  var H = canvas.height = window.innerHeight;
+  var ctx = canvas.getContext('2d');
+  var colors = ['#FF6B35','#E11D48','#FBBF24','#16A34A','#3B82F6','#A855F7'];
+  var parts = [];
+  var cx = W/2, cy = H * 0.45;
+  for (var i=0; i<70; i++){
+    parts.push({
+      x: cx + (Math.random()-0.5)*40,
+      y: cy,
+      vx: (Math.random()-0.5)*16,
+      vy: -Math.random()*18 - 8,
+      g: 0.6,
+      size: 7 + Math.random()*6,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*Math.PI*2,
+      vrot: (Math.random()-0.5)*0.5,
+      shape: Math.random() < 0.5 ? 'rect' : 'circle'
+    });
+  }
+  var t0 = performance.now();
+  function tick(t){
+    var elapsed = t - t0;
+    ctx.clearRect(0, 0, W, H);
+    parts.forEach(function(p){
+      p.vy += p.g;
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.rot += p.vrot;
+      var life = 1 - elapsed/1600;
+      if (life <= 0) return;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, Math.min(1, life * 1.2));
+      ctx.fillStyle = p.color;
+      if (p.shape === 'rect'){
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.55);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size/2, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    });
+    if (elapsed < 1700) requestAnimationFrame(tick);
+    else { canvas.remove(); window._confettiActive = false; }
+  }
+  requestAnimationFrame(tick);
+  if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([18,40,18]);
+}
+
+// Wrap toggleCheck so confetti fires when the shop page hits 0 unchecked
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof toggleCheck !== 'function') return;
+  var orig = toggleCheck;
+  toggleCheck = function(row){
+    var wasDone = row && row.classList && row.classList.contains('done');
+    orig.apply(this, arguments);
+    var nowDone = row && row.classList && row.classList.contains('done');
+    // Only fire on transition from unchecked → checked
+    if (!wasDone && nowDone){
+      var pg = row.closest ? row.closest('.page') : null;
+      if (pg && /shop/i.test(pg.id || '')){
+        // Count unchecked rows still visible (skip pantry + hidden)
+        var remaining = 0;
+        pg.querySelectorAll('.check-row').forEach(function(r){
+          if (r.style.display === 'none') return;
+          if (r.classList.contains('pantry')) return;
+          if (!r.classList.contains('done')) remaining++;
+        });
+        if (remaining === 0){
+          // Defer slightly so the row's own animation plays first
+          setTimeout(_glassConfetti, 240);
+        }
+      }
+    }
+  };
+});
+
+// ── 11 · View Transitions for navTo / switchWeek ──────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  if (!document.startViewTransition) return;
+  if (typeof navTo === 'function'){
+    var origN = navTo;
+    navTo = function(slug, btn){
+      // Skip transition for the very first call (initial route)
+      if (!window._glassNavReady) { window._glassNavReady = true; return origN.apply(this, arguments); }
+      try{
+        document.documentElement.removeAttribute('data-vt-mode');
+        document.startViewTransition(function(){ origN.call(this, slug, btn); });
+      } catch(e){ origN.apply(this, arguments); }
+    };
+  }
+  if (typeof switchWeek === 'function'){
+    var origW = switchWeek;
+    switchWeek = function(n, btn){
+      try{
+        document.documentElement.removeAttribute('data-vt-mode');
+        document.startViewTransition(function(){ origW.call(this, n, btn); });
+      } catch(e){ origW.apply(this, arguments); }
+    };
+  }
+});
+
+// ── 12 · Theme crossfade via View Transitions ─────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  if (!document.startViewTransition || typeof toggleTheme !== 'function') return;
+  var orig = toggleTheme;
+  window.toggleTheme = toggleTheme = function(btn){
+    try{
+      document.documentElement.setAttribute('data-vt-mode', 'theme');
+      var t = document.startViewTransition(function(){ orig.call(this, btn); });
+      if (t && t.finished) t.finished.finally(function(){
+        document.documentElement.removeAttribute('data-vt-mode');
+      });
+    } catch(e){ orig.apply(this, arguments); }
+  };
+});
+
+// ── 13 · Scroll-driven parallax: scale recipe SVGs when in view ───────────
+(function(){
+  if (!('IntersectionObserver' in window)) return;
+  var seen = new WeakSet();
+  function setup(){
+    document.querySelectorAll('.rcard-svg').forEach(function(svg){
+      if (seen.has(svg)) return;
+      seen.add(svg);
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting && e.intersectionRatio > 0.35){
+            svg.classList.add('in-view');
+          } else if (e.intersectionRatio < 0.15){
+            svg.classList.remove('in-view');
+          }
+        });
+      }, { threshold: [0, 0.15, 0.35, 0.6] });
+      io.observe(svg);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', setup);
+  // Re-scan after week/page nav (new SVGs may have entered view)
+  setTimeout(setup, 800);
+  setTimeout(setup, 2000);
+})();
+
+// ── 4 · Mark pages animated after first view (so re-nav doesn't restagger) ─
+(function(){
+  function markAnimated(){
+    document.querySelectorAll('.page.on').forEach(function(p){
+      setTimeout(function(){ p.classList.add('animated'); }, 1200);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', markAnimated);
+  // Wrap navTo / switchWeek to clear .animated on the newly active page
+  // so the entry stagger plays once per visit.
+  document.addEventListener('DOMContentLoaded', function(){
+    if (typeof navTo === 'function'){
+      var orig = navTo;
+      navTo = function(){
+        orig.apply(this, arguments);
+        // Strip 'animated' from the new active pages, then re-mark after run
+        document.querySelectorAll('.page.on').forEach(function(p){ p.classList.remove('animated'); });
+        setTimeout(markAnimated, 50);
+      };
+    }
+  });
+})();
+
+// ── 3 · Glass action sheet  (replaces window.confirm for our flows) ───────
+function glassConfirm(opts){
+  return new Promise(function(resolve){
+    opts = opts || {};
+    var overlay = document.createElement('div');
+    overlay.className = 'glass-sheet-overlay';
+    var sheet = document.createElement('div');
+    sheet.className = 'glass-sheet';
+    sheet.innerHTML =
+      '<div class="glass-sheet-handle"></div>' +
+      (opts.title ? '<h3 class="glass-sheet-title">' + _glassEsc(opts.title) + '</h3>' : '') +
+      (opts.message ? '<p class="glass-sheet-msg">' + _glassEsc(opts.message) + '</p>' : '') +
+      '<div class="glass-sheet-btns">' +
+        '<button class="glass-sheet-btn cancel">' + _glassEsc(opts.cancel || 'Cancel') + '</button>' +
+        '<button class="glass-sheet-btn ' + (opts.danger ? 'danger' : 'confirm') + '">' +
+          _glassEsc(opts.confirm || 'Confirm') + '</button>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+    requestAnimationFrame(function(){
+      overlay.classList.add('show');
+      sheet.classList.add('show');
+    });
+    function close(val){
+      overlay.classList.remove('show');
+      sheet.classList.remove('show');
+      setTimeout(function(){ overlay.remove(); sheet.remove(); }, 420);
+      resolve(val);
+    }
+    overlay.addEventListener('click', function(){ close(false); });
+    sheet.querySelector('.cancel').addEventListener('click', function(){ close(false); });
+    sheet.querySelector('.confirm, .danger').addEventListener('click', function(){ close(true); });
+  });
+}
+function _glassEsc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Hijack resetShopList confirm — replace native dialog with glass sheet
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof resetShopList !== 'function') return;
+  // Override directly: we know the original message.
+  window.resetShopList = function(){
+    glassConfirm({
+      title: 'Reset shopping list?',
+      message: 'Restores removed items, clears custom additions and checked states. Saved prices and pantry marks are kept.',
+      confirm: 'Reset list',
+      cancel: 'Keep as-is',
+      danger: true
+    }).then(function(ok){
+      if (!ok) return;
+      try{ shopState = { deleted:[], added:{}, checked:[], prices: shopState.prices || {} }; _saveShop(); }catch(e){}
+      location.reload();
+    });
+  };
+});
+
+// ── 14 · Replace nav emoji with monoline SVG icons (after DOM ready) ──────
+document.addEventListener('DOMContentLoaded', function(){
+  var SVG = {
+    chef: '<svg class="icn" viewBox="0 0 24 24"><path d="M7 14a4 4 0 1 1 1.5-7.7A4 4 0 0 1 16 5a4 4 0 0 1 0 8h-9z"/><path d="M7 14h10v5a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-5z"/><path d="M9 14v6M12 14v6M15 14v6"/></svg>',
+    star: '<svg class="icn" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3.1L6.6 19.5l1.2-6L3.3 9.3l6.1-.7L12 3z"/></svg>',
+    search: '<svg class="icn" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+    drumstick: '<svg class="icn" viewBox="0 0 24 24"><path d="M14.5 4.5a5 5 0 0 1 5 5c0 1.7-.8 3.2-2 4.2-.4.3-.6.8-.6 1.3v.5l-3.6 3.6-1.4-1.4-3.5 3.5-2-2 3.5-3.5L8.5 14l3.6-3.6h.5c.5 0 1-.2 1.3-.6 1-1.2 2.6-2 4.2-2"/></svg>',
+    moon: '<svg class="icn" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
+    sun: '<svg class="icn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l1.4 1.4M16.6 16.6 18 18M6 18l1.4-1.4M16.6 7.4 18 6"/></svg>'
+  };
+  var swaps = [
+    ['onclick="navTo(\'chef\',this)">🧑‍🍳 Chef',       'onclick="navTo(\'chef\',this)">' + SVG.chef + '<span>Chef</span>'],
+    ['onclick="navTo(\'favs\',this)">⭐ Favourites',          'onclick="navTo(\'favs\',this)">' + SVG.star + '<span>Favourites</span>'],
+    ['onclick="navTo(\'search\',this)">🔍 Search',           'onclick="navTo(\'search\',this)">' + SVG.search + '<span>Search</span>']
+  ];
+  swaps.forEach(function(pair){
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      // Match by current visible text since onclick is on the element
+      var t = b.textContent.trim();
+      if (pair[0].indexOf('Chef')   >= 0 && /^🧑.*Chef$/.test(t))      b.innerHTML = SVG.chef       + '<span>Chef</span>';
+      if (pair[0].indexOf('Favour') >= 0 && /^⭐.*Favourites$/.test(t)) b.innerHTML = SVG.star       + '<span>Favourites</span>';
+      if (pair[0].indexOf('Search') >= 0 && /^🔍.*Search$/.test(t))    b.innerHTML = SVG.search     + '<span>Search</span>';
+    });
+  });
+  // CJ toggle button (drumstick)
+  var cj = document.getElementById('cj-toggle');
+  if (cj && cj.textContent.trim() === '🍗') cj.innerHTML = SVG.drumstick;
+  // Theme toggle (moon/sun) — wrap toggleTheme to swap icon at runtime
+  var themeBtn = document.getElementById('theme-btn');
+  if (themeBtn){
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeBtn.innerHTML = (isDark ? SVG.sun + '<span>Light</span>' : SVG.moon + '<span>Dark</span>');
+    if (typeof toggleTheme === 'function'){
+      var origT = toggleTheme;
+      window.toggleTheme = toggleTheme = function(btn){
+        origT.call(this, btn);
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (themeBtn) themeBtn.innerHTML = (dark ? SVG.sun + '<span>Light</span>' : SVG.moon + '<span>Dark</span>');
+      };
+    }
+  }
 });
 </script>
 
