@@ -5296,6 +5296,7 @@ function toggleCheck(row) {
     _saveShop();
     var pg = row.closest ? row.closest('.page') : null;
     if (pg) _updateCartTotal(pg.id);
+    if (typeof _updateStickyTotal === 'function') _updateStickyTotal();
   }
 }
 
