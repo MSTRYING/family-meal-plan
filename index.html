@@ -1537,15 +1537,27 @@ body{
 .sticky-nav{position:relative}
 .sticky-nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:44px;background:linear-gradient(to right,transparent,var(--mode-nav-bg));pointer-events:none;z-index:2}
 
-/* 14 ── SVG card background tint by day of week */
-#mon .rcard-svg rect:first-child,#w2-mon .rcard-svg rect:first-child{fill:#F2EAE0}
-#tue .rcard-svg rect:first-child,#w2-tue .rcard-svg rect:first-child{fill:#E8F2EA}
-#wed .rcard-svg rect:first-child,#w2-wed .rcard-svg rect:first-child{fill:#EAE8F2}
-#thu .rcard-svg rect:first-child,#w2-thu .rcard-svg rect:first-child{fill:#F2F0E2}
-#fri .rcard-svg rect:first-child,#w2-fri .rcard-svg rect:first-child{fill:#E4EEF5}
-#sat .rcard-svg rect:first-child,#w2-sat .rcard-svg rect:first-child{fill:#F5EDE5}
-#sun .rcard-svg rect:first-child,#w2-sun .rcard-svg rect:first-child{fill:#E8F0E5}
+/* 14 ── SVG card background tint by day of week (W1–W4) */
+#mon .rcard-svg rect:first-child,#w2-mon .rcard-svg rect:first-child,#w3-mon .rcard-svg rect:first-child,#w4-mon .rcard-svg rect:first-child{fill:#F2EAE0}
+#tue .rcard-svg rect:first-child,#w2-tue .rcard-svg rect:first-child,#w3-tue .rcard-svg rect:first-child,#w4-tue .rcard-svg rect:first-child{fill:#E8F2EA}
+#wed .rcard-svg rect:first-child,#w2-wed .rcard-svg rect:first-child,#w3-wed .rcard-svg rect:first-child,#w4-wed .rcard-svg rect:first-child{fill:#EAE8F2}
+#thu .rcard-svg rect:first-child,#w2-thu .rcard-svg rect:first-child,#w3-thu .rcard-svg rect:first-child,#w4-thu .rcard-svg rect:first-child{fill:#F2F0E2}
+#fri .rcard-svg rect:first-child,#w2-fri .rcard-svg rect:first-child,#w3-fri .rcard-svg rect:first-child,#w4-fri .rcard-svg rect:first-child{fill:#E4EEF5}
+#sat .rcard-svg rect:first-child,#w2-sat .rcard-svg rect:first-child,#w3-sat .rcard-svg rect:first-child,#w4-sat .rcard-svg rect:first-child{fill:#F5EDE5}
+#sun .rcard-svg rect:first-child,#w2-sun .rcard-svg rect:first-child,#w3-sun .rcard-svg rect:first-child,#w4-sun .rcard-svg rect:first-child{fill:#E8F0E5}
 /* Dark mode: existing !important rule already overrides the above */
+
+/* ── W3/W4 generated-content class aliases ─────────────────────────────── */
+/* .nb used instead of .nut-badge in W3/W4 */
+.nb{display:inline-block;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:20px;margin-bottom:6px;vertical-align:middle}
+/* .method-list used instead of .steps-list in W3/W4 */
+.method-list{list-style:none;padding:0;margin:.5rem 0;counter-reset:step-c}
+.method-list li{display:flex;gap:.75rem;padding:.5rem 0;font-family:var(--sans);font-size:13px;color:var(--ink2);line-height:1.55;border-bottom:1px solid var(--border)}
+.method-list li:last-child{border-bottom:none}
+.method-list li::before{content:counter(step-c);counter-increment:step-c;display:flex;align-items:center;justify-content:center;flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#fff;font-size:11px;font-weight:700;margin-top:1px}
+/* .cj-note used instead of .meat-callout in W3/W4 */
+.cj-note{background:rgba(37,99,235,.07);border-left:3px solid #3B82F6;color:#1E3A6B;padding:.6rem .9rem;margin:.5rem 0;border-radius:0 var(--rsm) var(--rsm) 0;font-family:var(--sans);font-size:12.5px;line-height:1.6}
+[data-theme="dark"] .cj-note{background:rgba(59,130,246,.12);color:#93C5FD;border-color:#3B82F6}
 
 </style>
 
@@ -5144,6 +5156,7 @@ body{
 </div><!-- /w2 -->
 
 <div class="week-block" id="w3">
+<div class="main">
 <div id="w3-mon" class="page">
   <div class="page-header">
     <h2 class="page-title">Monday</h2>
@@ -5697,7 +5710,7 @@ body{
     </div>
   </div>
 </div>
-<div id="w3-shop" class="page" style="display:none">
+<div id="w3-shop" class="page">
   <div class="page-header">
     <h2 class="page-title">Week 3 shopping list</h2>
     <span class="page-sub">Makro · 4 people · Mediterranean &amp; comfort food</span>
@@ -5816,7 +5829,7 @@ body{
     </table>
   </div>
 </div>
-<div id="w3-nuts" class="page" style="display:none">
+<div id="w3-nuts" class="page">
   <div class="page-header"><h2 class="page-title">Week 3 nutrition guide</h2><span class="page-sub">Mediterranean eating — evidence-based and delicious</span></div>
 
   <p class="section-title-bar" style="border-top:none;margin-top:0;padding-top:0">Why Mediterranean eating works</p>
@@ -5833,8 +5846,10 @@ body{
     <div class="nut-card"><span class="nut-badge nb-teal">Braai Saturday ~80g protein day</span><p class="nut-title">Halloumi + boerewors</p><p class="nut-body">Saturday's braai is CJ's biggest protein day of the week. Halloumi skewers (25g per 100g) + 500g boerewors (shared between CJ and whoever else wants it) provides an exceptional protein hit alongside the vegetable sides.</p></div>
   </div>
 </div>
+</div><!-- /main w3 -->
 </div><!-- /w3 -->
 <div class="week-block" id="w4">
+<div class="main">
 <div id="w4-mon" class="page">
   <div class="page-header">
     <h2 class="page-title">Monday</h2>
@@ -6388,7 +6403,7 @@ body{
     </div>
   </div>
 </div>
-<div id="w4-shop" class="page" style="display:none">
+<div id="w4-shop" class="page">
   <div class="page-header">
     <h2 class="page-title">Week 4 shopping list</h2>
     <span class="page-sub">Makro · 4 people · World kitchen — Asian + international</span>
@@ -6505,7 +6520,7 @@ body{
     </table>
   </div>
 </div>
-<div id="w4-nuts" class="page" style="display:none">
+<div id="w4-nuts" class="page">
   <div class="page-header"><h2 class="page-title">Week 4 nutrition guide</h2><span class="page-sub">Closing the month with global food wisdom</span></div>
 
   <p class="section-title-bar" style="border-top:none;margin-top:0;padding-top:0">What Week 4 adds nutritionally</p>
@@ -6522,6 +6537,7 @@ body{
     <div class="nut-card"><span class="nut-badge nb-teal">4-week total</span><p class="nut-title">Over 2,700g protein for the month</p><p class="nut-body">Across 28 days averaging ~97g daily, CJ comfortably hits his monthly target. The combination of complete protein from eggs, dairy, legumes and meat add-ons has covered every essential amino acid across the month without any protein shake required.</p></div>
   </div>
 </div>
+</div><!-- /main w4 -->
 </div><!-- /w4 -->
 
 <!-- ═══════════════════════════════════════════════════════
@@ -6616,21 +6632,26 @@ function navTo(slug, btn) {
   if (btn) btn.classList.add('on');
 
   // Favs / Search are standalone pages outside week blocks
-  if (slug === 'favs' || slug === 'search') {
+  if (slug === 'favs' || slug === 'search' || slug === 'chef') {
     [1,2,3,4].forEach(function(i){
       var wb = document.getElementById('w'+i);
       if (wb) wb.classList.remove('on');
     });
-    ['favs-page','search-page'].forEach(function(sid){
+    ['favs-page','search-page','chef-page'].forEach(function(sid){
       var sp = document.getElementById(sid);
-      if (sp) sp.classList.toggle('on', sp.id === slug + '-page');
+      if (sp) sp.classList.toggle('on', sp.id === slug + '-page' || sp.id === slug);
     });
+    // Also hide chef-page when navigating away from it
+    if (slug !== 'chef') {
+      var chefPage = document.getElementById('chef-page');
+      if (chefPage) chefPage.classList.remove('on');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return;
   }
 
   // Hide standalone pages when routing to a week page
-  ['favs-page','search-page'].forEach(function(sid){
+  ['favs-page','search-page','chef-page'].forEach(function(sid){
     var sp = document.getElementById(sid);
     if (sp) sp.classList.remove('on');
   });
@@ -6657,8 +6678,7 @@ function switchWeek(n, btn) {
   });
   // activate Monday for the switched-to week
   var firstNavBtn = document.querySelector('#main-nav .nav-btn');
-  if (firstNavBtn) navTo('mon', firstNavBtn);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (firstNavBtn) navTo('mon', firstNavBtn); // navTo already scrolls to top
 }
 
 // ── Week 3/4 "coming soon" placeholders ───────────────────────────────────
@@ -6693,7 +6713,7 @@ function _goToMeal(wkNum, navSlug) {
     if (el) el.classList.toggle('on', i === wkNum);
   });
   // Navigate to the day (navTo uses curWeek to build the page id)
-  navTo(navSlug, document.querySelector('#main-nav .nav-btn[onclick*="' + navSlug + '"]'));
+  navTo(navSlug, document.querySelector('#main-nav .nav-btn[onclick="navTo(\'' + navSlug + '\',this)"]') || document.querySelector('#main-nav .nav-btn[onclick*="\'' + navSlug + '\'"]'));
 }
 
 // Derive a day nav-slug from a human-readable day title (fallback for old ratings)
@@ -6734,7 +6754,6 @@ function toggleCheck(row) {
     if (row.classList.contains('done')) {
       if (shopState.checked.indexOf(id) === -1) shopState.checked.push(id);
       _floatRowUp(row);       // move to top of category
-      _showPriceConfirm(row);
     } else {
       shopState.checked = shopState.checked.filter(function(i){ return i !== id; });
       _hidePriceConfirm();
@@ -7156,9 +7175,9 @@ function _injectShopExtras(pageId) {
   if (oldBS) oldBS.remove(); // remove stale summary so it refreshes with new prices
   var estTotal = 0;
   page.querySelectorAll('.check-price').forEach(function(el) {
-    // Skip rows that were deleted (display:none)
+    // Skip rows that were deleted (display:none) or marked as pantry "have it"
     var row = el.closest ? el.closest('.check-row') : null;
-    if (row && row.style.display === 'none') return;
+    if (row && (row.style.display === 'none' || row.classList.contains('pantry'))) return;
     // Use floating-point match so R58.50 isn't truncated to 58
     var m = el.textContent.match(/[\d,]+(?:\.\d+)?/);
     if (m) estTotal += parseFloat(m[0].replace(/,/g, ''));
@@ -7279,8 +7298,8 @@ function _swapStart(btn) {
 
 // ── Reset ──────────────────────────────────────────────────────────────────
 function resetShopList() {
-  if (!confirm('Reset list? This restores removed items, clears custom additions, and resets checked states. Saved prices and carry-over items are kept.')) return;
-  shopState = { deleted:[], added:{}, checked:[], prices:{} };
+  if (!confirm('Reset list? This restores removed items, clears custom additions, and resets checked states. Saved prices and pantry marks are kept.')) return;
+  shopState = { deleted:[], added:{}, checked:[], prices: shopState.prices || {} };
   _saveShop();
   location.reload();
 }
@@ -7358,6 +7377,29 @@ function initShopList() {
     '<button type="button" class="pc-skip-btn" onclick="_hidePriceConfirm()">Skip</button>';
   document.body.appendChild(pcBox);
 
+  // Long-press on any .check-row (checked items) → show price confirm
+  if (!window._longPressHandler) {
+    window._longPressHandler = true;
+    var _lpTimer = null;
+    var _lpRow   = null;
+    document.addEventListener('pointerdown', function(e) {
+      var row = e.target.closest ? e.target.closest('.check-row') : null;
+      if (!row || !row.classList.contains('done')) return;
+      _lpRow = row;
+      _lpTimer = setTimeout(function() {
+        _lpTimer = null;
+        _showPriceConfirm(_lpRow);
+      }, 600);
+    });
+    document.addEventListener('pointerup',    function() { if (_lpTimer) { clearTimeout(_lpTimer); _lpTimer = null; } });
+    document.addEventListener('pointercancel',function() { if (_lpTimer) { clearTimeout(_lpTimer); _lpTimer = null; } });
+    document.addEventListener('pointermove',  function(e) {
+      if (_lpTimer && (Math.abs(e.movementX||0) > 6 || Math.abs(e.movementY||0) > 6)) {
+        clearTimeout(_lpTimer); _lpTimer = null;
+      }
+    });
+  }
+
   // Dismiss price-confirm box when clicking outside it, or pressing Escape
   if (!window._pcBoxListeners) {
     window._pcBoxListeners = true;
@@ -7428,7 +7470,7 @@ function initShopList() {
   });
 
   // Inject action bar (cart counter + WhatsApp + Print + Reset) into each shopping page
-  [{id:'shop', lbl:'Week 1'}, {id:'w2-shop', lbl:'Week 2'}].forEach(function(cfg) {
+  [{id:'shop', lbl:'Week 1'}, {id:'w2-shop', lbl:'Week 2'}, {id:'w3-shop', lbl:'Week 3'}, {id:'w4-shop', lbl:'Week 4'}].forEach(function(cfg) {
     var page = document.getElementById(cfg.id);
     if (!page) return;
 
@@ -7484,7 +7526,7 @@ function initShopList() {
   });
 
   // Pantry overview cards
-  ['shop','w2-shop'].forEach(_renderPantryOverview);
+  ['shop','w2-shop','w3-shop','w4-shop'].forEach(_renderPantryOverview);
 
   // Scale notice + budget summary
   ['shop','w2-shop','w3-shop','w4-shop'].forEach(_injectShopExtras);
