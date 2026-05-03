@@ -1560,6 +1560,75 @@ body{
 .cj-note{background:rgba(37,99,235,.07);border-left:3px solid #3B82F6;color:#1E3A6B;padding:.6rem .9rem;margin:.5rem 0;border-radius:0 var(--rsm) var(--rsm) 0;font-family:var(--sans);font-size:12.5px;line-height:1.6}
 [data-theme="dark"] .cj-note{background:rgba(59,130,246,.12);color:#93C5FD;border-color:#3B82F6}
 
+/* ══════════════════════════════════════════════════════════════
+   MOBILE IMPROVEMENTS v1
+══════════════════════════════════════════════════════════════ */
+
+/* #2 nav: minimum 44px tap target on every button */
+.nav-btn{min-height:44px}
+
+/* #4 font-size controls (sit inside nav bar) */
+.fz-ctrl{display:flex;align-items:center;gap:4px;flex-shrink:0;padding:0 .6rem 0 .4rem;
+  border-left:1px solid rgba(255,255,255,.12);margin-left:4px}
+.fz-btn{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);
+  font-family:var(--sans);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;
+  cursor:pointer;line-height:1.4;-webkit-tap-highlight-color:transparent;min-height:30px}
+.fz-btn:active{background:var(--gold);border-color:var(--gold);color:#fff}
+#fontsize-label{font-size:9px;color:rgba(255,255,255,.45);min-width:22px;text-align:center;
+  transition:opacity .5s;font-family:var(--sans);letter-spacing:.02em}
+
+/* #6 swipe-to-delete: check-row needs relative + overflow hidden */
+.check-row{overflow:hidden}
+
+/* #7 week at a glance */
+#week-glance .shop-items{
+  display:flex!important;gap:4px;padding:10px 10px!important;
+  overflow-x:auto;scrollbar-width:none
+}
+#week-glance .shop-items::-webkit-scrollbar{display:none}
+.glance-day{flex:1;min-width:36px;max-width:56px;cursor:pointer;padding:5px 3px;
+  border-radius:6px;transition:background .15s;-webkit-tap-highlight-color:transparent}
+.glance-day.today{background:rgba(255,107,53,.1)}
+.glance-day:active{background:rgba(255,107,53,.18)}
+.glance-day-name{font-family:var(--sans);font-size:9px;font-weight:700;color:var(--ink3);
+  text-align:center;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.glance-meal{font-size:8.5px;line-height:1.3;color:var(--ink3);margin-bottom:2px;
+  padding:2px 3px 2px 5px;border-left:2px solid var(--border);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* #8 in-line timer button */
+.timer-btn{display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:1px solid var(--border);border-radius:10px;
+  font-size:10.5px;padding:1px 6px;cursor:pointer;color:var(--ink4);
+  margin-left:4px;vertical-align:middle;-webkit-tap-highlight-color:transparent;
+  min-height:20px;font-family:var(--sans);white-space:nowrap}
+.timer-btn:active{background:var(--gold);border-color:var(--gold);color:#fff}
+
+/* #10 CJ toggle */
+.cj-toggle-btn{background:none;border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.65);font-family:var(--sans);font-size:10px;font-weight:600;
+  padding:4px 10px;border-radius:20px;cursor:pointer;flex-shrink:0;
+  letter-spacing:.04em;-webkit-tap-highlight-color:transparent;transition:all .2s;
+  margin-right:6px;min-height:30px}
+.cj-toggle-btn.on{background:rgba(239,68,68,.25);border-color:#EF4444;color:#FCA5A5}
+body.cj-hidden .meat-callout,
+body.cj-hidden .cj-note{display:none!important}
+
+/* #5 pull-to-refresh bar */
+#ptr-bar{position:fixed;top:0;left:0;right:0;height:0;z-index:600;
+  background:var(--gold);display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);font-size:11px;font-weight:600;color:#fff;overflow:hidden;
+  letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+
+/* #1 swipe direction hint (brief flash on first swipe) */
+.swipe-hint{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.65);color:#fff;font-family:var(--sans);font-size:12px;
+  padding:7px 16px;border-radius:20px;z-index:450;pointer-events:none;
+  opacity:0;transition:opacity .4s;white-space:nowrap}
+.swipe-hint.on{opacity:1}
+
+/* ══ END MOBILE IMPROVEMENTS ══ */
+
 </style>
 
 </head>
@@ -1597,6 +1666,12 @@ body{
     <button class="nav-btn" onclick="navTo('chef',this)">🧑‍🍳 Chef</button>
     <button class="nav-btn" onclick="navTo('favs',this)">⭐ Favourites</button>
     <button class="nav-btn" onclick="navTo('search',this)">🔍 Search</button>
+    <div class="fz-ctrl">
+      <button class="fz-btn" onclick="_changeTextSize(-1)" aria-label="Smaller text">A−</button>
+      <span id="fontsize-label" style="opacity:0">16</span>
+      <button class="fz-btn" onclick="_changeTextSize(1)" aria-label="Larger text">A+</button>
+    </div>
+    <button class="cj-toggle-btn" id="cj-toggle" onclick="toggleCJ(this)" title="Toggle CJ meat options">🍗</button>
   </div>
 </nav>
 
@@ -7131,25 +7206,55 @@ function _updateStickyTotal() {
 function shareShopList(pageId) {
   var page = document.getElementById(pageId);
   if (!page) return;
-  var lines = ['\uD83D\uDED2 *Shopping list \u2014 Family Meal Plan*\n'];
+  var wkMatch = pageId.match(/w(\d)-shop/);
+  var wkNum = wkMatch ? wkMatch[1] : '1';
+  var catEmojis = {produce:'🥦',fruit:'🍎',dairy:'🧀',egg:'🥚',dry:'🌾',pantry:'🫙',
+    bakery:'🍞',meat:'🥩',fish:'🐟',frozen:'🧊',household:'🧹',toiletries:'🧴',spice:'🧂'};
+
+  var lines = ['🛒 *Week ' + wkNum + ' Shopping List — Lablert Family*'];
+  var totalUnchecked = 0, totalChecked = 0;
+
   page.querySelectorAll('.shop-card').forEach(function(card) {
     var titleEl = card.querySelector('.shop-card-title');
     if (!titleEl) return;
-    var items = [];
+    var catName = titleEl.textContent.trim();
+    var emoji = '🛍️';
+    var lower = catName.toLowerCase();
+    Object.keys(catEmojis).forEach(function(k){ if (lower.indexOf(k) > -1) emoji = catEmojis[k]; });
+
+    var toBuy = [], got = [];
     card.querySelectorAll('.check-row').forEach(function(row) {
       if (row.style.display === 'none') return;
+      if (row.classList.contains('pantry')) return;
       var lbl = row.querySelector('.check-label');
       var pr  = row.querySelector('.check-price');
       if (!lbl) return;
-      var tick = row.classList.contains('done') ? '\u2705' : '\u2B1C';
-      var prTxt = pr ? pr.textContent.replace(/VERIFIED|ACTUAL|est/gi,'').replace(/\s+/g,' ').trim() : '';
-      items.push(tick + ' ' + lbl.textContent.trim() + (prTxt ? '  ' + prTxt : ''));
+      var name = lbl.textContent.trim();
+      var prTxt = pr ? pr.textContent.replace(/VERIFIED|ACTUAL|est\./gi,'').replace(/\s+/g,' ').trim() : '';
+      var line = name + (prTxt ? '  _' + prTxt + '_' : '');
+      if (row.classList.contains('done')) { got.push('✅ ' + line); totalChecked++; }
+      else { toBuy.push('⬜ ' + line); totalUnchecked++; }
     });
-    if (items.length) {
-      lines.push('\n*' + titleEl.textContent.trim() + '*');
-      lines = lines.concat(items);
+
+    if (toBuy.length || got.length) {
+      lines.push('\n' + emoji + ' *' + catName + '*');
+      toBuy.forEach(function(i){ lines.push(i); });
+      if (got.length) {
+        lines.push('_— already in trolley —_');
+        got.forEach(function(i){ lines.push(i); });
+      }
     }
   });
+
+  lines.push('\n📊 *' + totalUnchecked + ' still to buy · ' + totalChecked + ' in trolley*');
+
+  // Add actual spend if sticky total is showing
+  var stickyEl = document.getElementById('sticky-shop-total');
+  if (stickyEl && stickyEl.classList.contains('on')) {
+    var amt = stickyEl.querySelector('.sticky-amount');
+    if (amt) lines.push('💰 *Running total: ' + amt.textContent.trim() + '*');
+  }
+
   window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
 }
 
@@ -7980,6 +8085,341 @@ function _ffLoadError() { var el = document.getElementById('ff-offline-msg'); if
   <button class="pwa-install-btn" onclick="_installPWA()">Add</button>
   <button class="pwa-dismiss-btn" onclick="_dismissPWA()" aria-label="Dismiss">×</button>
 </div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+// MOBILE IMPROVEMENTS
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── #4  Text-size control ───────────────────────────────────────────────────
+var _fontSize = 16;
+(function _initTextSize() {
+  try { var s = localStorage.getItem('mealplan_fontsize'); if (s) _fontSize = parseInt(s) || 16; } catch(e) {}
+  document.documentElement.style.fontSize = _fontSize + 'px';
+})();
+
+function _changeTextSize(delta) {
+  _fontSize = Math.max(13, Math.min(21, _fontSize + delta));
+  document.documentElement.style.fontSize = _fontSize + 'px';
+  try { localStorage.setItem('mealplan_fontsize', _fontSize); } catch(e) {}
+  var lbl = document.getElementById('fontsize-label');
+  if (lbl) {
+    lbl.textContent = _fontSize + 'px';
+    lbl.style.opacity = '1';
+    clearTimeout(lbl._fzTimer);
+    lbl._fzTimer = setTimeout(function(){ lbl.style.opacity = '0'; }, 1400);
+  }
+}
+
+// ── #10 CJ meat-options toggle ──────────────────────────────────────────────
+(function _initCJ() {
+  try { if (localStorage.getItem('mealplan_cj_hidden') === '1') document.body.classList.add('cj-hidden'); } catch(e) {}
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('cj-toggle');
+    if (btn && document.body.classList.contains('cj-hidden')) btn.classList.add('on');
+  });
+})();
+
+function toggleCJ(btn) {
+  var hidden = document.body.classList.toggle('cj-hidden');
+  btn.classList.toggle('on', hidden);
+  try { localStorage.setItem('mealplan_cj_hidden', hidden ? '1' : '0'); } catch(e) {}
+  // Brief feedback toast
+  var t = document.getElementById('swap-toast');
+  if (t) {
+    t.textContent = hidden ? '🍗 CJ\'s meat options hidden' : '🍗 CJ\'s meat options shown';
+    t.classList.add('on');
+    setTimeout(function(){ t.classList.remove('on'); t.textContent = '✓ Meals swapped!'; }, 2000);
+  }
+}
+
+// ── #3  iOS "Add to Home Screen" coach tip ──────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  try { if (localStorage.getItem('mealplan_ios_tip')) return; } catch(e) { return; }
+  var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var isStandalone = window.navigator.standalone;
+  if (!isIOS || isStandalone) return;
+  setTimeout(function() {
+    try { localStorage.setItem('mealplan_ios_tip', '1'); } catch(e) {}
+    var tip = document.createElement('div');
+    tip.style.cssText =
+      'position:fixed;bottom:0;left:0;right:0;z-index:700;' +
+      'background:var(--mode-card-bg);border-top:1px solid var(--border);' +
+      'padding:1.1rem 1.25rem 1.5rem;font-family:var(--sans);' +
+      'box-shadow:0 -6px 24px rgba(0,0,0,.15)';
+    tip.innerHTML =
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem">' +
+        '<strong style="font-size:14px;color:var(--ink)">📲 Install the app</strong>' +
+        '<button onclick="this.closest(\'div[style*=fixed]\').remove()" ' +
+          'style="background:none;border:none;font-size:20px;color:var(--ink4);cursor:pointer;padding:0 4px;line-height:1">×</button>' +
+      '</div>' +
+      '<p style="font-size:13px;color:var(--ink3);line-height:1.65;margin:0">' +
+        'Tap <strong>Share ⎙</strong> at the bottom of Safari, then<br>' +
+        '<strong>Add to Home Screen</strong> to use full-screen with no browser bar.' +
+      '</p>';
+    document.body.appendChild(tip);
+    setTimeout(function(){ if (tip.parentNode) tip.remove(); }, 14000);
+  }, 4000);
+});
+
+// ── #1  Swipe left/right to navigate between days ───────────────────────────
+(function _initDaySwipe() {
+  var DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
+  var _sx = 0, _sy = 0, _sActive = false, _hintShown = false;
+
+  function _showSwipeHint() {
+    if (_hintShown) return;
+    _hintShown = true;
+    try { if (localStorage.getItem('mealplan_swipe_hint')) return; localStorage.setItem('mealplan_swipe_hint','1'); } catch(e){}
+    var h = document.createElement('div');
+    h.className = 'swipe-hint';
+    h.textContent = '← swipe to change day →';
+    document.body.appendChild(h);
+    setTimeout(function(){ h.classList.add('on'); }, 50);
+    setTimeout(function(){ h.classList.remove('on'); setTimeout(function(){ h.remove(); }, 500); }, 2800);
+  }
+
+  document.addEventListener('touchstart', function(e) {
+    // Ignore touches on interactive / scroll elements
+    if (e.target.closest('.check-row,.nav-scroll,nav,.shop-card,.week-switcher,button,input,select')) return;
+    _sx = e.touches[0].clientX;
+    _sy = e.touches[0].clientY;
+    _sActive = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!_sActive) { _sActive = false; return; }
+    _sActive = false;
+    var dx = e.changedTouches[0].clientX - _sx;
+    var dy = e.changedTouches[0].clientY - _sy;
+    if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+
+    var activePage = document.querySelector('.week-block.on .page.on');
+    if (!activePage) return;
+    var slug = activePage.id.replace(/^w\d+-/, '');
+    var idx = DAYS.indexOf(slug);
+    if (idx === -1) return; // not a day page
+
+    var nextIdx = dx < 0 ? idx + 1 : idx - 1;
+    if (nextIdx < 0 || nextIdx >= DAYS.length) return;
+
+    var nextSlug = DAYS[nextIdx];
+    var btn = document.querySelector('#main-nav .nav-btn[onclick*="\'' + nextSlug + '\'"]');
+    navTo(nextSlug, btn);
+
+    // Scroll active nav button into view
+    if (btn) { btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); _showSwipeHint(); }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!_sActive) return;
+    var dy = Math.abs(e.touches[0].clientY - _sy);
+    var dx = Math.abs(e.touches[0].clientX - _sx);
+    if (dy > dx + 10) _sActive = false; // clear if scrolling vertically
+  }, { passive: true });
+})();
+
+// ── #5  Pull-to-refresh on shopping pages ───────────────────────────────────
+(function _initPTR() {
+  var _py = 0, _pActive = false;
+  var bar = document.createElement('div');
+  bar.id = 'ptr-bar';
+  bar.textContent = '↓ Pull to refresh list';
+  document.body.appendChild(bar);
+
+  document.addEventListener('touchstart', function(e) {
+    var page = document.querySelector('.page.on');
+    if (!page || page.id.indexOf('shop') === -1) return;
+    if (window.scrollY > 2) return;
+    _py = e.touches[0].clientY;
+    _pActive = true;
+    bar.style.transition = 'none';
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!_pActive) return;
+    var dy = e.touches[0].clientY - _py;
+    if (dy <= 0) { _pActive = false; bar.style.height = '0'; return; }
+    var h = Math.min(dy * 0.45, 52);
+    bar.style.height = h + 'px';
+    bar.textContent = h > 36 ? '↑ Release to refresh' : '↓ Pull to refresh list';
+  }, { passive: true });
+
+  document.addEventListener('touchend', function() {
+    if (!_pActive) return;
+    _pActive = false;
+    var h = parseFloat(bar.style.height) || 0;
+    bar.style.transition = 'height .3s';
+    bar.style.height = '0';
+    if (h > 36) setTimeout(function() { location.reload(); }, 300);
+    else bar.textContent = '↓ Pull to refresh list';
+  }, { passive: true });
+
+  document.addEventListener('touchcancel', function() {
+    _pActive = false;
+    bar.style.transition = 'height .25s';
+    bar.style.height = '0';
+  }, { passive: true });
+})();
+
+// ── #6  Swipe-to-delete on shopping list rows ───────────────────────────────
+(function _initSwipeDelete() {
+  var _row = null, _sx = 0, _sy = 0, _dragging = false;
+  var THRESHOLD = 90;
+
+  document.addEventListener('touchstart', function(e) {
+    var row = e.target.closest('.check-row');
+    if (!row || e.target.closest('button')) return;
+    _row = row;
+    _sx = e.touches[0].clientX;
+    _sy = e.touches[0].clientY;
+    _dragging = false;
+    row.style.transition = 'none';
+    row.style.background = '';
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!_row) return;
+    var dx = e.touches[0].clientX - _sx;
+    var dy = e.touches[0].clientY - _sy;
+    if (!_dragging) {
+      if (Math.abs(dy) > 8) { _row = null; return; }   // vertical scroll wins
+      if (Math.abs(dx) > 8) _dragging = true;
+    }
+    if (!_dragging || dx > 4) return;               // only allow left swipe
+    var tx = Math.max(-THRESHOLD * 1.4, dx);
+    _row.style.transform = 'translateX(' + tx + 'px)';
+    var danger = Math.min(1, Math.abs(tx) / THRESHOLD);
+    _row.style.background = 'rgba(225,29,72,' + (danger * 0.18) + ')';
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!_row) return;
+    var row = _row; _row = null;
+    if (!_dragging) { row.style.transform = ''; row.style.background = ''; return; }
+    _dragging = false;
+
+    var dx = e.changedTouches[0].clientX - _sx;
+    if (dx < -THRESHOLD) {
+      // Commit delete
+      row.style.transition = 'transform .18s ease-in, opacity .18s';
+      row.style.transform = 'translateX(-110%)';
+      row.style.opacity = '0';
+      setTimeout(function() {
+        var id = row.getAttribute('data-id');
+        if (id && typeof shopState !== 'undefined') {
+          if (shopState.deleted.indexOf(id) === -1) shopState.deleted.push(id);
+          if (typeof _saveShop === 'function') _saveShop();
+        }
+        row.style.display = 'none';
+        row.style.transform = ''; row.style.opacity = ''; row.style.transition = '';
+        if (typeof _updateStickyTotal === 'function') _updateStickyTotal();
+      }, 190);
+    } else {
+      // Snap back
+      row.style.transition = 'transform .22s ease-out, background .22s';
+      row.style.transform = '';
+      row.style.background = '';
+      setTimeout(function(){ row.style.transition = ''; }, 230);
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchcancel', function() {
+    if (_row) { _row.style.transform = ''; _row.style.background = ''; _row.style.transition = ''; _row = null; }
+    _dragging = false;
+  }, { passive: true });
+})();
+
+// ── #7  Week at a glance card ───────────────────────────────────────────────
+function _renderWeekGlance() {
+  var DAYS   = ['mon','tue','wed','thu','fri','sat','sun'];
+  var LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var TYPE_C = { Breakfast:'#16A34A', Lunch:'#3B82F6', Dinner:'#E11D48' };
+
+  var today = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
+
+  // Remove old card
+  var old = document.getElementById('week-glance');
+  if (old) old.remove();
+
+  var monId   = curWeek === 1 ? 'mon' : 'w' + curWeek + '-mon';
+  var monPage = document.getElementById(monId);
+  if (!monPage) return;
+
+  var colsHtml = DAYS.map(function(d, i) {
+    var pageId = curWeek === 1 ? d : 'w' + curWeek + '-' + d;
+    var page   = document.getElementById(pageId);
+    var mealsHtml = '';
+    if (page) {
+      page.querySelectorAll('.meal-block').forEach(function(mb) {
+        var pill = mb.querySelector('.type-pill');
+        var name = mb.querySelector('.meal-head-name');
+        if (!name) return;
+        var type  = pill ? pill.textContent.trim() : '';
+        var col   = TYPE_C[type] || 'var(--border)';
+        var label = name.textContent.trim();
+        if (label.length > 20) label = label.slice(0, 18) + '…';
+        mealsHtml += '<div class="glance-meal" style="border-left-color:' + col + '">' + label + '</div>';
+      });
+    }
+    var isToday = (curWeek === 1 && d === today) ? ' today' : '';
+    var slug = d; // navTo uses the day slug directly
+    return '<div class="glance-day' + isToday + '" onclick="var b=document.querySelector(\'#main-nav .nav-btn[onclick*=\\\"' + slug + '\\\"]\');navTo(\'' + slug + '\',b);if(b)b.scrollIntoView({inline:\'center\',behavior:\'smooth\'})">' +
+      '<div class="glance-day-name">' + LABELS[i] + '</div>' +
+      mealsHtml +
+    '</div>';
+  }).join('');
+
+  var card = document.createElement('div');
+  card.id = 'week-glance';
+  card.className = 'shop-card';
+  card.style.marginBottom = '1rem';
+  card.innerHTML =
+    '<div class="shop-card-header" onclick="toggleCat(\'week-glance-inner\')" style="cursor:pointer">' +
+      '<span class="shop-card-icon">📅</span>' +
+      '<span class="shop-card-title">Week ' + curWeek + ' at a glance</span>' +
+      '<svg class="chevron open" id="chev-week-glance-inner" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>' +
+    '</div>' +
+    '<div class="shop-items open" id="cat-week-glance-inner" style="display:flex;gap:4px;padding:10px 10px;overflow-x:auto;scrollbar-width:none">' +
+      colsHtml +
+    '</div>';
+
+  var hdr = monPage.querySelector('.page-header');
+  if (hdr) hdr.parentNode.insertBefore(card, hdr.nextSibling);
+}
+
+// Re-render glance card when week changes
+var _origSwitchWeek = switchWeek;
+switchWeek = function(n, btn) {
+  _origSwitchWeek(n, btn);
+  setTimeout(_renderWeekGlance, 0);
+};
+
+document.addEventListener('DOMContentLoaded', _renderWeekGlance);
+
+// ── #8  Cooking timer links in recipe steps ──────────────────────────────────
+function _injectTimerBtns() {
+  var rx = /(\d+)(?:\s*[-–]\s*(\d+))?\s*(min(?:ute)?s?|hrs?|hours?)/gi;
+  document.querySelectorAll('.steps-list li, .method-list li').forEach(function(li) {
+    // Only touch text nodes to avoid double-wrapping
+    if (li.querySelector('.timer-btn')) return;
+    li.innerHTML = li.innerHTML.replace(rx, function(match, n1, n2, unit) {
+      var mins = parseInt(n1);
+      if (/hrs?|hours?/i.test(unit)) mins *= 60;
+      if (n2) {
+        var m2 = parseInt(n2);
+        if (/hrs?|hours?/i.test(unit)) m2 *= 60;
+        mins = Math.round((mins + m2) / 2);
+      }
+      var url = 'https://www.google.com/search?q=' + encodeURIComponent(mins + ' minute timer');
+      return match + ' <button class="timer-btn" onclick="window.open(\'' + url + '\',\'_blank\')" title="Start ' + mins + ' min timer">⏱</button>';
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', _injectTimerBtns);
+
+// ════════════════════════════════════════════════════════════════════════════
+</script>
 
 </body>
 </html>

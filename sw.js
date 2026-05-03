@@ -1,7 +1,7 @@
 // Family Meal Plan — Service Worker v3
 // Caches the full app shell (including split JS modules) on first load.
 
-var CACHE = 'meal-plan-v21';
+var CACHE = 'meal-plan-v22';
 var ASSETS = [
   '/family-meal-plan/',
   '/family-meal-plan/index.html',
