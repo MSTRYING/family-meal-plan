@@ -55,6 +55,26 @@ var FF_NORM_MAP = {
   'bicarbonate of soda':'bicarb','baking soda':'bicarb',
   'self-raising flour':'flour',
   'tin fish':'tuna',
+  // ── W3/W4 Mediterranean & Asian ingredient aliases ──────────────────
+  'eggplant':'aubergine','egg plant':'aubergine','brinjal':'aubergine',
+  'firm tofu':'tofu','silken tofu':'tofu','soft tofu':'tofu','extra firm tofu':'tofu',
+  'soba noodles':'noodles','udon noodles':'noodles','rice vermicelli':'noodles',
+  'bulgur':'couscous','bulgur wheat':'couscous','pearl couscous':'couscous',
+  'white miso':'miso','red miso':'miso','miso paste':'miso',
+  'fresh ginger':'ginger','ground ginger':'ginger','ginger root':'ginger',
+  'tamari':'soy','light soy sauce':'soy','dark soy sauce':'soy',
+  'coconut cream':'coconut milk','light coconut milk':'coconut milk',
+  'chia':'chia seeds','black chia':'chia seeds',
+  'sesame seeds':'sesame','toasted sesame':'sesame','sesame seed':'sesame',
+  'tahini paste':'tahini',
+  'halloumi cheese':'halloumi',
+  'curry paste':'red curry paste','thai curry paste':'red curry paste','green curry paste':'red curry paste',
+  'nori sheet':'nori','nori sheets':'nori','seaweed':'nori','dried seaweed':'nori',
+  'edamame beans':'edamame','frozen edamame':'edamame','shelled edamame':'edamame',
+  'tamarind paste':'tamarind','tamarind sauce':'tamarind','tamarind concentrate':'tamarind',
+  'quinoa flakes':'quinoa','red quinoa':'quinoa','white quinoa':'quinoa',
+  'ras el hanout':'ras el hanout','harissa':'harissa',
+  'truffle oil':'truffle oil',
 };
 
 function ffNorm(s) {
@@ -82,7 +102,9 @@ var FF_CATS = [
   {k:'breakfast', l:'Brekkie',        e:'🍳'},
   {k:'budget',    l:'Budget',         e:'💰'},
   {k:'lunchbox',  l:'Lunchbox',       e:'🥡'},
-  {k:'crowd',     l:'Weekend',        e:'🎉'}
+  {k:'crowd',     l:'Weekend',        e:'🎉'},
+  {k:'med',       l:'Mediterranean',  e:'🫒'},
+  {k:'asian',     l:'Asian Kitchen',  e:'🥢'}
 ];
 
 // ── Pantry quick-tap chips ──────────────────────────────────────────
@@ -91,7 +113,10 @@ var FF_PANTRY_CHIPS = [
   'rice','pasta','potatoes','sweet potatoes','cheese','milk','butter',
   'flour','oil','lemon','spinach','canned tomatoes','avocado',
   'beans','lentils','bread','cream','soy sauce','stock',
-  'bacon','carrots','broccoli','bell pepper','peas','noodles'
+  'bacon','carrots','broccoli','bell pepper','peas','noodles',
+  'tahini','halloumi','tofu','couscous','quinoa','miso',
+  'coconut milk','edamame','chia seeds','nori','aubergine','ginger',
+  'red curry paste','sesame','olives'
 ];
 
 // ── Recipe bank (100 recipes) ───────────────────────────────────────
@@ -806,5 +831,163 @@ var FF_RECIPES = [
         'Mix canned tomatoes, honey, soy sauce, mustard and garlic into BBQ sauce.',
         'Place ribs in dish, pour sauce over. Cover with foil.',
         'Braise at 160°C for 2.5 hours. Uncover last 20 min to caramelise.']}
+
+,
+
+// ── MEDITERRANEAN ────────────────────────────────────────────────────
+{id:'md01',n:'Grilled Halloumi & Veg',c:'med',e:'🧀',t:15,s:4,tags:['v','gf'],p:16,
+ ing:['halloumi','courgette','bell pepper','olive oil','lemon'],
+ steps:['Slice halloumi 1cm thick, courgette lengthways, pepper into strips.',
+        'Brush everything with olive oil.',
+        'Grill or griddle on high heat 2-3 min each side until charred lines appear.',
+        'Squeeze lemon over and serve immediately — halloumi toughens as it cools.']},
+
+{id:'md02',n:'Herb Couscous Salad',c:'med',e:'🥗',t:15,s:4,tags:['v','vg'],p:11,
+ ing:['couscous','tomatoes','cucumber','onion','olive oil','lemon','coriander'],
+ steps:['Pour boiling water over couscous (equal volumes). Cover and rest 5 min.',
+        'Fluff with a fork. Cool 5 min.',
+        'Dice tomatoes, cucumber and red onion. Add to couscous.',
+        'Dress with olive oil, lemon juice and chopped coriander. Season well.']},
+
+{id:'md03',n:'Baked Aubergine with Feta',c:'med',e:'🍆',t:40,s:4,tags:['v','gf'],p:13,
+ ing:['aubergine','canned tomatoes','cheese','garlic','olive oil','basil'],
+ steps:['Halve aubergines lengthways, score flesh, brush with olive oil. Roast 20 min at 200°C.',
+        'Sauté garlic in olive oil 1 min. Add canned tomatoes. Simmer 8 min.',
+        'Spoon tomato sauce over aubergine halves. Top with crumbled feta.',
+        'Return to oven 10 min until golden. Scatter fresh basil.']},
+
+{id:'md04',n:'Tahini Roasted Vegetables',c:'med',e:'🥦',t:35,s:4,tags:['v','vg','gf'],p:12,
+ ing:['tahini','sweet potatoes','broccoli','garlic','lemon','olive oil'],
+ steps:['Roast cubed sweet potato and broccoli florets at 200°C for 25 min.',
+        'Whisk tahini with lemon juice, garlic, 3 tbsp water and a pinch of salt until pourable.',
+        'Drizzle tahini sauce over hot vegetables.',
+        'Serve as a side or over rice or couscous.']},
+
+{id:'md05',n:'Mediterranean Quinoa Bowl',c:'med',e:'🥗',t:25,s:4,tags:['v','gf'],p:14,
+ ing:['quinoa','tomatoes','cucumber','cheese','olives','olive oil','lemon'],
+ steps:['Rinse quinoa. Simmer in 2x water 15 min until absorbed. Fluff and cool.',
+        'Dice tomatoes and cucumber. Slice olives.',
+        'Combine quinoa, veg and pitted olives in a bowl.',
+        'Dress with olive oil and lemon juice. Top with crumbled feta.']},
+
+{id:'md06',n:'Aubergine & Chickpea Stew',c:'med',e:'🍲',t:35,s:4,tags:['v','vg','gf'],p:12,
+ ing:['aubergine','beans','canned tomatoes','onion','garlic','cumin','oil'],
+ steps:['Cut aubergine into 2cm cubes. Fry in oil until golden. Remove.',
+        'Fry onion and garlic until soft. Add cumin, stir 30 sec.',
+        'Add chickpeas, canned tomatoes and aubergine. Season.',
+        'Simmer 20 min until thick. Serve with bread or couscous.']},
+
+{id:'md07',n:'Halloumi & Roasted Veg Wraps',c:'med',e:'🌯',t:20,s:4,tags:['v'],p:15,
+ ing:['halloumi','wraps','bell pepper','onion','tomatoes','lettuce','lemon'],
+ steps:['Slice and griddle halloumi 2 min each side until golden.',
+        'Thinly slice pepper and onion and griddle 3 min.',
+        'Warm wraps in a dry pan.',
+        'Fill wraps with halloumi, veg, fresh tomatoes and lettuce. Squeeze lemon.']},
+
+{id:'md08',n:'Moroccan Spiced Roasted Veg',c:'med',e:'🫒',t:40,s:4,tags:['v','vg','gf'],p:10,
+ ing:['sweet potatoes','carrots','onion','beans','ras el hanout','olive oil','coriander'],
+ steps:['Preheat oven to 200°C.',
+        'Toss cubed sweet potato, carrots and onion with ras el hanout and olive oil.',
+        'Roast 30 min until caramelised, turning halfway.',
+        'Stir in drained chickpeas for last 10 min. Top with fresh coriander.']},
+
+{id:'md09',n:'Tahini Lemon Salad',c:'med',e:'🥗',t:10,s:4,tags:['v','vg','gf'],p:10,
+ ing:['tahini','lemon','garlic','lettuce','cucumber','tomatoes','olives'],
+ steps:['Whisk tahini, lemon juice and minced garlic with 4 tbsp water until smooth.',
+        'Season dressing with salt and pepper.',
+        'Roughly chop lettuce, dice cucumber and tomatoes.',
+        'Toss salad with dressing and scatter olives over the top.']},
+
+{id:'md10',n:'Couscous-Stuffed Peppers',c:'med',e:'🫑',t:40,s:4,tags:['v'],p:13,
+ ing:['couscous','bell pepper','canned tomatoes','cheese','onion','garlic','olive oil'],
+ steps:['Halve and deseed peppers. Brush with oil and roast cut-side up at 180°C for 15 min.',
+        'Cook couscous in vegetable stock. Fry onion and garlic, combine with couscous.',
+        'Stir in canned tomatoes and season. Spoon filling into peppers.',
+        'Top with cheese. Bake a further 15 min until melted and golden.']},
+
+{id:'md11',n:'Halloumi & Egg Breakfast',c:'med',e:'🧀',t:15,s:2,tags:['v','gf'],p:18,
+ ing:['halloumi','eggs','tomatoes','olive oil','lemon'],
+ steps:['Slice halloumi 1cm thick.',
+        'Fry in a dry non-stick pan on medium-high until golden on both sides.',
+        'Halve tomatoes and fry cut-side down in olive oil until caramelised.',
+        'Fry or poach eggs alongside. Plate with a squeeze of lemon.']},
+
+{id:'md12',n:'Quinoa Breakfast Bowl',c:'med',e:'🥣',t:20,s:2,tags:['v','gf'],p:10,
+ ing:['quinoa','milk','banana','honey','cinnamon'],
+ steps:['Simmer quinoa in milk (2:1 ratio) over low heat for 15 min, stirring often.',
+        'Add a pinch of cinnamon and a drizzle of honey.',
+        'Cook until creamy — add a splash more milk if needed.',
+        'Serve topped with sliced banana and an extra drizzle of honey.']},
+
+{id:'md13',n:'Grilled Aubergine Flatbread',c:'med',e:'🥪',t:15,s:2,tags:['v','vg'],p:11,
+ ing:['aubergine','pita bread','tomatoes','olive oil','garlic','basil'],
+ steps:['Slice aubergine into 1cm rounds. Brush with garlic-infused olive oil.',
+        'Grill or griddle 3 min each side until soft and charred.',
+        'Warm pita bread in the oven.',
+        'Layer grilled aubergine and sliced tomatoes on pita. Scatter fresh basil.']},
+
+// ── ASIAN KITCHEN ────────────────────────────────────────────────────
+{id:'as01',n:'Crispy Tofu Stir-Fry',c:'asian',e:'🥢',t:20,s:4,tags:['v','vg','gf'],p:12,
+ ing:['tofu','broccoli','bell pepper','soy sauce','garlic','sesame oil','oil'],
+ steps:['Press tofu dry with paper towel. Cube and pan-fry in oil until crispy on all sides.',
+        'Remove tofu. Stir-fry garlic, broccoli and pepper 4 min.',
+        'Return tofu, add soy sauce and sesame oil.',
+        'Toss to coat and serve over rice immediately.']},
+
+{id:'as02',n:'Miso Soup with Tofu & Nori',c:'asian',e:'🍵',t:15,s:4,tags:['v','vg','gf'],p:8,
+ ing:['miso','tofu','nori','spring onions','stock'],
+ steps:['Bring vegetable stock to a gentle simmer (do not boil).',
+        'Dissolve miso paste in a ladle of warm stock, then stir back into pot.',
+        'Dice firm tofu and add to pot. Simmer 3 min.',
+        'Serve topped with sliced spring onions and torn nori sheets.']},
+
+{id:'as03',n:'Thai Red Curry',c:'asian',e:'🍛',t:30,s:4,tags:['v','vg','gf'],p:12,
+ ing:['red curry paste','coconut milk','sweet potatoes','broccoli','beans','rice','oil'],
+ steps:['Fry red curry paste in oil 1 min until fragrant.',
+        'Add coconut milk, diced sweet potato and chickpeas.',
+        'Simmer 15 min until sweet potato is tender. Add broccoli last 5 min.',
+        'Serve over steamed rice. Adjust heat with more or less curry paste.']},
+
+{id:'as04',n:'Edamame & Sesame Rice Bowl',c:'asian',e:'🍱',t:15,s:2,tags:['v','vg','gf'],p:13,
+ ing:['rice','edamame','avocado','soy sauce','sesame oil','spring onions','nori'],
+ steps:['Cook rice per packet.',
+        'Steam or microwave edamame until bright green and tender.',
+        'Slice avocado. Shred or tear nori.',
+        'Build bowls: rice, edamame, avocado. Dress with soy sauce and sesame oil. Top with spring onions and nori.']},
+
+{id:'as05',n:'Soba Noodle & Edamame Salad',c:'asian',e:'🍜',t:15,s:4,tags:['v','vg'],p:12,
+ ing:['noodles','edamame','cucumber','soy sauce','sesame oil','spring onions','garlic'],
+ steps:['Cook soba noodles per packet. Rinse under cold water to stop cooking.',
+        'Steam edamame. Julienne or thinly slice cucumber.',
+        'Whisk soy sauce, sesame oil and minced garlic into a dressing.',
+        'Toss noodles, edamame and cucumber in dressing. Top with spring onions.']},
+
+{id:'as06',n:'Tofu Scramble on Toast',c:'asian',e:'🍳',t:15,s:4,tags:['v','vg','df'],p:12,
+ ing:['tofu','turmeric','onion','bell pepper','soy sauce','oil','bread'],
+ steps:['Crumble firm tofu into a bowl. It should resemble scrambled egg.',
+        'Fry diced onion and pepper in oil 3 min.',
+        'Add crumbled tofu, turmeric and soy sauce. Stir-fry 5 min until golden.',
+        'Serve on toasted bread. Season with salt and pepper.']},
+
+{id:'as07',n:'Chia Seed Pudding',c:'asian',e:'🥣',t:5,s:2,tags:['v','gf'],p:8,
+ ing:['chia seeds','coconut milk','honey','banana'],
+ steps:['Mix chia seeds with coconut milk and honey. Stir thoroughly.',
+        'Leave 5 min, stir again to break up any clumps.',
+        'Cover and refrigerate overnight (or at least 2 hours) until thick and creamy.',
+        'Serve topped with sliced banana and extra honey.']},
+
+{id:'as08',n:'Tofu & Veg Green Curry',c:'asian',e:'🍛',t:25,s:4,tags:['v','vg','gf'],p:11,
+ ing:['tofu','red curry paste','coconut milk','courgette','bell pepper','spring onions','rice'],
+ steps:['Press and cube tofu. Lightly fry until golden. Remove.',
+        'Fry curry paste in the same pan 1 min.',
+        'Pour in coconut milk. Add diced courgette and pepper. Simmer 10 min.',
+        'Return tofu. Serve over rice topped with sliced spring onions.']},
+
+{id:'as09',n:'Tamarind Lentil Soup',c:'asian',e:'🍜',t:30,s:4,tags:['v','vg','gf'],p:12,
+ ing:['lentils','tamarind','onion','garlic','canned tomatoes','cumin','oil'],
+ steps:['Fry onion, garlic and cumin in oil until fragrant.',
+        'Add lentils, canned tomatoes and 4 cups water.',
+        'Simmer 20 min until lentils are completely soft.',
+        'Stir in tamarind paste, season with salt. Adjust sourness to taste.']}
 
 ]; // end FF_RECIPES

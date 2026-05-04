@@ -1778,8 +1778,9 @@ body.cj-hidden .cj-note{display:none!important}
 .rcard, .meal-block, .shop-card, .pantry-card, #prep-card-w1, #prep-card-w2,
 #prep-card-w3, #prep-card-w4, .nut-card, .week-glance-card{
   background: var(--glass-bg) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
-  backdrop-filter: blur(20px) saturate(170%);
+  /* Reduced from 20px → 14px for better GPU perf on mid-range devices */
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
   border: 1px solid var(--glass-border) !important;
   border-radius: 18px !important;
   box-shadow:
@@ -2241,6 +2242,107 @@ html[data-vt-mode="back"]::view-transition-new(root){
   background: rgba(255,107,53,0.18);
   border-color: rgba(255,107,53,0.35);
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   PRINT STYLESHEET                                                    v26
+   ══════════════════════════════════════════════════════════════════════ */
+@media print {
+  /* Hide interactive chrome */
+  .sticky-nav, .week-switcher, .nav-scroll, .fz-ctrl, .cj-toggle-btn,
+  .swap-btn, .rating-btn, .timer-btn, #mp-timer-stack,
+  .add-item-btn, .row-del, .row-carryover,
+  .shop-actions, #sticky-shop-total, .pantry-card,
+  .week-glance-card, #prep-card-w1, #prep-card-w2, #prep-card-w3, #prep-card-w4,
+  .ios-tip, #swap-toast, .glass-sheet-overlay,
+  .meal-share-btn, .surprise-btn, #budget-overview-card { display: none !important; }
+
+  body { background: #fff !important; color: #111 !important; font-size: 11pt; margin: 0; }
+  * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+      box-shadow: none !important; text-shadow: none !important; }
+
+  /* Reveal all pages for print — normally hidden by CSS */
+  .page { display: block !important; visibility: visible !important;
+          page-break-inside: avoid; margin-bottom: 24pt; }
+  .week-block, .main { display: block !important; }
+
+  .rcard, .meal-block, .shop-card, .nut-card {
+    background: #fff !important; border: 1px solid #bbb !important;
+    border-radius: 5pt !important; margin-bottom: 10pt; page-break-inside: avoid;
+  }
+  .rcard-svg { max-height: 90pt; }
+  .page-header { border-bottom: 1.5pt solid #333 !important; padding-bottom: 5pt;
+                 margin-bottom: 10pt; }
+
+  /* Shopping list rows */
+  .check-row { padding: 2pt 0 !important; border-bottom: 0.5pt solid #ddd; font-size: 10pt; }
+  .check-box  { display: inline-block; width: 9pt; height: 9pt; border: 0.75pt solid #444;
+                vertical-align: middle; margin-right: 5pt; }
+  .check-row.done .check-box::after { content: '\2713'; font-size: 7pt; line-height: 1; }
+  .check-row.done .check-label { text-decoration: line-through; color: #888; }
+
+  @page { margin: 1.5cm; size: A4 portrait; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MEAL SHARE BUTTON                                                   v26
+   ══════════════════════════════════════════════════════════════════════ */
+.meal-share-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; margin-top: 10px;
+  font-size: 12px; font-family: var(--sans); font-weight: 500; color: var(--ink2);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border); border-radius: 20px; cursor: pointer;
+  transition: transform 0.12s var(--ease-spring), color 0.15s;
+}
+.meal-share-btn:active { transform: scale(0.92); color: var(--gold); }
+.meal-share-btn svg    { flex-shrink: 0; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   SURPRISE ME BUTTON                                                  v26
+   ══════════════════════════════════════════════════════════════════════ */
+.surprise-btn {
+  padding: 5px 8px; font-size: 17px; line-height: 1;
+  background: none; border: none; cursor: pointer; border-radius: 8px;
+  transition: transform 0.15s var(--ease-spring);
+}
+.surprise-btn:active { transform: scale(0.82) rotate(-20deg); }
+
+/* ══════════════════════════════════════════════════════════════════════
+   BUDGET OVERVIEW CARD                                                v26
+   ══════════════════════════════════════════════════════════════════════ */
+#budget-overview-card {
+  margin: 12px 0; border-radius: 14px;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+#budget-overview-card .shop-card-header {
+  padding: 12px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+}
+.budget-grid { padding: 0 16px 4px; }
+.budget-row  {
+  display: grid; grid-template-columns: 58px 1fr 78px;
+  align-items: center; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.budget-row:last-child { border-bottom: none; }
+.budget-week  { font-size: 12px; color: var(--ink2); font-weight: 600; }
+.budget-theme { font-size: 11px; color: var(--ink3); }
+.budget-bar-wrap { background: var(--mode-border); border-radius: 4px;
+                   height: 6px; overflow: hidden; }
+.budget-bar   { height: 100%; border-radius: 4px; background: var(--gold);
+                transition: width 0.7s var(--ease-out); }
+.budget-amt   { font-size: 12px; color: var(--ink); text-align: right; font-weight: 600; }
+.budget-total { padding: 10px 16px 12px; font-size: 13px; color: var(--ink2);
+                border-top: 1px solid var(--glass-border); }
+.budget-total strong { color: var(--ink); }
 
 </style>
 
@@ -9622,6 +9724,10 @@ function _mpStartTimer(mins, label){
   _mpSaveTimers();
   _mpRenderTimers();
   _mpStartLoop();
+  // Request notification permission so background alerts can fire
+  if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
   // Visual feedback near the source button
   if (navigator.vibrate) navigator.vibrate(15);
   // Prime audio context with a silent ping (iOS gesture unlock)
@@ -9803,6 +9909,29 @@ function _mpAlarm(t){
   setTimeout(function(){ _mpBeep(1320, 0.32, 0.35); }, 440);
   // Vibration pattern
   if (navigator.vibrate) navigator.vibrate([200, 80, 200, 80, 400]);
+  // Native notification — visible when tab is backgrounded (Android Chrome)
+  if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    try {
+      var _notif = new Notification('⏱ Timer done — ' + (t.label || 'Cooking timer'), {
+        body: 'Tap to return to the meal plan',
+        icon: '/family-meal-plan/icon-192.png',
+        tag: 'meal-timer-' + t.id,
+        renotify: true,
+        requireInteraction: true
+      });
+      _notif.onclick = function(){ window.focus(); _notif.close(); };
+    } catch(e){}
+  }
+  // SW relay — shows notification when PWA is installed on home screen
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    try {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'MP_TIMER_DONE',
+        label: t.label || 'Cooking timer',
+        id: t.id
+      });
+    } catch(e){}
+  }
   // Repeat audio twice more (every 3s) until user dismisses
   var reps = 0;
   var interval = setInterval(function(){
@@ -9831,6 +9960,128 @@ document.addEventListener('DOMContentLoaded', function(){
   document.addEventListener('click', primer, { once: true });
   document.addEventListener('touchstart', primer, { once: true, passive: true });
 });
+</script>
+
+<!-- ══ v26 NEW FEATURES: Meal sharing · Surprise Me · Budget overview ══ -->
+<script>
+/* ── Individual meal share via WhatsApp ─────────────────────────────── */
+function _shareMealWA(btn) {
+  var block = btn;
+  while (block && !block.classList.contains('meal-block')) block = block.parentElement;
+  if (!block) return;
+  var title  = (block.querySelector('.rcard-title,.card-title') || {}).textContent || 'Meal';
+  var desc   = (block.querySelector('.rcard-desc') || {}).textContent || '';
+  var steps  = Array.from(block.querySelectorAll('.steps-list li,.method-list li'))
+                    .map(function(li, i){ return (i+1) + '. ' + li.textContent.trim(); })
+                    .join('\n');
+  var ings   = Array.from(block.querySelectorAll('.rcard-chips .chip'))
+                    .map(function(c){ return '\u2022 ' + c.textContent.trim(); })
+                    .join('\n');
+  var tpEl   = block.querySelector('.tp-b,.tp-l,.tp-d');
+  var type   = !tpEl ? '' :
+               tpEl.classList.contains('tp-b') ? '\uD83C\uDF05 Breakfast: ' :
+               tpEl.classList.contains('tp-l') ? '\u2600\uFE0F Lunch: '     : '\uD83C\uDF19 Dinner: ';
+  var msg = type + '*' + title.trim() + '*\n\n';
+  if (desc.trim())  msg += desc.trim() + '\n\n';
+  if (ings)         msg += '*Ingredients:*\n' + ings + '\n\n';
+  if (steps)        msg += '*Steps:*\n' + steps;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+/* Inject share button into every meal-block at DOMContentLoaded */
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.meal-block').forEach(function(block) {
+    if (block.querySelector('.meal-share-btn')) return;
+    var body = block.querySelector('.rcard-body');
+    if (!body) return;
+    var btn = document.createElement('button');
+    btn.className = 'meal-share-btn';
+    btn.title = 'Share recipe on WhatsApp';
+    btn.setAttribute('aria-label', 'Share recipe via WhatsApp');
+    btn.innerHTML =
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+      ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07' +
+      'A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.77 1.2h3' +
+      'a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91' +
+      'a16 16 0 0 0 6.72 6.72l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7' +
+      'A2 2 0 0 1 22 16.92z"/></svg> Share recipe';
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      _shareMealWA(btn);
+    });
+    body.appendChild(btn);
+  });
+});
+
+/* ── Surprise Me — random day picker ────────────────────────────────── */
+function _surpriseMe() {
+  var days  = ['mon','tue','wed','thu','fri','sat','sun'];
+  var names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  var i = Math.floor(Math.random() * 7);
+  navTo(days[i], null);
+  if (typeof showToast === 'function') showToast('\uD83C\uDFB2 ' + names[i] + '\'s meals!');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.querySelector('.surprise-btn')) return;
+  var fz = document.querySelector('.fz-ctrl');
+  if (!fz) return;
+  var btn = document.createElement('button');
+  btn.className = 'surprise-btn';
+  btn.title = 'Jump to a random day';
+  btn.setAttribute('aria-label', 'Surprise me — random day');
+  btn.textContent = '\uD83C\uDFB2';
+  btn.addEventListener('click', _surpriseMe);
+  /* Place immediately after the fz-ctrl group */
+  fz.parentNode.insertBefore(btn, fz.nextSibling);
+});
+
+/* ── Monthly Budget Overview ────────────────────────────────────────── */
+(function() {
+  var WEEKS = [
+    { label: 'Week 1', theme: 'Core vegetarian',    est: 1650 },
+    { label: 'Week 2', theme: 'Variety & leftovers', est: 1720 },
+    { label: 'Week 3', theme: 'Mediterranean',        est: 1820 },
+    { label: 'Week 4', theme: 'Asian & world',        est: 1835 }
+  ];
+  var MAX   = Math.max.apply(null, WEEKS.map(function(w){ return w.est; }));
+  var TOTAL = WEEKS.reduce(function(s, w){ return s + w.est; }, 0);
+
+  function _buildBudgetCard() {
+    if (document.getElementById('budget-overview-card')) return;
+
+    var rows = WEEKS.map(function(w) {
+      var pct = Math.round((w.est / MAX) * 100);
+      return '<div class="budget-row">' +
+        '<div class="budget-week">' + w.label + '<br><span class="budget-theme">' + w.theme + '</span></div>' +
+        '<div class="budget-bar-wrap"><div class="budget-bar" style="width:' + pct + '%"></div></div>' +
+        '<div class="budget-amt">~R\u202f' + w.est.toLocaleString('en-ZA') + '</div>' +
+        '</div>';
+    }).join('');
+
+    var card = document.createElement('div');
+    card.id = 'budget-overview-card';
+    card.innerHTML =
+      '<div class="shop-card-header" onclick="toggleCat(\'budget-inner\')">' +
+        '<span>\uD83D\uDCCA Monthly Budget Overview</span>' +
+        '<span id="chev-budget-inner" class="chevron">\u203a</span>' +
+      '</div>' +
+      '<div id="cat-budget-inner" style="display:none">' +
+        '<div class="budget-grid">' + rows + '</div>' +
+        '<p class="budget-total">4-week estimated total: <strong>R\u202f' +
+          TOTAL.toLocaleString('en-ZA') + '</strong></p>' +
+      '</div>';
+
+    /* Inject at top of the Favourites page (cross-week utility) */
+    var page = document.getElementById('favs');
+    if (!page) return;
+    var hdr = page.querySelector('.page-header');
+    hdr ? page.insertBefore(card, hdr.nextSibling) : page.insertBefore(card, page.firstChild);
+  }
+
+  document.addEventListener('DOMContentLoaded', _buildBudgetCard);
+})();
 </script>
 
 </body>

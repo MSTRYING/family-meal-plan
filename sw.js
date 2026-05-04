@@ -1,7 +1,7 @@
 // Family Meal Plan — Service Worker v3
 // Caches the full app shell (including split JS modules) on first load.
 
-var CACHE = 'meal-plan-v25';
+var CACHE = 'meal-plan-v26';
 var ASSETS = [
   '/family-meal-plan/',
   '/family-meal-plan/index.html',
@@ -32,6 +32,38 @@ self.addEventListener('activate', function(e) {
   self.clients.claim();
 });
 
+// Timer-done notification relay — main thread posts this when the PWA is backgrounded
+self.addEventListener('message', function(e) {
+  if (!e.data || e.data.type !== 'MP_TIMER_DONE') return;
+  if (!self.registration || !self.registration.showNotification) return;
+  self.registration.showNotification(
+    '⏱ Timer done — ' + (e.data.label || 'Cooking timer'),
+    {
+      body: 'Tap to return to your meal plan',
+      icon: '/family-meal-plan/icon-192.png',
+      badge: '/family-meal-plan/icon-192.png',
+      tag: 'meal-timer-' + (e.data.id || 'done'),
+      renotify: true,
+      requireInteraction: true
+    }
+  );
+});
+
+// Notification click — bring PWA window to front
+self.addEventListener('notificationclick', function(e) {
+  e.notification.close();
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].url.includes('family-meal-plan') && 'focus' in list[i]) {
+          return list[i].focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow('/family-meal-plan/');
+    })
+  );
+});
+
 // Fetch — cache-first for same-origin, network-first for CDN (Google Fonts)
 self.addEventListener('fetch', function(e) {
   var url = e.request.url;
@@ -50,7 +82,7 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // Everything else — cache-first
+  // Everything else — cache-first with offline fallback for navigation
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached) return cached;
@@ -61,6 +93,12 @@ self.addEventListener('fetch', function(e) {
           caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
         }
         return resp;
+      }).catch(function() {
+        // Offline fallback: for navigation requests serve the cached app shell
+        if (e.request.mode === 'navigate') {
+          return caches.match('/family-meal-plan/index.html')
+              || caches.match('/family-meal-plan/');
+        }
       });
     })
   );
