@@ -1,7 +1,7 @@
 // Family Meal Plan — Service Worker v3
 // Caches the full app shell (including split JS modules) on first load.
 
-var CACHE = 'meal-plan-v26';
+var CACHE = 'meal-plan-v27';
 var ASSETS = [
   '/family-meal-plan/',
   '/family-meal-plan/index.html',
@@ -36,16 +36,19 @@ self.addEventListener('activate', function(e) {
 self.addEventListener('message', function(e) {
   if (!e.data || e.data.type !== 'MP_TIMER_DONE') return;
   if (!self.registration || !self.registration.showNotification) return;
-  self.registration.showNotification(
-    '⏱ Timer done — ' + (e.data.label || 'Cooking timer'),
-    {
-      body: 'Tap to return to your meal plan',
-      icon: '/family-meal-plan/icon-192.png',
-      badge: '/family-meal-plan/icon-192.png',
-      tag: 'meal-timer-' + (e.data.id || 'done'),
-      renotify: true,
-      requireInteraction: true
-    }
+  // Bug 3 fix: wrap in e.waitUntil() so the SW isn't killed before showNotification completes
+  e.waitUntil(
+    self.registration.showNotification(
+      '⏱ Timer done — ' + (e.data.label || 'Cooking timer'),
+      {
+        body: 'Tap to return to your meal plan',
+        icon: '/family-meal-plan/icon-192.png',
+        badge: '/family-meal-plan/icon-192.png',
+        tag: 'meal-timer-' + (e.data.id || 'done'),
+        renotify: true,
+        requireInteraction: true
+      }
+    )
   );
 });
 
@@ -95,9 +98,11 @@ self.addEventListener('fetch', function(e) {
         return resp;
       }).catch(function() {
         // Offline fallback: for navigation requests serve the cached app shell
+        // Bug 4 fix: use .then() chain — || on Promises is always truthy
         if (e.request.mode === 'navigate') {
-          return caches.match('/family-meal-plan/index.html')
-              || caches.match('/family-meal-plan/');
+          return caches.match('/family-meal-plan/index.html').then(function(r) {
+            return r || caches.match('/family-meal-plan/');
+          });
         }
       });
     })

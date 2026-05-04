@@ -1050,40 +1050,7 @@ body{
 [data-theme="dark"] .lb-sel{background:var(--mode-bg3);border-color:var(--mode-border2)}
 
 /* ── PRINT STYLESHEET ── */
-@media print{
-  .hero,.sticky-top,.theme-toggle,.week-block:not(.on),.shop-actions,.add-item-row,
-  .row-del,.split-shop,.tips-grid,.shop-notice,.price-accuracy,
-  .pc-box,.tip-card,.update-bar,.offline-bar,.pwa-prompt,.swap-banner,.swap-toast,
-  .sticky-shop-total,#ff-toast{display:none!important}
-  .week-block.on .page:not(.on){display:none!important}
-  body{background:#fff!important;color:#111!important}
-  .shop-items{display:block!important;overflow:visible!important}
-  .check-row.done{opacity:.4}
-  .check-row.done .check-label{text-decoration:line-through}
-  .check-box{border:1.5px solid #999!important;background:none!important;border-radius:3px}
-  .check-row.done .check-box{background:#aaa!important}
-  .shop-card{border:1px solid #ddd!important;box-shadow:none!important;break-inside:avoid;margin-bottom:.6rem}
-  .shop-card-header{background:#f6f6f6!important;border-bottom:1px solid #ddd!important}
-  .retailer-tag{border:1px solid #bbb!important;color:#444!important;background:#eee!important}
-  .total-bar{background:#222!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .main{padding:0!important;max-width:100%!important}
-  .section-title-bar{border-color:#ddd!important}
-  .chevron,.shop-card-header svg:last-child{display:none!important}
-  @page{margin:1.5cm}
-
-  /* ── Print week plan mode ── */
-  body.print-plan .week-block.on{display:grid!important;grid-template-columns:repeat(3,1fr);gap:8px;padding:0!important}
-  body.print-plan .week-block.on .page{display:block!important;border:1px solid #ccc;border-radius:6px;padding:8px;break-inside:avoid}
-  body.print-plan .week-block.on .page .page-header{border-bottom:1px solid #eee;margin-bottom:6px;padding-bottom:4px}
-  body.print-plan .page-title{font-size:11pt!important;font-weight:700!important;margin:0!important}
-  body.print-plan .page-sub{display:none}
-  body.print-plan .rcard,body.print-plan .rcard-svg,body.print-plan .rcard-chips,body.print-plan .rcard-desc,body.print-plan .recipe-cols,body.print-plan .rcard-body{display:none!important}
-  body.print-plan .meal-block{margin-bottom:4px!important}
-  body.print-plan .meal-head{margin-bottom:0!important;gap:6px!important;align-items:flex-start}
-  body.print-plan .meal-head-name{font-size:9pt!important;line-height:1.3}
-  body.print-plan .type-pill{font-size:7pt!important;padding:2px 5px!important}
-  body.print-plan .swap-btn,.co-section,.shop-actions,.add-item-row,.ff-toast,.swap-banner,.swap-toast,.favs-page,.search-page,#chef-page,.offline-bar,.pwa-prompt,.update-bar{display:none!important}
-}
+/* old @media print block removed — consolidated into v26 PRINT STYLESHEET below */
 
 /* ═══════════════════════════════════════════════════
    FRIDGE FINDER
@@ -2260,10 +2227,14 @@ html[data-vt-mode="back"]::view-transition-new(root){
   * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
       box-shadow: none !important; text-shadow: none !important; }
 
-  /* Reveal all pages for print — normally hidden by CSS */
-  .page { display: block !important; visibility: visible !important;
-          page-break-inside: avoid; margin-bottom: 24pt; }
-  .week-block, .main { display: block !important; }
+  /* Show only the active week and the active page — what's on screen gets printed */
+  .week-block.on { display: block !important; }
+  .week-block.on .main { display: block !important; }
+  .page.on { display: block !important; visibility: visible !important;
+             page-break-inside: avoid; margin-bottom: 24pt; }
+  /* Open shop-item lists so shopping list prints fully */
+  .shop-items { display: block !important; overflow: visible !important; }
+  .chevron, .shop-card-header svg:last-child { display: none !important; }
 
   .rcard, .meal-block, .shop-card, .nut-card {
     background: #fff !important; border: 1px solid #bbb !important;
@@ -2304,6 +2275,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
    ══════════════════════════════════════════════════════════════════════ */
 .surprise-btn {
   padding: 5px 8px; font-size: 17px; line-height: 1;
+  min-height: 44px; /* match nav tap target size */
   background: none; border: none; cursor: pointer; border-radius: 8px;
   transition: transform 0.15s var(--ease-spring);
 }
@@ -10018,9 +9990,21 @@ document.addEventListener('DOMContentLoaded', function() {
 function _surpriseMe() {
   var days  = ['mon','tue','wed','thu','fri','sat','sun'];
   var names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  var i = Math.floor(Math.random() * 7);
+  var wk  = 1 + Math.floor(Math.random() * 4);   // random week 1\u20134
+  var i   = Math.floor(Math.random() * 7);        // random day 0\u20136
+  // Switch to the chosen week if different from current
+  if (wk !== curWeek) {
+    var wkBtns = document.querySelectorAll('.week-btn');
+    switchWeek(wk, wkBtns[wk - 1] || wkBtns[0] || null);
+  }
   navTo(days[i], null);
-  if (typeof showToast === 'function') showToast('\uD83C\uDFB2 ' + names[i] + '\'s meals!');
+  // Show feedback via the existing swap-toast element
+  var toast = document.getElementById('swap-toast');
+  if (toast) {
+    toast.textContent = '\uD83C\uDFB2 Week ' + wk + ' \u2014 ' + names[i] + '!';
+    toast.classList.add('on');
+    setTimeout(function(){ toast.classList.remove('on'); }, 2400);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -10067,14 +10051,14 @@ document.addEventListener('DOMContentLoaded', function() {
         '<span>\uD83D\uDCCA Monthly Budget Overview</span>' +
         '<span id="chev-budget-inner" class="chevron">\u203a</span>' +
       '</div>' +
-      '<div id="cat-budget-inner" style="display:none">' +
+      '<div id="cat-budget-inner" class="shop-items">' +
         '<div class="budget-grid">' + rows + '</div>' +
         '<p class="budget-total">4-week estimated total: <strong>R\u202f' +
           TOTAL.toLocaleString('en-ZA') + '</strong></p>' +
       '</div>';
 
     /* Inject at top of the Favourites page (cross-week utility) */
-    var page = document.getElementById('favs');
+    var page = document.getElementById('favs-page');
     if (!page) return;
     var hdr = page.querySelector('.page-header');
     hdr ? page.insertBefore(card, hdr.nextSibling) : page.insertBefore(card, page.firstChild);
