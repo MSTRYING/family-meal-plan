@@ -102,7 +102,7 @@
   --mode-ink:#0D0E1A;
   --mode-ink2:#2E3050;
   --mode-ink3:#606280;
-  --mode-ink4:#9294AA;
+  --mode-ink4:#6E708C;
   --mode-ink5:#C4C5D4;
   /* Borders: clean neutral */
   --mode-border:rgba(13,14,26,0.09);
@@ -127,7 +127,7 @@
   --green3:#4ADE80;
   --blue:#2563EB;
   --teal:#0E7490;
-  --amber:#D97706;
+  --amber:#A35608;
   /* Shape: slightly sharper for modern feel */
   --r:10px;
   --rsm:6px;
@@ -140,7 +140,7 @@
   --mode-ink:#EEEEFF;
   --mode-ink2:#BBBBD8;
   --mode-ink3:#8888AA;
-  --mode-ink4:#606080;
+  --mode-ink4:#7E80A0;
   --mode-ink5:#404060;
   --mode-border:rgba(180,182,255,0.10);
   --mode-border2:rgba(180,182,255,0.18);
@@ -362,11 +362,11 @@ body{
   border:1px solid var(--border);
 }
 .chip-protein{
-  background:rgba(30,92,53,.10);color:var(--green);
+  background:rgba(30,92,53,.10);color:#0F6B33;
   border-color:rgba(30,92,53,.22);font-weight:600;
 }
 .chip-prep{
-  background:rgba(225,29,72,.08);color:var(--rust);
+  background:rgba(225,29,72,.08);color:#B81234;
   border-color:rgba(225,29,72,.2);font-weight:600;
 }
 
@@ -667,7 +667,7 @@ body{
   padding:4px 12px;cursor:pointer;letter-spacing:.02em;
   transition:all .15s;-webkit-tap-highlight-color:transparent;
 }
-.share-week-btn:hover{background:#25D366;color:#fff;border-color:#25D366}
+.share-week-btn:hover{background:#0F8A3E;color:#fff;border-color:#0F8A3E}
 
 /* ── THEME TOGGLE — fixed corner button ── */
 .theme-toggle{
@@ -988,7 +988,7 @@ body{
 .meal-block.skipped .meal-head-name{text-decoration:line-through}
 .meal-block.skipped .rcard{pointer-events:none}
 .skipped-badge{
-  display:inline-block;background:var(--rust2);color:#fff;
+  display:inline-block;background:var(--rust);color:#fff;
   border-radius:4px;font-size:10px;font-weight:700;padding:1px 7px;
   letter-spacing:.06em;margin-left:8px;vertical-align:middle;
 }
@@ -1270,8 +1270,8 @@ body{
 .ff-btn:hover{border-color:var(--gold);color:var(--gold)}
 .ff-btn-add{background:var(--green);color:#fff;border-color:var(--green)}
 .ff-btn-add:hover{background:var(--green2);border-color:var(--green2);color:#fff}
-.ff-btn-wa{background:#25D366;color:#fff;border-color:#25D366}
-.ff-btn-wa:hover{background:#1da851;border-color:#1da851;color:#fff}
+.ff-btn-wa{background:#0F8A3E;color:#fff;border-color:#0F8A3E}
+.ff-btn-wa:hover{background:#0A6E2F;border-color:#0A6E2F;color:#fff}
 
 /* ── Favourites Page ────────────────────────────────────────────────────── */
 .favs-page{
@@ -2433,6 +2433,12 @@ a:focus-visible,
   .type-pill, .tp-b, .tp-l, .tp-d {
     opacity: 1 !important;
   }
+  /* v38: tighten muted-ink + brand colours for high-contrast users */
+  :root { --mode-ink4: #5A5C7A !important; --gold: #C03E11 !important; }
+  [data-theme="dark"] { --mode-ink4: #9092B5 !important; }
+  .chip-protein, .nb-green { color: #0A4A24 !important; }
+  .chip-prep { color: #8C0E25 !important; }
+  .meat-callout { color: #6E3C04 !important; }
 }
 #day-progress{
   height:3px;background:var(--gold);width:0;
@@ -9738,7 +9744,7 @@ function _renderPrepCard(wkNum) {
       // Label is "Sunday night", "Monday night", etc.
       // If it's the same as the current day of week, add "(tonight)"
       var todayNight = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'][new Date().getDay()];
-      var suffix = night === todayNight ? ' <span style="color:var(--gold);font-weight:800">← tonight</span>' : '';
+      var suffix = night === todayNight ? ' <span style="color:#A03811;font-weight:800">← tonight</span>' : '';
 
       return (
         '<div class="prep-group">' +
