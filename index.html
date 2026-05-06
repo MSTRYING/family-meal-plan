@@ -1759,6 +1759,33 @@ body.cj-hidden .cj-note{display:none!important}
 [data-theme="dark"] .nav-btn:not(.on):hover{
   background: rgba(255,255,255,0.06);
 }
+/* ── V7: Day-colour nav pips ── */
+.nav-btn[data-day]{
+  padding-bottom: 14px !important;
+}
+.nav-btn[data-day]::after{
+  content:"";
+  position:absolute;
+  bottom:6px;left:50%;
+  transform:translateX(-50%);
+  width:16px;height:3px;
+  border-radius:3px;
+  opacity:0.55;
+  transition:opacity 0.25s,width 0.25s,box-shadow 0.25s;
+}
+.nav-btn[data-day].on::after{
+  opacity:0.9;
+  width:22px;
+}
+.nav-btn[data-day="mon"]::after{background:#D4A87A;}
+.nav-btn[data-day="tue"]::after{background:#6DB87A;}
+.nav-btn[data-day="wed"]::after{background:#8B87C8;}
+.nav-btn[data-day="thu"]::after{background:#B8AE58;}
+.nav-btn[data-day="fri"]::after{background:#6AAAD4;}
+.nav-btn[data-day="sat"]::after{background:#D4926A;}
+.nav-btn[data-day="sun"]::after{background:#72A882;}
+[data-theme="dark"] .nav-btn[data-day]::after{opacity:0.7;}
+[data-theme="dark"] .nav-btn[data-day].on::after{opacity:1;}
 
 /* Glass week switcher */
 .week-switcher{
@@ -2265,7 +2292,9 @@ html[data-vt-mode="back"]::view-transition-new(root){
   .shop-actions, #sticky-shop-total, .pantry-card,
   .week-glance-card, #prep-card-w1, #prep-card-w2, #prep-card-w3, #prep-card-w4,
   .ios-tip, #swap-toast, .glass-sheet-overlay,
-  .meal-share-btn, .surprise-btn, #budget-overview-card { display: none !important; }
+  .meal-share-btn, .surprise-btn, #budget-overview-card,
+  #back-to-top, .skip-link, #day-progress,
+  #hero-today, .meal-notes-wrap { display: none !important; }
 
   body { background: #fff !important; color: #111 !important; font-size: 11pt; margin: 0; }
   * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
@@ -2375,6 +2404,34 @@ a:focus-visible,
   outline-offset:2px;
   border-radius:4px;
 }
+/* ── A5: prefers-contrast: more — increase borders, reduce glass blur ── */
+@media (prefers-contrast: more) {
+  .rcard, .meal-block, .shop-card, .nut-card, .pantry-card {
+    border: 1.5px solid var(--ink3) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--paper) !important;
+  }
+  .sticky-nav, .week-switcher {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 2px solid var(--border) !important;
+  }
+  .nav-btn.on {
+    background: var(--gold) !important;
+    outline: 2px solid var(--gold2) !important;
+  }
+  .check-row, .shop-card-header {
+    border: 1px solid var(--border) !important;
+  }
+  button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+    outline-width: 3px !important;
+    outline-offset: 3px !important;
+  }
+  .type-pill, .tp-b, .tp-l, .tp-d {
+    opacity: 1 !important;
+  }
+}
 #day-progress{
   height:3px;background:var(--gold);width:0;
   transition:width 0.35s cubic-bezier(0.22,1,0.36,1);
@@ -2430,13 +2487,13 @@ a:focus-visible,
 <div class="sticky-top">
 <nav class="sticky-nav">
   <div class="nav-scroll" id="main-nav">
-    <button class="nav-btn on" onclick="navTo('mon',this)">Monday</button>
-    <button class="nav-btn" onclick="navTo('tue',this)">Tuesday</button>
-    <button class="nav-btn" onclick="navTo('wed',this)">Wednesday</button>
-    <button class="nav-btn" onclick="navTo('thu',this)">Thursday</button>
-    <button class="nav-btn" onclick="navTo('fri',this)">Friday</button>
-    <button class="nav-btn" onclick="navTo('sat',this)">Saturday</button>
-    <button class="nav-btn" onclick="navTo('sun',this)">Sunday</button>
+    <button class="nav-btn on" data-day="mon" onclick="navTo('mon',this)">Monday</button>
+    <button class="nav-btn" data-day="tue" onclick="navTo('tue',this)">Tuesday</button>
+    <button class="nav-btn" data-day="wed" onclick="navTo('wed',this)">Wednesday</button>
+    <button class="nav-btn" data-day="thu" onclick="navTo('thu',this)">Thursday</button>
+    <button class="nav-btn" data-day="fri" onclick="navTo('fri',this)">Friday</button>
+    <button class="nav-btn" data-day="sat" onclick="navTo('sat',this)">Saturday</button>
+    <button class="nav-btn" data-day="sun" onclick="navTo('sun',this)">Sunday</button>
     <button class="nav-btn" onclick="navTo('shop',this)">Shopping</button>
     <button class="nav-btn" onclick="navTo('nuts',this)">Nutrition</button>
     <button class="nav-btn" onclick="navTo('chef',this)">🧑‍🍳 Chef</button>
@@ -2460,6 +2517,7 @@ a:focus-visible,
 <div class="share-bar">
   <button class="share-week-btn" onclick="checkForUpdate()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px" id="update-check-btn">⟳ Update</button>
   <button class="share-week-btn" onclick="printWeekPlan()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px">🖨️ Print</button>
+  <button class="share-week-btn" onclick="_exportWeekCal()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px" aria-label="Export week to calendar">📅 Calendar</button>
   <button class="share-week-btn" onclick="shareWeekWhatsApp()">📱 Share on WhatsApp</button>
 </div>
 <div id="day-progress" role="progressbar" aria-label="Week progress" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"></div>
@@ -8438,8 +8496,7 @@ document.querySelectorAll('.shop-items').forEach(function(el){ el.classList.add(
 document.querySelectorAll('.chevron').forEach(function(el){ el.classList.add('open'); });
 document.addEventListener('DOMContentLoaded', initShopList);
 
-// ── Recipe-scaler state stubs (prevents _injectShopExtras crash) ──────────
-// No recipe-scaling feature yet — stubs keep the budget summary working.
+// ── Recipe-scaler (F4) ────────────────────────────────────────────────────
 var RCP_KEY  = 'mealplan_rcp_v1';
 var rcpState = { scalers: {} };
 function _loadRcp() {
@@ -8449,6 +8506,130 @@ function _loadRcp() {
   } catch(e) {}
   if (!rcpState || typeof rcpState.scalers !== 'object') rcpState = { scalers: {} };
 }
+function _saveRcp() {
+  try { localStorage.setItem(RCP_KEY, JSON.stringify(rcpState)); } catch(e) {}
+}
+
+var SCALE_STEPS  = [0.5, 0.75, 1, 1.5, 2, 3];
+var SCALE_LABELS = ['\xd7\xbd','\xd7\xbe','\xd71','\xd71\xbd','\xd72','\xd73'];
+// Unicode: ×½, ×¾, ×1, ×1½, ×2, ×3
+var _FRACS = {'1/2':0.5,'1/3':0.333,'1/4':0.25,'2/3':0.667,'3/4':0.75,'1/8':0.125,'3/8':0.375};
+
+function _numToFrac(v) {
+  // Format a float as a nice fraction or decimal
+  var whole = Math.floor(v);
+  var frac  = v - whole;
+  if (frac < 0.04) return whole || '';
+  var best = '', bestDiff = 1;
+  for (var k in _FRACS) {
+    var diff = Math.abs(_FRACS[k] - frac);
+    if (diff < bestDiff) { bestDiff = diff; best = k; }
+  }
+  if (bestDiff < 0.06 && best) return whole > 0 ? whole + ' ' + best : best;
+  return Math.round(v * 10) / 10;
+}
+
+function _scaleIngText(text, factor) {
+  if (factor === 1) return text;
+  // Match leading number: mixed (1 1/2), fraction (1/2), or decimal/integer
+  return text.replace(
+    /^(\d+)\s+(\d+\/\d+)|^(\d+\/\d+)|^(\d+(?:\.\d+)?)/,
+    function(_, w, mf, f, n) {
+      var val;
+      if (w !== undefined) { val = parseFloat(w) + (_FRACS[mf] || eval(mf) || 0); }
+      else if (f !== undefined) { val = _FRACS[f] || eval(f) || 0; }
+      else { val = parseFloat(n); }
+      return _numToFrac(val * factor);
+    }
+  );
+}
+
+function _applyScaleToMeal(mb, factor) {
+  mb.querySelectorAll('.ing-list li').forEach(function(li) {
+    if (!li.dataset.ingOrig) li.dataset.ingOrig = li.textContent;
+    li.textContent = _scaleIngText(li.dataset.ingOrig, factor);
+  });
+  // Scale the "Serves N" chip
+  mb.querySelectorAll('.rcard-chips .chip').forEach(function(chip) {
+    if (!chip.dataset.chipOrig) chip.dataset.chipOrig = chip.textContent;
+    if (/Serves/i.test(chip.dataset.chipOrig)) {
+      chip.textContent = chip.dataset.chipOrig.replace(/\d+/, function(n) {
+        var scaled = Math.round(parseInt(n) * factor);
+        return scaled < 1 ? 1 : scaled;
+      });
+    }
+  });
+}
+
+function _applyScalerUI(mb, idx) {
+  var factor  = SCALE_STEPS[idx];
+  var countEl = mb.querySelector('.scaler-count');
+  var downBtn = mb.querySelector('.scaler-down');
+  var upBtn   = mb.querySelector('.scaler-up');
+  var banner  = mb.querySelector('.scaler-banner');
+  if (countEl) countEl.textContent = SCALE_LABELS[idx];
+  if (downBtn) downBtn.disabled = (idx === 0);
+  if (upBtn)   upBtn.disabled   = (idx === SCALE_STEPS.length - 1);
+  if (banner) {
+    if (factor === 1) {
+      banner.classList.remove('visible');
+    } else {
+      var servChip = mb.querySelector('.rcard-chips .chip');
+      var baseN = 4;
+      mb.querySelectorAll('.rcard-chips .chip').forEach(function(ch) {
+        if (/Serves/i.test(ch.dataset.chipOrig || ch.textContent)) {
+          var m = (ch.dataset.chipOrig || ch.textContent).match(/\d+/);
+          if (m) baseN = parseInt(m[0]);
+        }
+      });
+      var servN = Math.round(baseN * factor);
+      banner.textContent = SCALE_LABELS[idx] + ' \u2014 scaled to serve ' + (servN < 1 ? 1 : servN);
+      banner.classList.add('visible');
+    }
+  }
+  _applyScaleToMeal(mb, factor);
+}
+
+function _scalerStep(mb, dir) {
+  _loadRcp();
+  var id  = _mealId(mb);
+  var cur = (rcpState.scalers[id] !== undefined) ? rcpState.scalers[id] : 2;
+  var next = Math.max(0, Math.min(SCALE_STEPS.length - 1, cur + dir));
+  rcpState.scalers[id] = next;
+  _saveRcp();
+  _applyScalerUI(mb, next);
+}
+
+function _initScaler() {
+  _loadRcp();
+  document.querySelectorAll('.meal-block').forEach(function(mb) {
+    var body = mb.querySelector('.rcard-body');
+    if (!body || mb.querySelector('.scaler-row')) return;
+    var chips = body.querySelector('.rcard-chips');
+    if (!chips) return;
+    // Scaler row
+    var row = document.createElement('div');
+    row.className = 'scaler-row';
+    row.innerHTML =
+      '<span class="scaler-label">Serves</span>' +
+      '<button class="scaler-btn scaler-down" aria-label="Fewer servings" ' +
+        'onclick="_scalerStep(this.closest(\".meal-block\"),-1)">−</button>' +
+      '<span class="scaler-count">\xd71</span>' +
+      '<button class="scaler-btn scaler-up" aria-label="More servings" ' +
+        'onclick="_scalerStep(this.closest(\".meal-block\"),1)">+</button>';
+    // Banner
+    var banner = document.createElement('div');
+    banner.className = 'scaler-banner';
+    // Insert after chips
+    chips.parentNode.insertBefore(row, chips.nextSibling);
+    chips.parentNode.insertBefore(banner, row.nextSibling);
+    // Restore saved scale
+    var id = _mealId(mb);
+    var savedIdx = (rcpState.scalers[id] !== undefined) ? rcpState.scalers[id] : 2;
+    _applyScalerUI(mb, savedIdx);
+  });
+}
+document.addEventListener('DOMContentLoaded', _initScaler);
 
 // ── Print week plan ────────────────────────────────────────────────────────
 // body.print-plan CSS hides recipe cards; only meal names print.
@@ -8459,6 +8640,77 @@ function printWeekPlan() {
 }
 
 // ── Share week on WhatsApp ─────────────────────────────────────────────────
+// ── Week calendar (.ics) export ───────────────────────────────────────
+var _CAL_BASE = new Date(2025, 3, 28); // W1 Monday = 28 April 2025
+function _exportWeekCal() {
+  var days = ['mon','tue','wed','thu','fri','sat','sun'];
+  var weekStart = new Date(_CAL_BASE);
+  weekStart.setDate(_CAL_BASE.getDate() + (curWeek - 1) * 7);
+  var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+  var toDateStr = function(d) {
+    return d.getFullYear() + '' + pad(d.getMonth() + 1) + '' + pad(d.getDate());
+  };
+  var lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Lablert Family Meal Plan 2025//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:Meal Plan Week ' + curWeek,
+    'X-WR-TIMEZONE:Africa/Johannesburg'
+  ];
+  days.forEach(function(slug, i) {
+    var pageId = curWeek === 1 ? slug : 'w' + curWeek + '-' + slug;
+    var page = document.getElementById(pageId);
+    if (!page) return;
+    var meals = [];
+    page.querySelectorAll('.meal-block').forEach(function(mb) {
+      var pill = mb.querySelector('.type-pill');
+      var name = mb.querySelector('.meal-head-name');
+      if (name) {
+        var type = pill ? pill.textContent.trim() : 'Meal';
+        meals.push(type + ': ' + name.textContent.trim());
+      }
+    });
+    if (!meals.length) return;
+    var d    = new Date(weekStart); d.setDate(weekStart.getDate() + i);
+    var dn   = new Date(d);         dn.setDate(d.getDate() + 1);
+    var dStr = toDateStr(d); var nStr = toDateStr(dn);
+    // Use dinner as summary, fallback to last meal
+    var summary = '';
+    meals.forEach(function(m) { if (m.indexOf('Dinner') === 0) summary = m.replace('Dinner: ',''); });
+    if (!summary) summary = meals[meals.length-1].replace(/^[^:]+: /,'');
+    var desc = meals.join('\\n');
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:meal-w' + curWeek + '-' + slug + '-' + dStr + '@lablert.mealplan');
+    lines.push('DTSTART;VALUE=DATE:' + dStr);
+    lines.push('DTEND;VALUE=DATE:' + nStr);
+    lines.push('SUMMARY:\uD83C\uDF7D ' + summary);
+    lines.push('DESCRIPTION:' + desc);
+    lines.push('CATEGORIES:Meal Plan');
+    lines.push('END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  var ics = lines.join('\r\n');
+  try {
+    var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href   = url;
+    a.download = 'meal-plan-week-' + curWeek + '.ics';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+  } catch(e) {
+    window.open('data:text/calendar;charset=utf-8,' + encodeURIComponent(ics), '_blank');
+  }
+  var toast = document.getElementById('swap-toast');
+  if (toast) {
+    toast.textContent = '\uD83D\uDCC5 Week ' + curWeek + ' exported!';
+    toast.classList.add('on');
+    setTimeout(function() { toast.classList.remove('on'); }, 2600);
+  }
+}
+
 function shareWeekWhatsApp() {
   var days  = ['mon','tue','wed','thu','fri','sat','sun'];
   var names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -9555,6 +9807,24 @@ function _injectHeroToday() {
     + '</a>';
 }
 document.addEventListener('DOMContentLoaded', _injectHeroToday);
+
+// ── V6: aria-label on recipe card SVGs ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.meal-block').forEach(function(mb) {
+    var svg = mb.querySelector('.rcard-svg');
+    if (!svg) return;
+    var name = (mb.querySelector('.meal-head-name') || {}).textContent || '';
+    if (!name) return;
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', name + ' illustration');
+    // Inject <title> inside SVG for maximum screen reader compat
+    if (!svg.querySelector('title')) {
+      var t = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      t.textContent = name;
+      svg.insertBefore(t, svg.firstChild);
+    }
+  });
+});
 </script>
 
 <script>
