@@ -2475,6 +2475,110 @@ a:focus-visible,
 /* keep the active day visible (avoids stagger-animation skips) */
 .page.on .meal-block{ content-visibility:visible; }
 
+/* === v39 — "What's new" changelog modal === */
+.changelog-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(6px) saturate(120%);
+  -webkit-backdrop-filter:blur(6px) saturate(120%);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;padding:20px;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s var(--ease-out);
+}
+.changelog-overlay.on{opacity:1;pointer-events:auto}
+.changelog-sheet{
+  background:var(--glass-bg-strong);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--glass-border);
+  border-radius:18px;
+  box-shadow:var(--glass-shadow-l);
+  max-width:460px;width:100%;
+  max-height:80vh;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  transform:scale(0.96) translateY(8px);
+  transition:transform .35s var(--ease-spring);
+}
+.changelog-overlay.on .changelog-sheet{transform:scale(1) translateY(0)}
+.changelog-header{
+  padding:20px 22px 14px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.changelog-header h2{
+  font-family:var(--serif);
+  font-size:24px;font-weight:600;
+  color:var(--ink);
+  margin:0 0 4px 0;
+  letter-spacing:.01em;
+}
+.changelog-sub{
+  font-size:12px;color:var(--ink3);
+  font-family:var(--sans);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.changelog-body{
+  padding:18px 22px 14px;
+  overflow-y:auto;flex:1;
+  -webkit-overflow-scrolling:touch;
+}
+.changelog-entry{
+  margin-bottom:18px;
+  padding-bottom:16px;
+  border-bottom:1px dashed var(--border);
+}
+.changelog-entry:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.changelog-version-row{
+  display:flex;align-items:baseline;gap:10px;
+  margin-bottom:10px;flex-wrap:wrap;
+}
+.changelog-version-badge{
+  font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  background:var(--gold);color:#fff;
+  padding:3px 9px;border-radius:5px;
+  font-family:var(--sans);
+  flex-shrink:0;
+}
+.changelog-title-text{
+  font-size:14.5px;font-weight:600;
+  color:var(--ink);
+  font-family:var(--sans);
+  letter-spacing:.005em;
+}
+.changelog-list{list-style:none;padding:0;margin:0}
+.changelog-list li{
+  font-size:13.5px;line-height:1.6;
+  color:var(--ink2);
+  padding:5px 0 5px 18px;
+  position:relative;
+  font-family:var(--sans);
+}
+.changelog-list li::before{
+  content:'';position:absolute;left:4px;top:14px;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--gold);
+}
+.changelog-dismiss{
+  width:100%;
+  padding:15px 20px;
+  background:var(--gold);
+  color:#1A1209;
+  border:none;
+  font-size:14.5px;font-weight:700;
+  font-family:var(--sans);
+  cursor:pointer;
+  letter-spacing:.04em;
+  border-top:1px solid var(--glass-stroke);
+  transition:background .2s,transform .15s var(--ease-spring);
+}
+.changelog-dismiss:hover{background:var(--gold3)}
+.changelog-dismiss:active{transform:scale(0.985)}
+.changelog-dismiss:focus-visible{
+  outline:2px solid #1A1209;outline-offset:-4px;
+}
+
 </style>
 
 </head>
@@ -10648,6 +10752,171 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialise for current page (Monday)
     _updateDayProgress('mon');
   });
+})();
+</script>
+
+<script>
+/* === v39 — "What's new" changelog modal === */
+(function(){
+  var MP_VERSION = 'v39';
+  var SEEN_KEY   = 'mealplan_seen_version';
+
+  /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
+  var CHANGELOG = [
+    {
+      v: 'v39', date: '2026-05-06',
+      title: '"What\'s new" notifications',
+      items: [
+        'Update notes appear when a new version goes live',
+        'If you miss multiple updates, you\'ll see them all together'
+      ]
+    },
+    {
+      v: 'v38', date: '2026-05-06',
+      title: 'Accessibility polish',
+      items: [
+        'Improved colour contrast across the app for easier reading',
+        'High-contrast mode auto-applies if your device requests it',
+        'Tweaked muted text colours to meet WCAG AA standards'
+      ]
+    },
+    {
+      v: 'v37', date: '2026-05-06',
+      title: 'Faster page loads',
+      items: [
+        'Off-screen recipe and shopping cards skip layout work',
+        'Fonts pre-connect during page parse for faster first paint'
+      ]
+    },
+    {
+      v: 'v36', date: '2026-05-06',
+      title: 'Recipe logic audit',
+      items: [
+        'Every recipe checked: all ingredients now appear in the steps',
+        'CJ meat add-ons added to all 4 Week 4 dinners (Thai curry, burger, sushi bowl, potjie)',
+        'Fixed Thursday lunch title (was "noodle flask", now "cheddar & PB sandwiches")',
+        'Wednesday lunch prep tip timing corrected'
+      ]
+    }
+  ];
+
+  function _vNum(v){ return parseInt(String(v||'').replace(/\D/g,''),10) || 0; }
+
+  function _isReturningUser(){
+    /* Any other mealplan_* key besides SEEN_KEY indicates a returning user */
+    try {
+      for (var i = 0; i < localStorage.length; i++){
+        var k = localStorage.key(i);
+        if (k && k.indexOf('mealplan_') === 0 && k !== SEEN_KEY) return true;
+      }
+    } catch(e){}
+    return false;
+  }
+
+  function _esc(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                    .replace(/"/g,'&quot;').replace(/\u2019/g,'\u2019');
+  }
+
+  function _showChangelog(){
+    try {
+      var seen = null;
+      try { seen = localStorage.getItem(SEEN_KEY); } catch(e){}
+      var current = MP_VERSION;
+
+      if (seen === null){
+        if (!_isReturningUser()){
+          /* Brand new install — silently record current version, don't nag */
+          try { localStorage.setItem(SEEN_KEY, current); } catch(e){}
+          return;
+        }
+        seen = ''; /* returning user — show everything */
+      }
+      if (seen === current) return;
+
+      var seenNum = _vNum(seen);
+      var entries = CHANGELOG.filter(function(e){ return _vNum(e.v) > seenNum; });
+      if (!entries.length){
+        try { localStorage.setItem(SEEN_KEY, current); } catch(e){}
+        return;
+      }
+
+      var bodyHtml = '';
+      entries.forEach(function(e){
+        var listHtml = '';
+        (e.items || []).forEach(function(item){
+          listHtml += '<li>' + _esc(item) + '</li>';
+        });
+        bodyHtml +=
+          '<div class="changelog-entry">' +
+            '<div class="changelog-version-row">' +
+              '<span class="changelog-version-badge">' + _esc(e.v) + '</span>' +
+              (e.title ? '<span class="changelog-title-text">' + _esc(e.title) + '</span>' : '') +
+            '</div>' +
+            '<ul class="changelog-list">' + listHtml + '</ul>' +
+          '</div>';
+      });
+
+      var n = entries.length;
+      var subtitle = n === 1 ? 'New in this version' : (n + ' updates since you last visited');
+
+      var overlay = document.createElement('div');
+      overlay.className = 'changelog-overlay';
+      overlay.id = 'changelog-overlay';
+      overlay.setAttribute('role','dialog');
+      overlay.setAttribute('aria-labelledby','changelog-title');
+      overlay.setAttribute('aria-modal','true');
+      overlay.innerHTML =
+        '<div class="changelog-sheet">' +
+          '<div class="changelog-header">' +
+            '<h2 id="changelog-title">What\'s new</h2>' +
+            '<div class="changelog-sub">' + subtitle + '</div>' +
+          '</div>' +
+          '<div class="changelog-body">' + bodyHtml + '</div>' +
+          '<button class="changelog-dismiss" type="button" autofocus>Got it \u2713</button>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+
+      var dismiss = function(){
+        try { localStorage.setItem(SEEN_KEY, current); } catch(e){}
+        overlay.classList.remove('on');
+        setTimeout(function(){ if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 350);
+      };
+
+      overlay.querySelector('.changelog-dismiss').addEventListener('click', dismiss);
+      /* Tap outside the sheet also dismisses */
+      overlay.addEventListener('click', function(ev){
+        if (ev.target === overlay) dismiss();
+      });
+      /* Esc to dismiss */
+      document.addEventListener('keydown', function escHandler(ev){
+        if (ev.key === 'Escape'){
+          dismiss();
+          document.removeEventListener('keydown', escHandler);
+        }
+      });
+
+      requestAnimationFrame(function(){ overlay.classList.add('on'); });
+    } catch(e){
+      /* Never let a changelog error break the app */
+      try { localStorage.setItem(SEEN_KEY, MP_VERSION); } catch(e2){}
+    }
+  }
+
+  /* Show with a small delay so the app settles first (hero anim, page-stagger, etc.) */
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(_showChangelog, 1100); });
+  } else {
+    setTimeout(_showChangelog, 1100);
+  }
+
+  /* Expose for debugging / manual reopen via console */
+  window._showChangelog = _showChangelog;
+  window._mpResetChangelog = function(){
+    try { localStorage.removeItem(SEEN_KEY); } catch(e){}
+    _showChangelog();
+  };
 })();
 </script>
 
