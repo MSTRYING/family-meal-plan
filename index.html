@@ -2338,6 +2338,26 @@ html[data-vt-mode="back"]::view-transition-new(root){
 .budget-total { padding: 10px 16px 12px; font-size: 13px; color: var(--ink2);
                 border-top: 1px solid var(--glass-border); }
 .budget-total strong { color: var(--ink); }
+#day-progress{
+  height:3px;background:var(--gold);width:0;
+  transition:width 0.35s cubic-bezier(0.22,1,0.36,1);
+  position:relative;top:0;left:0;
+  box-shadow:0 0 6px rgba(255,107,53,.4);
+}
+#back-to-top{
+  position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:14px;
+  width:40px;height:40px;border-radius:50%;border:none;
+  background:var(--glass-bg-strong);backdrop-filter:blur(12px) saturate(160%);
+  -webkit-backdrop-filter:blur(12px) saturate(160%);
+  border:1px solid var(--glass-border);
+  color:var(--ink);font-size:18px;cursor:pointer;
+  box-shadow:var(--glass-shadow);z-index:90;
+  transition:opacity .25s,transform .25s;
+  display:flex!important;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+}
+#back-to-top.visible{opacity:1;pointer-events:auto}
+#back-to-top:active{transform:scale(0.9)}
 .budget-actual-bar{
   position:absolute;top:0;left:0;height:100%;
   background:rgba(22,163,74,.35);border-radius:6px;
@@ -2404,6 +2424,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
   <button class="share-week-btn" onclick="printWeekPlan()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px">🖨️ Print</button>
   <button class="share-week-btn" onclick="shareWeekWhatsApp()">📱 Share on WhatsApp</button>
 </div>
+<div id="day-progress" role="progressbar" aria-label="Week progress" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"></div>
 </div><!-- /sticky-top -->
 
 <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">🌙 Dark</button>
@@ -9077,13 +9098,14 @@ function _renderWeekGlance() {
 
   var today = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
 
-  // Remove old card
-  var old = document.getElementById('week-glance');
-  if (old) old.remove();
-
   var monId   = curWeek === 1 ? 'mon' : 'w' + curWeek + '-mon';
   var monPage = document.getElementById(monId);
   if (!monPage) return;
+
+  // Remove this week's existing card (leave other weeks' cards intact)
+  var cardId = 'week-glance-w' + curWeek;
+  var old = document.getElementById(cardId);
+  if (old) old.remove();
 
   var colsHtml = DAYS.map(function(d, i) {
     var pageId = curWeek === 1 ? d : 'w' + curWeek + '-' + d;
@@ -9101,7 +9123,7 @@ function _renderWeekGlance() {
         mealsHtml += '<div class="glance-meal" style="border-left-color:' + col + '">' + label + '</div>';
       });
     }
-    var isToday = (curWeek === 1 && d === today) ? ' today' : '';
+    var isToday = d === today ? ' today' : '';
     var slug = d; // navTo uses the day slug directly
     return '<div class="glance-day' + isToday + '" onclick="var b=document.querySelector(\'#main-nav .nav-btn[onclick*=\\\"' + slug + '\\\"]\');navTo(\'' + slug + '\',b);if(b)b.scrollIntoView({inline:\'center\',behavior:\'smooth\'})">' +
       '<div class="glance-day-name">' + LABELS[i] + '</div>' +
@@ -9110,16 +9132,16 @@ function _renderWeekGlance() {
   }).join('');
 
   var card = document.createElement('div');
-  card.id = 'week-glance';
+  card.id = cardId;
   card.className = 'shop-card';
   card.style.marginBottom = '1rem';
   card.innerHTML =
-    '<div class="shop-card-header" onclick="toggleCat(\'week-glance-inner\')" style="cursor:pointer">' +
+    '<div class="shop-card-header" onclick="toggleCat(\'week-glance-inner-w' + curWeek + '\')" style="cursor:pointer">' +
       '<span class="shop-card-icon">📅</span>' +
       '<span class="shop-card-title">Week ' + curWeek + ' at a glance</span>' +
-      '<svg class="chevron open" id="chev-week-glance-inner" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>' +
+      '<svg class="chevron open" id="chev-week-glance-inner-w' + curWeek + '" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>' +
     '</div>' +
-    '<div class="shop-items open" id="cat-week-glance-inner" style="display:flex;gap:4px;padding:10px 10px;overflow-x:auto;scrollbar-width:none">' +
+    '<div class="shop-items open" id="cat-week-glance-inner-w' + curWeek + '" style="display:flex;gap:4px;padding:10px 10px;overflow-x:auto;scrollbar-width:none">' +
       colsHtml +
     '</div>';
 
@@ -9134,7 +9156,13 @@ switchWeek = function(n, btn) {
   setTimeout(_renderWeekGlance, 0);
 };
 
-document.addEventListener('DOMContentLoaded', _renderWeekGlance);
+document.addEventListener('DOMContentLoaded', function() {
+  _renderWeekGlance(); // W1 (curWeek default = 1)
+  // Pre-render W2/W3/W4 so their Monday pages already have the card
+  var saved = curWeek;
+  [2, 3, 4].forEach(function(wk) { curWeek = wk; _renderWeekGlance(); });
+  curWeek = saved;
+});
 
 // ── #8  Cooking timer links in recipe steps ──────────────────────────────────
 function _injectTimerBtns() {
@@ -10166,7 +10194,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.addEventListener('DOMContentLoaded', _buildBudgetCard);
 })();
+
+// ── Day progress bar update ─────────────────────────────────────────────────
+(function() {
+  var DAY_ORDER = {mon:1,tue:2,wed:3,thu:4,fri:5,sat:6,sun:7};
+  function _updateDayProgress(slug) {
+    var bar = document.getElementById('day-progress');
+    if (!bar) return;
+    var pos = DAY_ORDER[slug] || 0;
+    bar.style.width = pos ? Math.round((pos / 7) * 100) + '%' : '0';
+    bar.setAttribute('aria-valuenow', pos);
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    // Back-to-top scroll reveal
+    var btt = document.getElementById('back-to-top');
+    if (btt) {
+      window.addEventListener('scroll', function() {
+        btt.classList.toggle('visible', window.scrollY > 280);
+      }, { passive: true });
+    }
+    // Wrap navTo to update progress bar
+    var _pN = navTo;
+    navTo = function(slug, btn) {
+      _pN(slug, btn);
+      _updateDayProgress(slug);
+    };
+    // Initialise for current page (Monday)
+    _updateDayProgress('mon');
+  });
+})();
 </script>
+
+<button id="back-to-top" aria-label="Scroll to top" title="Back to top"
+  onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none">&#x2191;</button>
 
 </body>
 </html>
