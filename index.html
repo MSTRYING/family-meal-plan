@@ -2359,6 +2359,22 @@ html[data-vt-mode="back"]::view-transition-new(root){
 .budget-total { padding: 10px 16px 12px; font-size: 13px; color: var(--ink2);
                 border-top: 1px solid var(--glass-border); }
 .budget-total strong { color: var(--ink); }
+.skip-link{
+  position:absolute;top:-100px;left:1rem;
+  background:var(--gold);color:#fff;font-family:var(--sans);
+  font-size:13px;font-weight:600;padding:8px 16px;
+  border-radius:0 0 8px 8px;text-decoration:none;z-index:9999;
+  transition:top .15s;
+}
+.skip-link:focus{top:0}
+/* ── A11Y: keyboard focus outlines ── */
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:2px;
+  border-radius:4px;
+}
 #day-progress{
   height:3px;background:var(--gold);width:0;
   transition:width 0.35s cubic-bezier(0.22,1,0.36,1);
@@ -2391,6 +2407,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
 
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 
 <!-- HERO -->
 <header class="hero">
@@ -2430,7 +2447,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
       <span id="fontsize-label" style="opacity:0">16</span>
       <button class="fz-btn" onclick="_changeTextSize(1)" aria-label="Larger text">A+</button>
     </div>
-    <button class="cj-toggle-btn" id="cj-toggle" onclick="toggleCJ(this)" title="Toggle CJ meat options">🍗</button>
+    <button class="cj-toggle-btn" id="cj-toggle" onclick="toggleCJ(this)" title="Toggle CJ meat options" aria-label="Toggle CJ meat options">🍗</button>
   </div>
 </nav>
 
@@ -2450,7 +2467,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
 
 <button class="theme-toggle" onclick="toggleTheme(this)" id="theme-btn">🌙 Dark</button>
 
-<div class="main">
+<div class="main" id="main-content">
 <div class="week-block on" id="w1">
 
 <!-- ═══════════════════════════════
