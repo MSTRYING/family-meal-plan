@@ -11,6 +11,8 @@
 <meta name="apple-mobile-web-app-title" content="Meal Plan">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
@@ -2459,6 +2461,13 @@ a:focus-visible,
 }
 .budget-bar-wrap{position:relative}
 .budget-actual{font-size:10px;color:var(--green2);font-weight:500;display:block;margin-top:1px}
+
+/* === v37 P4 — content-visibility for long off-screen lists === */
+.shop-card{ content-visibility:auto; contain-intrinsic-size: 0 280px; }
+.shop-card.open{ content-visibility:visible; }
+.meal-block{ content-visibility:auto; contain-intrinsic-size: 0 600px; }
+/* keep the active day visible (avoids stagger-animation skips) */
+.page.on .meal-block{ content-visibility:visible; }
 
 </style>
 
