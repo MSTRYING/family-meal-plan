@@ -969,6 +969,27 @@ body{
 .rating-btn.made{color:var(--ink3)}
 .rating-btn.made:hover{border-color:var(--green2);background:rgba(22,163,74,.08);color:var(--green2)}
 .rating-btn.made.made-active{background:rgba(22,163,74,.12);border-color:var(--green2);color:var(--green2);font-weight:600}
+.rating-btn.notes-toggle{color:var(--ink3)}
+.rating-btn.notes-toggle.notes-active{background:rgba(59,130,246,.1);border-color:#3B82F6;color:#3B82F6}
+.rating-btn.skip-toggle{color:var(--ink3)}
+.rating-btn.skip-toggle.skipped-active{background:rgba(225,29,72,.1);border-color:var(--rust2);color:var(--rust)}
+.meal-notes-wrap{padding:.6rem 0 .2rem;width:100%}
+.meal-notes-input{
+  width:100%;box-sizing:border-box;border-radius:var(--rsm);
+  border:1px solid var(--border);background:var(--paper);
+  color:var(--ink);font-family:var(--sans);font-size:13px;
+  padding:8px 10px;resize:vertical;min-height:52px;
+  transition:border-color .15s;
+}
+.meal-notes-input:focus{outline:none;border-color:var(--gold)}
+.meal-block.skipped{opacity:.38;filter:grayscale(.5);transition:opacity .3s,filter .3s}
+.meal-block.skipped .meal-head-name{text-decoration:line-through}
+.meal-block.skipped .rcard{pointer-events:none}
+.skipped-badge{
+  display:inline-block;background:var(--rust2);color:#fff;
+  border-radius:4px;font-size:10px;font-weight:700;padding:1px 7px;
+  letter-spacing:.06em;margin-left:8px;vertical-align:middle;
+}
 .rating-label{font-size:12px;color:var(--ink5);font-family:var(--sans)}
 
 /* ── SERVING SCALER ── */
@@ -8453,6 +8474,95 @@ function _saveRatings() {
 }
 
 // Stable ID from meal name (slug)
+// ── Meal notes ────────────────────────────────────────────────────────────
+var NOTES_KEY = 'mealplan_notes_v1';
+var _notesLog = {};
+function _loadNotes() {
+  try { var r = localStorage.getItem(NOTES_KEY); if (r) _notesLog = JSON.parse(r); } catch(e) {}
+}
+function _saveNotes() {
+  try { localStorage.setItem(NOTES_KEY, JSON.stringify(_notesLog)); } catch(e) {}
+}
+function _toggleNotes(btn) {
+  var mb   = btn.closest('.meal-block');
+  var wrap = mb ? mb.querySelector('.meal-notes-wrap') : null;
+  if (!wrap) return;
+  var open = wrap.style.display !== 'none';
+  wrap.style.display = open ? 'none' : '';
+  btn.classList.toggle('notes-active', !open);
+  if (!open) { var ta = wrap.querySelector('.meal-notes-input'); if (ta) ta.focus(); }
+}
+function _saveNote(ta) {
+  var mb = ta.closest('.meal-block');
+  if (!mb) return;
+  var id = _mealId(mb);
+  if (!id) return;
+  _loadNotes();
+  var val = ta.value;
+  if (val.trim()) _notesLog[id] = val; else delete _notesLog[id];
+  _saveNotes();
+  var btn = mb.querySelector('.notes-toggle');
+  if (btn) btn.innerHTML = val.trim() ? '&#x1F4DD; Notes &#x25CF;' : '&#x1F4DD; Notes';
+}
+function _restoreNote(mb) {
+  _loadNotes();
+  var id = _mealId(mb);
+  if (!id) return;
+  var note = _notesLog[id];
+  var ta   = mb.querySelector('.meal-notes-input');
+  var btn  = mb.querySelector('.notes-toggle');
+  if (ta && note) {
+    ta.value = note;
+    if (btn) btn.innerHTML = '&#x1F4DD; Notes &#x25CF;';
+  }
+}
+
+// ── Skip meal toggle ───────────────────────────────────────────────────────
+var SKIPPED_KEY = 'mealplan_skipped_v1';
+var _skippedLog = {};
+function _loadSkipped() {
+  try { var r = localStorage.getItem(SKIPPED_KEY); if (r) _skippedLog = JSON.parse(r); } catch(e) {}
+}
+function _saveSkipped() {
+  try { localStorage.setItem(SKIPPED_KEY, JSON.stringify(_skippedLog)); } catch(e) {}
+}
+function _toggleSkipMeal(btn) {
+  var mb = btn.closest('.meal-block');
+  if (!mb) return;
+  var id = _mealId(mb);
+  if (!id) return;
+  _loadSkipped();
+  var isSkipped = mb.classList.toggle('skipped');
+  btn.classList.toggle('skipped-active', isSkipped);
+  btn.textContent = isSkipped ? '⊙ Restore' : '⊘ Skip';
+  // Add/remove SKIPPED badge next to meal title
+  var nameEl = mb.querySelector('.meal-head-name');
+  var badge  = mb.querySelector('.skipped-badge');
+  if (isSkipped && nameEl && !badge) {
+    var b = document.createElement('span');
+    b.className = 'skipped-badge'; b.textContent = 'SKIPPED';
+    nameEl.parentNode.insertBefore(b, nameEl.nextSibling);
+  } else if (!isSkipped && badge) {
+    badge.remove();
+  }
+  if (isSkipped) _skippedLog[id] = true; else delete _skippedLog[id];
+  _saveSkipped();
+}
+function _restoreSkipped(mb) {
+  _loadSkipped();
+  var id = _mealId(mb);
+  if (!id || !_skippedLog[id]) return;
+  mb.classList.add('skipped');
+  var btn = mb.querySelector('.skip-toggle');
+  if (btn) { btn.classList.add('skipped-active'); btn.textContent = '⊙ Restore'; }
+  var nameEl = mb.querySelector('.meal-head-name');
+  if (nameEl && !mb.querySelector('.skipped-badge')) {
+    var b = document.createElement('span');
+    b.className = 'skipped-badge'; b.textContent = 'SKIPPED';
+    nameEl.parentNode.insertBefore(b, nameEl.nextSibling);
+  }
+}
+
 // ── Cook history ("Made it") ──────────────────────────────────────────────
 var COOKED_KEY = 'mealplan_cooked_v1';
 var _cookedLog = {};
@@ -8548,6 +8658,8 @@ function _refreshRatingUI(mb) {
   if (dnB) dnB.classList.toggle('active', !!(r && r.v === -1));
   if (lbl) lbl.textContent = r ? (r.v === 1 ? 'Cook again! ✨' : 'Skip next time') : '';
   _refreshMadeBtn(mb);
+  _restoreNote(mb);
+  _restoreSkipped(mb);
 }
 
 // Append 👍/👎 row into each recipe card body (runs once per meal-block)
@@ -8563,9 +8675,17 @@ function _injectRatingRow(mb) {
       '<button class="rating-btn down" onclick="rateMeal(this,false)" aria-label="Skip next time">👎 Skip</button>' +
       '<button class="swap-btn" onclick="_swapStart(this)" title="Swap this meal with another">⇄ Swap</button>' +
     '<button class="rating-btn made" onclick="madeMeal(this)" aria-label="Made it">✓ Made it</button>' +
+    '<button class="rating-btn notes-toggle" onclick="_toggleNotes(this)" aria-label="Toggle notes">&#x1F4DD; Notes</button>' +
+    '<button class="rating-btn skip-toggle" onclick="_toggleSkipMeal(this)" aria-label="Skip meal">⊘ Skip</button>' +
     '</div>' +
     '<span class="rating-label"></span>';
+  // Notes textarea (hidden by default)
+  var notesWrap = document.createElement('div');
+  notesWrap.className = 'meal-notes-wrap';
+  notesWrap.style.display = 'none';
+  notesWrap.innerHTML = '<textarea class="meal-notes-input" placeholder="Add personal notes for this recipe — substitutions, timings, tweaks…" rows="2" oninput="_saveNote(this)" onblur="_saveNote(this)"></textarea>';
   body.appendChild(row);
+  body.appendChild(notesWrap);
   _refreshRatingUI(mb);
 }
 
