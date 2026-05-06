@@ -234,6 +234,26 @@ body{
   backdrop-filter:blur(4px);
 }
 
+/* ── HERO TODAY ── */
+#hero-today{margin-top:1.1rem}
+.hero-today-link{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+  border-radius:30px;padding:6px 14px 6px 10px;
+  text-decoration:none;color:inherit;font-family:var(--sans);
+  backdrop-filter:blur(6px);transition:background .18s,transform .18s;
+  cursor:pointer;
+}
+.hero-today-link:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
+.hero-today-pill{
+  background:rgba(255,107,53,.7);border-radius:20px;
+  padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:.06em;
+  color:#fff;white-space:nowrap;
+}
+.hero-today-name{font-size:13px;font-weight:500;opacity:.92}
+.hero-today-arrow{font-size:14px;opacity:.6;transition:transform .18s}
+.hero-today-link:hover .hero-today-arrow{transform:translateX(3px)}
+
 /* ── STICKY NAV ── */
 .sticky-top{position:sticky;top:0;z-index:200}
 .sticky-nav{
@@ -946,6 +966,9 @@ body{
 .rating-btn:hover{border-color:var(--gold);background:rgba(255,107,53,.07)}
 .rating-btn.up.active{background:rgba(30,92,53,.12);border-color:var(--green2)}
 .rating-btn.down.active{background:rgba(225,29,72,.1);border-color:var(--rust2)}
+.rating-btn.made{color:var(--ink3)}
+.rating-btn.made:hover{border-color:var(--green2);background:rgba(22,163,74,.08);color:var(--green2)}
+.rating-btn.made.made-active{background:rgba(22,163,74,.12);border-color:var(--green2);color:var(--green2);font-weight:600}
 .rating-label{font-size:12px;color:var(--ink5);font-family:var(--sans)}
 
 /* ── SERVING SCALER ── */
@@ -2315,6 +2338,13 @@ html[data-vt-mode="back"]::view-transition-new(root){
 .budget-total { padding: 10px 16px 12px; font-size: 13px; color: var(--ink2);
                 border-top: 1px solid var(--glass-border); }
 .budget-total strong { color: var(--ink); }
+.budget-actual-bar{
+  position:absolute;top:0;left:0;height:100%;
+  background:rgba(22,163,74,.35);border-radius:6px;
+  transition:width 0.7s var(--ease-out);
+}
+.budget-bar-wrap{position:relative}
+.budget-actual{font-size:10px;color:var(--green2);font-weight:500;display:block;margin-top:1px}
 
 </style>
 
@@ -2334,6 +2364,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
       <span class="hero-pill">Sarah &nbsp;17</span>
       <span class="hero-pill">CJ &nbsp;17 &nbsp;— meat-eater</span>
     </div>
+    <div id="hero-today"></div>
   </div>
 </header>
 
@@ -8401,6 +8432,52 @@ function _saveRatings() {
 }
 
 // Stable ID from meal name (slug)
+// ── Cook history ("Made it") ──────────────────────────────────────────────
+var COOKED_KEY = 'mealplan_cooked_v1';
+var _cookedLog = {};
+function _loadCooked() {
+  try { var r = localStorage.getItem(COOKED_KEY); if (r) _cookedLog = JSON.parse(r); } catch(e) {}
+}
+function _saveCooked() {
+  try { localStorage.setItem(COOKED_KEY, JSON.stringify(_cookedLog)); } catch(e) {}
+}
+function _refreshMadeBtn(mb) {
+  _loadCooked();
+  var id  = _mealId(mb);
+  var btn = mb.querySelector('.rating-btn.made');
+  if (!btn || !id) return;
+  var entry = _cookedLog[id];
+  if (entry && entry.count > 0) {
+    btn.classList.add('made-active');
+    btn.innerHTML = '✓ Made ' + entry.count + '×';
+  }
+}
+function madeMeal(btn) {
+  var mb = btn.closest ? btn.closest('.meal-block') : null;
+  if (!mb) return;
+  var id   = _mealId(mb);
+  if (!id) return;
+  var name = (mb.querySelector('.meal-head-name') || {}).textContent || '';
+  _loadCooked();
+  var entry = _cookedLog[id] || { count: 0, name: name, dates: [] };
+  entry.count++;
+  entry.name = name;
+  entry.dates.push(new Date().toISOString().slice(0, 10));
+  if (entry.dates.length > 20) entry.dates = entry.dates.slice(-20);
+  _cookedLog[id] = entry;
+  _saveCooked();
+  btn.classList.add('made-active');
+  btn.innerHTML = '✓ Made ' + entry.count + '×';
+  if (navigator.vibrate) navigator.vibrate(30);
+  var toast = document.getElementById('swap-toast');
+  if (toast) {
+    var n = entry.count;
+    toast.textContent = '✓ Logged! Made this ' + n + ' time' + (n !== 1 ? 's' : '') + '.';
+    toast.classList.add('on');
+    setTimeout(function(){ toast.classList.remove('on'); }, 2600);
+  }
+}
+
 function _mealId(mb) {
   var n = mb.querySelector('.meal-head-name');
   return n ? n.textContent.trim().toLowerCase().replace(/[\s\W]+/g, '-').replace(/^-|-$/g, '') : null;
@@ -8449,6 +8526,7 @@ function _refreshRatingUI(mb) {
   if (upB) upB.classList.toggle('active', !!(r && r.v === 1));
   if (dnB) dnB.classList.toggle('active', !!(r && r.v === -1));
   if (lbl) lbl.textContent = r ? (r.v === 1 ? 'Cook again! ✨' : 'Skip next time') : '';
+  _refreshMadeBtn(mb);
 }
 
 // Append 👍/👎 row into each recipe card body (runs once per meal-block)
@@ -8463,6 +8541,7 @@ function _injectRatingRow(mb) {
       '<button class="rating-btn up" onclick="rateMeal(this,true)" aria-label="Cook again">👍 Cook again</button>' +
       '<button class="rating-btn down" onclick="rateMeal(this,false)" aria-label="Skip next time">👎 Skip</button>' +
       '<button class="swap-btn" onclick="_swapStart(this)" title="Swap this meal with another">⇄ Swap</button>' +
+    '<button class="rating-btn made" onclick="madeMeal(this)" aria-label="Made it">✓ Made it</button>' +
     '</div>' +
     '<span class="rating-label"></span>';
   body.appendChild(row);
@@ -8727,7 +8806,7 @@ function _ffLoadError() { var el = document.getElementById('ff-offline-msg'); if
   ⇄ Now tap the ⇄ on the meal you want to swap with
   <button class="swap-cancel-btn" onclick="_swapCancel()">✕ Cancel</button>
 </div>
-<div class="swap-toast" id="swap-toast">✓ Meals swapped!</div>
+<div class="swap-toast" id="swap-toast" role="status" aria-live="polite">✓ Meals swapped!</div>
 
 <!-- App update bar (shown when new SW activates) -->
 <div class="update-bar" id="update-bar">
@@ -9285,6 +9364,32 @@ function _togglePrepItem(el) {
 document.addEventListener('DOMContentLoaded', function() {
   [1, 2, 3, 4].forEach(_renderPrepCard);
 });
+
+// ── Tonight's dinner in hero ────────────────────────────────────────────────────
+function _injectHeroToday() {
+  var SLUGS = ['sun','mon','tue','wed','thu','fri','sat'];
+  var today = new Date().getDay();
+  var slug  = SLUGS[today];
+  var page  = document.getElementById(slug);
+  if (!page) return;
+  var dinnerBlock = null;
+  page.querySelectorAll('.meal-block').forEach(function(mb) {
+    if (mb.querySelector('.tp-d')) dinnerBlock = mb;
+  });
+  if (!dinnerBlock) return;
+  var nameEl = dinnerBlock.querySelector('.meal-head-name');
+  var title  = nameEl ? nameEl.textContent.trim() : '';
+  if (!title) return;
+  var el = document.getElementById('hero-today');
+  if (!el) return;
+  el.innerHTML =
+    '<a class="hero-today-link" onclick="navTo(\'' + slug + '\',null);return false;" href="javascript:void(0)">'
+    + '<span class="hero-today-pill">🌙 Tonight</span>'
+    + '<span class="hero-today-name">' + title + '</span>'
+    + '<span class="hero-today-arrow">&#x2192;</span>'
+    + '</a>';
+}
+document.addEventListener('DOMContentLoaded', _injectHeroToday);
 </script>
 
 <script>
@@ -10005,15 +10110,37 @@ document.addEventListener('DOMContentLoaded', function() {
   var MAX   = Math.max.apply(null, WEEKS.map(function(w){ return w.est; }));
   var TOTAL = WEEKS.reduce(function(s, w){ return s + w.est; }, 0);
 
+  // Sum logged maxPrices from priceDB for a given week (1–4)
+  function _priceWeekSum(wkNum) {
+    _loadPriceDB();
+    var total = 0;
+    Object.keys(priceDB).forEach(function(id) {
+      var isW2 = id.indexOf('w2') === 0;
+      var isW3 = id.indexOf('w3') === 0;
+      var isW4 = id.indexOf('w4') === 0;
+      var belongs = wkNum === 1 ? !(isW2 || isW3 || isW4)
+                  : id.indexOf('w' + wkNum) === 0;
+      if (belongs && priceDB[id]) total += priceDB[id].maxPrice || 0;
+    });
+    return Math.round(total);
+  }
+
   function _buildBudgetCard() {
     if (document.getElementById('budget-overview-card')) return;
 
-    var rows = WEEKS.map(function(w) {
-      var pct = Math.round((w.est / MAX) * 100);
+    var rows = WEEKS.map(function(w, wi) {
+      var pct    = Math.round((w.est / MAX) * 100);
+      var actual = _priceWeekSum(wi + 1);
+      var actPct = actual > 0 ? Math.min(100, Math.round((actual / MAX) * 100)) : 0;
+      var actStr = actual > 0 ? 'R\u202f' + actual.toLocaleString('en-ZA') + ' logged' : '';
       return '<div class="budget-row">' +
         '<div class="budget-week">' + w.label + '<br><span class="budget-theme">' + w.theme + '</span></div>' +
-        '<div class="budget-bar-wrap"><div class="budget-bar" style="width:' + pct + '%"></div></div>' +
-        '<div class="budget-amt">~R\u202f' + w.est.toLocaleString('en-ZA') + '</div>' +
+        '<div class="budget-bar-wrap">' +
+          '<div class="budget-bar" style="width:' + pct + '%"></div>' +
+          (actPct > 0 ? '<div class="budget-actual-bar" style="width:' + actPct + '%"></div>' : '') +
+        '</div>' +
+        '<div class="budget-amt">~R\u202f' + w.est.toLocaleString('en-ZA') +
+          (actStr ? '<br><span class="budget-actual">' + actStr + '</span>' : '') + '</div>' +
         '</div>';
     }).join('');
 
