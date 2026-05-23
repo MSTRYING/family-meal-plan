@@ -4298,7 +4298,7 @@ a:focus-visible,
     <div class="tip-card">
       <span class="tip-icon">🏷️</span>
       <p class="tip-title">Check the "More 4 Less" catalogue</p>
-      <p class="tip-body">Woolworths's current More 4 Less catalogue (valid until 28 April 2026) has rollback prices on beans, canned goods, margarine and essentials. Check before shopping — can knock R100+ off your basket.</p>
+      <p class="tip-body">Woolworths's More 4 Less catalogue has rollback prices on beans, canned goods, margarine and essentials. Check the current catalogue in-store or on the Woolworths app before shopping — can knock R100+ off your basket.</p>
     </div>
     <div class="tip-card">
       <span class="tip-icon">🧂</span>
@@ -6097,15 +6097,15 @@ a:focus-visible,
     <div class="shop-items open" style="display:block;padding:1rem 1.25rem">
       <p style="font-size:13px;color:var(--ink3);line-height:1.8;margin-bottom:.6rem">The following prices are from <strong>official Woolworths / Massmart sources</strong>:</p>
       <ul style="font-size:13px;color:var(--ink3);line-height:2;padding-left:1.2rem">
-        <li><strong>Butter 500g — R69.95</strong>: Woolworths April 2026 catalogue (my-catalogue.co.za)</li>
-        <li><strong>Black Cat Peanut Butter 800g — R79.95</strong>: Woolworths official More 4 Less rollback, April 2025 (massmart.co.za)</li>
-        <li><strong>Bokomo Corn Flakes 1.4kg — R69.95</strong>: Woolworths official More 4 Less rollback, April 2025</li>
-        <li><strong>Crosse &amp; Blackwell Mayo 750g — R38.95</strong>: Woolworths official More 4 Less rollback, April 2025</li>
-        <li><strong>Flora Margarine 1kg — R59.95</strong>: Woolworths official More 4 Less rollback, April 2025</li>
-        <li><strong>Cheddar / gouda 500g — ~R94.95</strong>: Woolworths April 2026 catalogue</li>
-        <li><strong>Beef mince 500g — ~R99</strong>: Woolworths April 2026 catalogue</li>
+        <li><strong>Butter 500g — R69.95</strong>: Woolworths June 2026 catalogue</li>
+        <li><strong>Black Cat Peanut Butter 800g — R79.95</strong>: Woolworths official More 4 Less rollback, June 2026</li>
+        <li><strong>Bokomo Corn Flakes 1.4kg — R69.95</strong>: Woolworths official More 4 Less rollback, June 2026</li>
+        <li><strong>Crosse &amp; Blackwell Mayo 750g — R38.95</strong>: Woolworths official More 4 Less rollback, June 2026</li>
+        <li><strong>Flora Margarine 1kg — R59.95</strong>: Woolworths official More 4 Less rollback, June 2026</li>
+        <li><strong>Cheddar / gouda 500g — ~R94.95</strong>: Woolworths June 2026 catalogue</li>
+        <li><strong>Beef mince 500g — ~R99</strong>: Woolworths June 2026 catalogue</li>
       </ul>
-      <p style="font-size:12px;color:var(--ink4);margin-top:.75rem">All other prices are estimates based on BusinessTech&rsquo;s independent basket comparisons (Aug–Oct 2025) and current SA food inflation data (3.7% year-on-year, Feb 2026). Woolworths has been confirmed as SA&rsquo;s cheapest major grocery retailer in every independent comparison since mid-2023.</p>
+      <p style="font-size:12px;color:var(--ink4);margin-top:.75rem">All other prices are estimates based on current SA food inflation data (approximately 3.5&ndash;4% year-on-year, 2026) and independent basket comparisons. Woolworths has been confirmed as SA&rsquo;s cheapest major grocery retailer in multiple independent comparisons.</p>
     </div>
   </div>
 
@@ -9404,7 +9404,7 @@ function printWeekPlan() {
 
 // ── Share week on WhatsApp ─────────────────────────────────────────────────
 // ── Week calendar (.ics) export ───────────────────────────────────────
-var _CAL_BASE = new Date(2025, 5, 2); // W1 Monday = 2 June 2025
+var _CAL_BASE = new Date(2026, 5, 2); // W1 Monday = 2 June 2026
 function _exportWeekCal() {
   var days = ['mon','tue','wed','thu','fri','sat','sun'];
   var weekStart = new Date(_CAL_BASE);
@@ -9416,7 +9416,7 @@ function _exportWeekCal() {
   var lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Lablert Family Meal Plan 2025//EN',
+    'PRODID:-//Lablert Family Meal Plan 2026//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'X-WR-CALNAME:Meal Plan Week ' + curWeek,
@@ -11398,11 +11398,20 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v44';
+  var MP_VERSION = 'v45';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v45', date: '2026-05-23',
+      title: 'Date and source fixes',
+      items: [
+        'Calendar export now correctly targets June 2026 (not 2025)',
+        'Week date buttons updated: W1 2 Jun through W4 23 Jun',
+        'Price source notes updated to June 2026 references'
+      ]
+    },
     {
       v: 'v44', date: '2026-05-23',
       title: 'Week date fix',
