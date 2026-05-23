@@ -4125,7 +4125,7 @@ a:focus-visible,
 <div id="shop" class="page">
   <div class="page-header">
     <h2 class="page-title">Woolworths shopping list</h2>
-    <span class="page-sub">Full week · 4 people · All meals · Tap any category to expand</span>
+    <span class="page-sub">Woolworths · 4 people · Core winter warmers</span>
   </div>
 
   <!-- FRESH PRODUCE -->
@@ -6112,7 +6112,7 @@ a:focus-visible,
   <!-- PRICE INFO & TIPS W2 (moved to bottom) -->
   <p class="section-title-bar" style="margin-top:2rem">About these prices</p>
   <div class="price-accuracy">
-    <strong>About these prices:</strong> Items marked <span class="price-source">VERIFIED</span> are from Woolworths&#x27;s official May 2025 price rollback announcement or BusinessTech&#x27;s independent basket comparison (Aug&#x2013;Oct 2025). Items marked <span class="price-source est">ESTIMATE</span> are based on current SA market data and Woolworths&#x27;s known pricing position as the cheapest major retailer. Prices subject to change — always verify at <a href="https://www.makro.co.za" target="_blank">makro.co.za</a> or in-store before shopping.
+    <strong>About these prices:</strong> Items marked <span class="price-source">VERIFIED</span> are from Woolworths&#x27;s official More 4 Less rollback catalogue (June 2026). Items marked <span class="price-source est">ESTIMATE</span> are based on current SA market data and Woolworths&#x27;s known pricing position as the cheapest major retailer. Prices subject to change — always verify at <a href="https://www.woolworths.co.za" target="_blank">woolworths.co.za</a> or in-store before shopping.
   </div>
 
   <p class="section-title-bar">Shopping tips for week 2</p>
@@ -11398,11 +11398,20 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v45';
+  var MP_VERSION = 'v46';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v46', date: '2026-05-23',
+      title: 'Store link and date cleanup',
+      items: [
+        'Price notes now link to woolworths.co.za (not makro.co.za)',
+        'All remaining stale date references updated to June 2026',
+        'Week 1 shop subtitle now consistent with other weeks'
+      ]
+    },
     {
       v: 'v45', date: '2026-05-23',
       title: 'Date and source fixes',
