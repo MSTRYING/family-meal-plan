@@ -2630,10 +2630,10 @@ a:focus-visible,
 </nav>
 
 <div class="week-switcher">
-  <button class="week-btn on" onclick="switchWeek(1,this)"><span class="wk-n">W1</span><span class="wk-d">28 Apr</span></button>
-  <button class="week-btn" onclick="switchWeek(2,this)"><span class="wk-n">W2</span><span class="wk-d">5 May</span></button>
-  <button class="week-btn" onclick="switchWeek(3,this)"><span class="wk-n">W3</span><span class="wk-d">12 May</span></button>
-  <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">19 May</span></button>
+  <button class="week-btn on" onclick="switchWeek(1,this)"><span class="wk-n">W1</span><span class="wk-d">2 Jun</span></button>
+  <button class="week-btn" onclick="switchWeek(2,this)"><span class="wk-n">W2</span><span class="wk-d">9 Jun</span></button>
+  <button class="week-btn" onclick="switchWeek(3,this)"><span class="wk-n">W3</span><span class="wk-d">16 Jun</span></button>
+  <button class="week-btn" onclick="switchWeek(4,this)"><span class="wk-n">W4</span><span class="wk-d">23 Jun</span></button>
 </div>
 <div class="share-bar">
   <button class="share-week-btn" onclick="checkForUpdate()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px" id="update-check-btn">⟳ Update</button>
@@ -11398,11 +11398,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v43';
+  var MP_VERSION = 'v44';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v44', date: '2026-05-23',
+      title: 'Week date fix',
+      items: [
+        'Week switcher buttons now correctly show June dates (W1 2 Jun, W2 9 Jun, W3 16 Jun, W4 23 Jun)'
+      ]
+    },
     {
       v: 'v43', date: '2026-05-23',
       title: 'June winter update',
