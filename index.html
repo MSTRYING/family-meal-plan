@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Family Meal Plan — Weeks 1–4</title>
 <meta name="description" content="Lablert family meal plan — 4 weeks of recipes, shopping lists, nutrition and lunchbox planning.">
-<meta name="theme-color" content="#08091C">
+<meta name="theme-color" content="#6B4C2A" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0A05" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Meal Plan">
@@ -233,7 +234,7 @@ body{
   border-radius:30px;padding:5px 14px;
   font-size:11px;font-weight:400;letter-spacing:.04em;
   color:rgba(238,238,255,.85);
-  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
 }
 
 /* ── HERO TODAY ── */
@@ -243,7 +244,7 @@ body{
   background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
   border-radius:30px;padding:6px 14px 6px 10px;
   text-decoration:none;color:inherit;font-family:var(--sans);
-  backdrop-filter:blur(6px);transition:background .18s,transform .18s;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .18s,transform .18s;
   cursor:pointer;
 }
 .hero-today-link:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
@@ -981,7 +982,7 @@ body{
 .meal-notes-input{
   width:100%;box-sizing:border-box;border-radius:var(--rsm);
   border:1px solid var(--border);background:var(--paper);
-  color:var(--ink);font-family:var(--sans);font-size:13px;
+  color:var(--ink);font-family:var(--sans);font-size:16px;
   padding:8px 10px;resize:vertical;min-height:52px;
   transition:border-color .15s;
 }
@@ -7031,7 +7032,7 @@ a:focus-visible,
   <div class="meal-block">
     <div class="meal-head">
       <span class="type-pill tp-d">Dinner</span>
-      <span class="meal-head-name">Eggplant parmigiana</span>
+      <span class="meal-head-name">Aubergine parmigiana</span>
     </div>
     <div class="rcard">
       <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" class="rcard-svg"><rect width="700" height="280" fill="#F8F8FF"/><ellipse cx="350" cy="200" rx="185" ry="50" fill="#E8E8FF"/><circle cx="350" cy="158" r="80" fill="#F0F0FF" stroke="#A78BFA" stroke-width="1.5"/><circle cx="295" cy="150" r="18" fill="#86EFAC"/><circle cx="335" cy="143" r="15" fill="#FBBF24"/><circle cx="370" cy="148" r="17" fill="#F87171"/><circle cx="408" cy="155" r="14" fill="#A78BFA"/><text x="350" y="268" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#44403c" opacity=".55">Roast Veg &amp; Chickpea Bowl</text></svg>
@@ -11431,11 +11432,20 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v48';
+  var MP_VERSION = 'v49';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v49', date: '2026-05-26',
+      title: 'iPhone polish',
+      items: [
+        'Buttons no longer overlap the iPhone home bar',
+        'Tapping recipe notes no longer zooms the screen on iPhone',
+        'Renamed \'Eggplant parmigiana\' to \'Aubergine parmigiana\' to match the rest of the menu'
+      ]
+    },
     {
       v: 'v48', date: '2026-05-26',
       title: 'Shopping list completeness',
