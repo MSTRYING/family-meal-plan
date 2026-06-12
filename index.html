@@ -962,7 +962,7 @@ body{
   display:flex;align-items:center;gap:10px;flex-wrap:wrap;
   padding-top:.9rem;border-top:1px solid var(--border);margin-top:.9rem;
 }
-.rating-btns{display:flex;gap:6px}
+.rating-btns{display:flex;gap:6px;flex-wrap:wrap}
 .rating-btn{
   background:none;border:1px solid var(--border2);border-radius:30px;
   padding:5px 12px;font-size:13px;cursor:pointer;
@@ -1355,7 +1355,7 @@ body{
 
 /* ── Meal Swap ──────────────────────────────────────────────────────────── */
 .swap-btn{
-  margin-left:auto;background:none;border:none;
+  margin-left:0;background:none;border:none;
   font-size:17px;cursor:pointer;opacity:.32;padding:2px 8px;
   border-radius:6px;transition:all .15s;flex-shrink:0;
   -webkit-tap-highlight-color:transparent;color:var(--ink3);
@@ -11432,11 +11432,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v49';
+  var MP_VERSION = 'v50';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v50', date: '2026-05-26',
+      title: 'Recipe buttons fit the screen',
+      items: [
+        'The recipe action buttons (Made it, Notes, Skip, etc.) no longer run off the edge on phones — they now wrap onto a second row so every button is tappable'
+      ]
+    },
     {
       v: 'v49', date: '2026-05-26',
       title: 'iPhone polish',
