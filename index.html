@@ -1596,22 +1596,6 @@ body{
 /* #6 swipe-to-delete: check-row needs relative + overflow hidden */
 .check-row{overflow:hidden}
 
-/* #7 week at a glance */
-#week-glance .shop-items{
-  display:flex!important;gap:4px;padding:10px 10px!important;
-  overflow-x:auto;scrollbar-width:none
-}
-#week-glance .shop-items::-webkit-scrollbar{display:none}
-.glance-day{flex:1;min-width:36px;max-width:56px;cursor:pointer;padding:5px 3px;
-  border-radius:6px;transition:background .15s;-webkit-tap-highlight-color:transparent}
-.glance-day.today{background:rgba(255,107,53,.1)}
-.glance-day:active{background:rgba(255,107,53,.18)}
-.glance-day-name{font-family:var(--sans);font-size:9px;font-weight:700;color:var(--ink3);
-  text-align:center;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
-.glance-meal{font-size:8.5px;line-height:1.3;color:var(--ink3);margin-bottom:2px;
-  padding:2px 3px 2px 5px;border-left:2px solid var(--border);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
 /* #8 in-line timer button */
 .timer-btn{display:inline-flex;align-items:center;justify-content:center;
   background:none;border:1px solid var(--border);border-radius:10px;
@@ -1819,7 +1803,7 @@ body.cj-hidden .cj-note{display:none!important}
    2 · GLASS MEAL CARDS & RECIPE CARDS & SHOP CARDS
    ════════════════════════════════════════════════════════════════════════════ */
 .rcard, .meal-block, .shop-card, .pantry-card, #prep-card-w1, #prep-card-w2,
-#prep-card-w3, #prep-card-w4, .nut-card, .week-glance-card{
+#prep-card-w3, #prep-card-w4, .nut-card{
   background: var(--glass-bg) !important;
   /* Reduced from 20px → 14px for better GPU perf on mid-range devices */
   -webkit-backdrop-filter: blur(14px) saturate(160%);
@@ -1840,8 +1824,7 @@ body.cj-hidden .cj-note{display:none!important}
 [data-theme="dark"] #prep-card-w2,
 [data-theme="dark"] #prep-card-w3,
 [data-theme="dark"] #prep-card-w4,
-[data-theme="dark"] .nut-card,
-[data-theme="dark"] .week-glance-card{
+[data-theme="dark"] .nut-card{
   box-shadow:
     0 1px 0 rgba(255,255,255,0.06) inset,
     var(--glass-shadow) !important;
@@ -2295,7 +2278,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
   .swap-btn, .rating-btn, .timer-btn, #mp-timer-stack,
   .add-item-btn, .row-del, .row-carryover,
   .shop-actions, #sticky-shop-total, .pantry-card,
-  .week-glance-card, #prep-card-w1, #prep-card-w2, #prep-card-w3, #prep-card-w4,
+  #prep-card-w1, #prep-card-w2, #prep-card-w3, #prep-card-w4,
   .ios-tip, #swap-toast, .glass-sheet-overlay,
   .meal-share-btn, .surprise-btn, #budget-overview-card,
   #back-to-top, .skip-link, #day-progress,
@@ -9172,80 +9155,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, { passive: true });
 })();
 
-// ── #7  Week at a glance card ───────────────────────────────────────────────
-function _renderWeekGlance() {
-  var DAYS   = ['mon','tue','wed','thu','fri','sat','sun'];
-  var LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  var TYPE_C = { Breakfast:'#16A34A', Lunch:'#3B82F6', Dinner:'#E11D48' };
-
-  var today = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
-
-  var monId   = curWeek === 1 ? 'mon' : 'w' + curWeek + '-mon';
-  var monPage = document.getElementById(monId);
-  if (!monPage) return;
-
-  // Remove this week's existing card (leave other weeks' cards intact)
-  var cardId = 'week-glance-w' + curWeek;
-  var old = document.getElementById(cardId);
-  if (old) old.remove();
-
-  var colsHtml = DAYS.map(function(d, i) {
-    var pageId = curWeek === 1 ? d : 'w' + curWeek + '-' + d;
-    var page   = document.getElementById(pageId);
-    var mealsHtml = '';
-    if (page) {
-      page.querySelectorAll('.meal-block').forEach(function(mb) {
-        var pill = mb.querySelector('.type-pill');
-        var name = mb.querySelector('.meal-head-name');
-        if (!name) return;
-        var type  = pill ? pill.textContent.trim() : '';
-        var col   = TYPE_C[type] || 'var(--border)';
-        var label = name.textContent.trim();
-        if (label.length > 20) label = label.slice(0, 18) + '…';
-        mealsHtml += '<div class="glance-meal" style="border-left-color:' + col + '">' + label + '</div>';
-      });
-    }
-    var isToday = d === today ? ' today' : '';
-    var slug = d; // navTo uses the day slug directly
-    return '<div class="glance-day' + isToday + '" onclick="var b=document.querySelector(\'#main-nav .nav-btn[onclick*=\\\"' + slug + '\\\"]\');navTo(\'' + slug + '\',b);if(b)b.scrollIntoView({inline:\'center\',behavior:\'smooth\'})">' +
-      '<div class="glance-day-name">' + LABELS[i] + '</div>' +
-      mealsHtml +
-    '</div>';
-  }).join('');
-
-  var card = document.createElement('div');
-  card.id = cardId;
-  card.className = 'shop-card';
-  card.style.marginBottom = '1rem';
-  card.innerHTML =
-    '<div class="shop-card-header" onclick="toggleCat(\'week-glance-inner-w' + curWeek + '\')" style="cursor:pointer">' +
-      '<span class="shop-card-icon">📅</span>' +
-      '<span class="shop-card-title">Week ' + curWeek + ' at a glance</span>' +
-      '<svg class="chevron open" id="chev-week-glance-inner-w' + curWeek + '" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg>' +
-    '</div>' +
-    '<div class="shop-items open" id="cat-week-glance-inner-w' + curWeek + '" style="display:flex;gap:4px;padding:10px 10px;overflow-x:auto;scrollbar-width:none">' +
-      colsHtml +
-    '</div>';
-
-  var hdr = monPage.querySelector('.page-header');
-  if (hdr) hdr.parentNode.insertBefore(card, hdr.nextSibling);
-}
-
-// Re-render glance card when week changes
-var _origSwitchWeek = switchWeek;
-switchWeek = function(n, btn) {
-  _origSwitchWeek(n, btn);
-  setTimeout(_renderWeekGlance, 0);
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-  _renderWeekGlance(); // W1 (curWeek default = 1)
-  // Pre-render W2/W3/W4 so their Monday pages already have the card
-  var saved = curWeek;
-  [2, 3, 4].forEach(function(wk) { curWeek = wk; _renderWeekGlance(); });
-  curWeek = saved;
-});
-
 // ── #8  Cooking timer links in recipe steps ──────────────────────────────────
 function _injectTimerBtns() {
   var rx = /(\d+)(?:\s*[-–]\s*(\d+))?\s*(min(?:ute)?s?|hrs?|hours?)/gi;
@@ -10328,11 +10237,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v54';
+  var MP_VERSION = 'v55';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v55', date: '2026-06-13',
+      title: 'Removed Week at a Glance',
+      items: [
+        'Removed the "Week at a glance" mini-summary card from the top of each week\'s Monday page \u2014 it wasn\'t pulling its weight and just added scrolling'
+      ]
+    },
     {
       v: 'v54', date: '2026-06-13',
       title: 'Fixed Week 1 & 2 recipe pictures',
