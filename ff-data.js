@@ -114,10 +114,11 @@ var FF_PANTRY_CHIPS = [
   'bacon','carrots','broccoli','bell pepper','peas','noodles',
   'tahini','halloumi','tofu','couscous','quinoa','miso',
   'coconut milk','edamame','chia seeds','nori','aubergine','ginger',
-  'red curry paste','sesame','olives'
+  'red curry paste','sesame','olives',
+  'oats','banana','peanut butter','cabbage','yoghurt'
 ];
 
-// ── Recipe bank (100 recipes) ───────────────────────────────────────
+// ── Recipe bank (149 recipes) ───────────────────────────────────────
 // Fields: id, n=name, c=cat, e=emoji, t=time(min), s=serves,
 //         tags=[], ing=[], steps=[]
 var FF_RECIPES = [
@@ -986,6 +987,201 @@ var FF_RECIPES = [
  steps:['Fry onion, garlic and cumin in oil until fragrant.',
         'Add lentils, canned tomatoes and 4 cups water.',
         'Simmer 20 min until lentils are completely soft.',
-        'Stir in tamarind paste, season with salt. Adjust sourness to taste.']}
+        'Stir in tamarind paste, season with salt. Adjust sourness to taste.']},
+
+// ── BREAKFAST (extra) ───────────────────────────────────────────────
+{id:'bk11',n:'Bacon & Egg Breakfast Muffins',c:'breakfast',e:'🧁',t:30,s:6,tags:['gf','hf'],p:16,
+ ing:['eggs','bacon','cheese','spring onions','milk','salt'],
+ steps:['Preheat oven to 180°C. Grease a muffin tin.',
+        'Fry bacon until crispy, then chop into small pieces.',
+        'Whisk eggs with milk, salt and pepper. Stir in bacon, cheese and sliced spring onions.',
+        'Pour into muffin moulds. Bake 18-20 min until set and golden.']},
+
+{id:'bk12',n:'Berry Overnight Oats',c:'breakfast',e:'🫐',t:5,s:2,tags:['v'],p:9,
+ ing:['oats','milk','plain yoghurt','frozen mixed berries','honey'],
+ steps:['Mix oats, milk and yoghurt in a jar or container.',
+        'Stir through a spoonful of honey.',
+        'Cover and refrigerate overnight.',
+        'Top with frozen mixed berries (or thawed) before eating.']},
+
+{id:'bk13',n:'Cheesy Egg Wrap',c:'breakfast',e:'🌯',t:10,s:2,tags:['v'],p:14,
+ ing:['eggs','cheese','wraps','butter','milk'],
+ steps:['Whisk eggs with a splash of milk, salt and pepper.',
+        'Melt butter in a pan, scramble eggs until just set.',
+        'Warm wraps in a dry pan.',
+        'Fill wraps with scrambled egg and grated cheese, roll tightly.']},
+
+{id:'bk14',n:'Banana Bread',c:'breakfast',e:'🍌',t:60,s:8,tags:['v'],p:6,
+ ing:['flour','banana','eggs','butter','sugar','baking powder','cinnamon'],
+ steps:['Preheat oven to 180°C. Grease a loaf tin.',
+        'Mash bananas. Cream butter and sugar, then beat in eggs and mashed banana.',
+        'Fold in flour, baking powder and cinnamon until just combined.',
+        'Pour into tin and bake 45-50 min until a skewer comes out clean.']},
+
+{id:'bk15',n:'Bean & Cheese Breakfast Quesadilla',c:'breakfast',e:'🫓',t:12,s:2,tags:['v'],p:16,
+ ing:['wraps','beans','cheese','eggs','onion','butter'],
+ steps:['Scramble eggs in butter with diced onion.',
+        'Warm beans in a small pot, lightly mash.',
+        'Spread beans and scrambled egg over one tortilla, top with cheese and second tortilla.',
+        'Cook in a dry pan 2 min each side until golden and cheese melts.']},
+
+// ── BUDGET (extra) ──────────────────────────────────────────────────
+{id:'bu11',n:'Lentil & Rice Pilaf',c:'budget',e:'🍚',t:35,s:6,tags:['v','vg','gf'],p:12,
+ ing:['lentils','rice','onion','garlic','cumin','oil','stock'],
+ steps:['Fry onion and garlic in oil until golden. Add cumin, stir 30 sec.',
+        'Rinse lentils and rice together.',
+        'Add lentils, rice and stock to the pot. Bring to boil.',
+        'Cover and simmer 18-20 min until liquid is absorbed and rice is tender.']},
+
+{id:'bu12',n:'Cabbage & Potato Fry',c:'budget',e:'🥬',t:30,s:4,tags:['v','vg','gf'],p:6,
+ ing:['cabbage','potatoes','onion','oil','turmeric','salt'],
+ steps:['Boil potatoes until just tender, then dice.',
+        'Fry onion in oil with turmeric until soft.',
+        'Add shredded cabbage and diced potato. Season with salt.',
+        'Stir-fry 10-12 min until cabbage is tender and lightly browned.']},
+
+{id:'bu13',n:'Tomato & Onion Rice',c:'budget',e:'🍅',t:25,s:6,tags:['v','vg','gf'],p:6,
+ ing:['rice','canned tomatoes','onion','garlic','oil','stock'],
+ steps:['Fry onion and garlic in oil until soft.',
+        'Add rinsed rice, stir 1 min to coat.',
+        'Add canned tomatoes and stock.',
+        'Cover and simmer 18 min until rice is tender and liquid absorbed.']},
+
+{id:'bu14',n:'Quick Mealie Bread',c:'budget',e:'🌽',t:45,s:8,tags:['v'],p:7,
+ ing:['maize meal','flour','eggs','milk','sugar','baking powder','butter'],
+ steps:['Preheat oven to 190°C. Grease a baking dish.',
+        'Mix maize meal, flour, sugar and baking powder.',
+        'Whisk in eggs, milk and melted butter until smooth.',
+        'Pour into dish and bake 30-35 min until golden and firm.']},
+
+{id:'bu15',n:'Bean & Pasta Soup',c:'budget',e:'🍜',t:30,s:6,tags:['v','vg'],p:13,
+ ing:['beans','pasta','canned tomatoes','onion','garlic','stock','oil'],
+ steps:['Fry onion and garlic in oil until soft.',
+        'Add canned tomatoes and stock. Bring to a simmer.',
+        'Add small pasta shapes and beans. Simmer 10-12 min until pasta is cooked.',
+        'Season well and serve with crusty bread.']},
+
+// ── LUNCHBOX (extra) ────────────────────────────────────────────────
+{id:'lb11',n:'Baked Chickpea Bites',c:'lunchbox',e:'🧆',t:30,s:4,tags:['v','vg','gf'],p:11,
+ ing:['beans','garlic','cumin','olive oil','lemon','flour'],
+ steps:['Preheat oven to 200°C.',
+        'Mash chickpeas with garlic, cumin, lemon juice and a spoon of flour to bind.',
+        'Roll into small balls and place on a lined tray, drizzle with olive oil.',
+        'Bake 20-25 min, turning once, until golden and firm.']},
+
+{id:'lb12',n:'Couscous & Roasted Veg Box',c:'lunchbox',e:'🥗',t:25,s:2,tags:['v','vg'],p:9,
+ ing:['couscous','bell pepper','courgette','olive oil','lemon','garlic'],
+ steps:['Preheat oven to 200°C. Toss diced pepper and courgette with olive oil and garlic. Roast 20 min.',
+        'Pour boiling water over couscous (equal volumes). Cover and rest 5 min, then fluff.',
+        'Stir roasted veg into couscous.',
+        'Dress with lemon juice and a drizzle of olive oil. Pack into a container.']},
+
+{id:'lb13',n:'Cheese & Pickle Sandwich',c:'lunchbox',e:'🥪',t:5,s:2,tags:['v'],p:13,
+ ing:['bread','cheese','butter','mustard','lettuce'],
+ steps:['Butter both slices of bread.',
+        'Spread a thin layer of mustard on one slice.',
+        'Layer with cheese and lettuce.',
+        'Press together and cut in half for packing.']},
+
+{id:'lb14',n:'Egg & Avocado Lunch Box',c:'lunchbox',e:'🥑',t:12,s:2,tags:['v','gf'],p:14,
+ ing:['eggs','avocado','tomatoes','lemon','salt'],
+ steps:['Hard boil eggs (10 min). Cool, peel and quarter.',
+        'Slice avocado and toss gently with lemon juice to stop browning.',
+        'Halve cherry tomatoes.',
+        'Pack eggs, avocado and tomatoes together, season with salt and pepper just before eating.']},
+
+{id:'lb15',n:'Banana Oat Muffins',c:'lunchbox',e:'🧁',t:30,s:6,tags:['v'],p:7,
+ ing:['oats','banana','eggs','milk','honey','baking powder','cinnamon'],
+ steps:['Preheat oven to 180°C. Grease a muffin tin.',
+        'Mash bananas and mix with eggs, milk and honey.',
+        'Stir in oats, baking powder and cinnamon until combined.',
+        'Spoon into muffin moulds and bake 20-22 min until set.']},
+
+// ── CROWD (extra) ───────────────────────────────────────────────────
+{id:'cr11',n:'Chicken Curry for a Crowd',c:'crowd',e:'🍛',t:60,s:8,tags:['gf'],p:30,
+ ing:['chicken','onion','garlic','canned tomatoes','curry powder','coconut milk','oil','rice'],
+ steps:['Fry onion and garlic in oil until soft. Add curry powder, stir 1 min.',
+        'Add chicken pieces and brown lightly on all sides.',
+        'Pour in canned tomatoes and coconut milk. Cover and simmer 35-40 min until chicken is tender.',
+        'Serve over steamed rice.']},
+
+{id:'cr12',n:'Beef & Bean Chilli Con Carne',c:'crowd',e:'🌶',t:60,s:8,tags:['gf'],p:28,
+ ing:['ground beef','beans','canned tomatoes','onion','garlic','chilli','cumin','oil','rice'],
+ steps:['Brown mince in oil with onion and garlic.',
+        'Add chilli and cumin, stir 1 min.',
+        'Add canned tomatoes and beans. Simmer 35-40 min, stirring occasionally.',
+        'Serve over rice with any extra toppings you have.']},
+
+{id:'cr13',n:'Roast Vegetable Lasagne',c:'crowd',e:'🍆',t:90,s:8,tags:['v'],p:18,
+ ing:['aubergine','courgette','bell pepper','pasta','canned tomatoes','cheese','milk','flour','butter','garlic','olive oil'],
+ steps:['Slice aubergine, courgette and pepper. Roast at 200°C with olive oil for 25 min until soft.',
+        'Simmer canned tomatoes with garlic for the sauce.',
+        'Make béchamel: melt butter, stir in flour, slowly whisk in milk until thick.',
+        'Layer pasta sheets, roast veg, tomato sauce and béchamel, repeating. Top with cheese and bake at 180°C for 35-40 min until golden.']},
+
+{id:'cr14',n:'Whole Roasted Fish',c:'crowd',e:'🐟',t:45,s:6,tags:['gf','df'],p:30,
+ ing:['fish','lemon','garlic','olive oil','rosemary','salt'],
+ steps:['Preheat oven to 200°C.',
+        'Score the fish skin and stuff the cavity with sliced lemon, garlic and rosemary.',
+        'Rub the outside with olive oil and salt.',
+        'Roast 25-30 min until the flesh flakes easily.']},
+
+{id:'cr15',n:'Slow Cooker Chicken Stew',c:'crowd',e:'🍲',t:240,s:6,tags:['gf'],p:30,
+ ing:['chicken','potatoes','carrots','onion','garlic','stock','canned tomatoes'],
+ steps:['Place chicken pieces, potatoes, carrots, onion and garlic in the slow cooker.',
+        'Pour over stock and canned tomatoes.',
+        'Cover and cook on low for 6-7 hours (or high for 3-4 hours) until chicken is falling apart.',
+        'Season well before serving with crusty bread.']},
+
+// ── ASIAN KITCHEN (extra) ───────────────────────────────────────────
+{id:'as10',n:'Vegetable Fried Rice with Tofu',c:'asian',e:'🍚',t:18,s:4,tags:['v','vg','gf'],p:14,
+ ing:['tofu','rice','carrots','peas','soy sauce','oil','spring onions'],
+ steps:['Press and cube tofu. Pan-fry in hot oil until golden, remove.',
+        'Stir-fry diced carrots and peas 3 min.',
+        'Add cold day-old rice, breaking up clumps. Stir-fry 3 min.',
+        'Return tofu, add soy sauce and toss. Top with spring onions.']},
+
+{id:'as11',n:'Sticky Soy Chicken with Rice',c:'asian',e:'🍗',t:25,s:4,tags:['gf','hf'],p:32,
+ ing:['chicken','soy sauce','honey','garlic','ginger','rice','sesame seeds'],
+ steps:['Mix soy sauce, honey, minced garlic and ginger into a sauce.',
+        'Pan-fry chicken pieces until golden and nearly cooked through.',
+        'Pour over sauce and simmer 5-8 min until sticky and chicken is cooked through.',
+        'Serve over rice, scattered with sesame seeds.']},
+
+{id:'as12',n:'Peanut Noodle Salad',c:'asian',e:'🥜',t:15,s:4,tags:['v','vg'],p:13,
+ ing:['noodles','peanut butter','soy sauce','carrots','cucumber','spring onions','sesame oil'],
+ steps:['Cook noodles per packet, rinse under cold water.',
+        'Whisk peanut butter, soy sauce, sesame oil and a splash of warm water into a smooth dressing.',
+        'Julienne carrots and cucumber.',
+        'Toss noodles, carrots and cucumber in the dressing. Top with spring onions.']},
+
+{id:'as13',n:'Sweet & Sour Tofu',c:'asian',e:'🍍',t:25,s:4,tags:['v','vg','gf'],p:13,
+ ing:['tofu','bell pepper','onion','canned tomatoes','soy sauce','honey','vinegar','oil','rice'],
+ steps:['Press and cube tofu. Pan-fry in oil until golden on all sides, remove.',
+        'Stir-fry onion and pepper 3 min.',
+        'Add canned tomatoes, soy sauce, honey and vinegar. Simmer 5 min until thickened.',
+        'Return tofu, toss to coat. Serve over rice.']},
+
+{id:'as14',n:'Ginger Garlic Greens with Rice',c:'asian',e:'🥦',t:15,s:4,tags:['v','vg','gf'],p:8,
+ ing:['broccoli','spinach','garlic','ginger','soy sauce','sesame oil','rice'],
+ steps:['Cook rice per packet.',
+        'Stir-fry minced garlic and ginger in a little oil for 30 sec.',
+        'Add broccoli florets, stir-fry 3-4 min until just tender.',
+        'Add spinach, soy sauce and a drizzle of sesame oil, toss until wilted. Serve over rice.']},
+
+// ── MEDITERRANEAN (extra) ───────────────────────────────────────────
+{id:'md14',n:'Greek Lemon Rice',c:'med',e:'🍋',t:25,s:4,tags:['v','vg','gf'],p:6,
+ ing:['rice','lemon','garlic','olive oil','stock','coriander'],
+ steps:['Fry garlic in olive oil for 30 sec.',
+        'Add rinsed rice and stock. Bring to a boil.',
+        'Cover and simmer 18 min until rice is tender and liquid absorbed.',
+        'Stir through lemon juice and zest, scatter with fresh coriander.']},
+
+{id:'md15',n:'Chickpea & Spinach Stew',c:'med',e:'🍲',t:25,s:4,tags:['v','vg','gf'],p:13,
+ ing:['beans','spinach','canned tomatoes','onion','garlic','cumin','oil'],
+ steps:['Fry onion and garlic in oil until soft. Add cumin, stir 30 sec.',
+        'Add chickpeas and canned tomatoes. Simmer 12 min.',
+        'Stir in spinach until wilted.',
+        'Season well and serve with bread or rice.']}
 
 ]; // end FF_RECIPES
