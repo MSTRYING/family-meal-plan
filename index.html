@@ -2565,6 +2565,33 @@ a:focus-visible,
   outline:2px solid #1A1209;outline-offset:-4px;
 }
 
+/* ── v59: adaptive light-mode hero + action bar ──────────────────────
+   The .hero and the .share-bar (Update/Print/Calendar/Share) were dark in
+   BOTH themes because they read --mode-hero-bg / --mode-nav-bg, which the
+   light theme keeps dark by design. In light mode, recolour them to a light
+   surface with dark text so the top of the page follows the theme setting.
+   Dark mode is intentionally left untouched. */
+html:not([data-theme="dark"]) .hero{
+  --mode-hero-bg:#FFF7F1;
+  --mode-hero-text:#16172A;
+}
+html:not([data-theme="dark"]) .hero-sub{ color:#4A4C6B; }
+html:not([data-theme="dark"]) .hero-pill{
+  color:#8A3410;
+  background:rgba(255,107,53,.10);
+  border-color:rgba(255,107,53,.42);
+}
+html:not([data-theme="dark"]) .hero-today-link{
+  background:rgba(13,14,26,.05);
+  border-color:rgba(13,14,26,.14);
+}
+html:not([data-theme="dark"]) .hero-today-link:hover{
+  background:rgba(13,14,26,.09);
+}
+html:not([data-theme="dark"]) .share-bar{
+  background:var(--mode-bg2);
+  border-bottom-color:rgba(13,14,26,.08);
+}
 </style>
 
 </head>
@@ -10246,11 +10273,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v58';
+  var MP_VERSION = 'v59';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v59', date: '2026-06-19',
+      title: 'Lighter look in light mode',
+      items: [
+        'The header banner and the Update/Print/Calendar/Share bar now turn light when the app is in light mode, instead of staying dark'
+      ]
+    },
     {
       v: 'v58', date: '2026-06-19',
       title: 'Lunchbox extras on the list',
