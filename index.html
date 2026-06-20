@@ -663,12 +663,12 @@ body{
   transition:background .3s;
 }
 .share-week-btn{
-  background:none;border:1px solid rgba(37,211,102,.45);border-radius:20px;
-  color:#25D366;font-family:var(--sans);font-size:11px;font-weight:600;
+  background:none;border:1px solid var(--border2);border-radius:20px;
+  color:var(--ink2);font-family:var(--sans);font-size:11px;font-weight:600;
   padding:4px 12px;cursor:pointer;letter-spacing:.02em;
   transition:all .15s;-webkit-tap-highlight-color:transparent;
 }
-.share-week-btn:hover{background:#0F8A3E;color:#fff;border-color:#0F8A3E}
+.share-week-btn:hover{background:rgba(255,107,53,.12);color:var(--ink);border-color:var(--gold)}
 
 /* ── THEME TOGGLE — fixed corner button ── */
 .theme-toggle{
@@ -894,15 +894,6 @@ body{
 }
 .cart-tally{font-size:11.5px;color:var(--ink5);white-space:nowrap}
 .shop-action-btns{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
-.btn-wa{
-  display:flex;align-items:center;gap:5px;
-  background:#25D366;border:none;border-radius:var(--rsm);
-  padding:.45rem .85rem;
-  font-family:var(--sans);font-size:11.5px;font-weight:600;
-  color:#fff;cursor:pointer;white-space:nowrap;
-  transition:background .15s;-webkit-tap-highlight-color:transparent;
-}
-.btn-wa:hover{background:#1ebe5a}
 .btn-print{
   display:flex;align-items:center;gap:5px;
   background:var(--paper3);border:1px solid var(--border2);border-radius:var(--rsm);
@@ -1273,8 +1264,6 @@ body{
 .ff-btn:hover{border-color:var(--gold);color:var(--gold)}
 .ff-btn-add{background:var(--green);color:#fff;border-color:var(--green)}
 .ff-btn-add:hover{background:var(--green2);border-color:var(--green2);color:#fff}
-.ff-btn-wa{background:#0F8A3E;color:#fff;border-color:#0F8A3E}
-.ff-btn-wa:hover{background:#0A6E2F;border-color:#0A6E2F;color:#fff}
 
 /* ── Favourites Page ────────────────────────────────────────────────────── */
 .favs-page{
@@ -2280,7 +2269,7 @@ html[data-vt-mode="back"]::view-transition-new(root){
   .shop-actions, #sticky-shop-total, .pantry-card,
   #prep-card-w1, #prep-card-w2, #prep-card-w3, #prep-card-w4,
   .ios-tip, #swap-toast, .glass-sheet-overlay,
-  .meal-share-btn, .surprise-btn, #budget-overview-card,
+  .surprise-btn, #budget-overview-card,
   #back-to-top, .skip-link, #day-progress,
   #hero-today, .meal-notes-wrap { display: none !important; }
 
@@ -2319,17 +2308,6 @@ html[data-vt-mode="back"]::view-transition-new(root){
 /* ══════════════════════════════════════════════════════════════════════
    MEAL SHARE BUTTON                                                   v26
    ══════════════════════════════════════════════════════════════════════ */
-.meal-share-btn {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 11px; margin-top: 10px;
-  font-size: 12px; font-family: var(--sans); font-weight: 500; color: var(--ink2);
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border); border-radius: 20px; cursor: pointer;
-  transition: transform 0.12s var(--ease-spring), color 0.15s;
-}
-.meal-share-btn:active { transform: scale(0.92); color: var(--gold); }
-.meal-share-btn svg    { flex-shrink: 0; }
 
 /* ══════════════════════════════════════════════════════════════════════
    SURPRISE ME BUTTON                                                  v26
@@ -2650,8 +2628,7 @@ html:not([data-theme="dark"]) .share-bar{
   <button class="share-week-btn" onclick="checkForUpdate()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px" id="update-check-btn">⟳ Update</button>
   <button class="share-week-btn" onclick="printWeekPlan()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px">🖨️ Print</button>
   <button class="share-week-btn" onclick="_exportWeekCal()" style="border-color:rgba(100,100,100,.45);color:var(--ink3);margin-right:6px" aria-label="Export week to calendar">📅 Calendar</button>
-  <button class="share-week-btn" onclick="shareWeekWhatsApp()">📱 Share on WhatsApp</button>
-</div>
+  </div>
 <div id="day-progress" role="progressbar" aria-label="Week progress" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"></div>
 </div><!-- /sticky-top -->
 
@@ -7664,61 +7641,6 @@ function _updateStickyTotal() {
   document.body.classList.toggle('has-sst', done.length > 0);
 }
 
-// ── WhatsApp share ─────────────────────────────────────────────────────────
-function shareShopList(pageId) {
-  var page = document.getElementById(pageId);
-  if (!page) return;
-  var wkMatch = pageId.match(/w(\d)-shop/);
-  var wkNum = wkMatch ? wkMatch[1] : '1';
-  var catEmojis = {produce:'🥦',fruit:'🍎',dairy:'🧀',egg:'🥚',dry:'🌾',pantry:'🫙',
-    bakery:'🍞',meat:'🥩',fish:'🐟',frozen:'🧊',household:'🧹',toiletries:'🧴',spice:'🧂'};
-
-  var lines = ['🛒 *Week ' + wkNum + ' Shopping List — Lablert Family*'];
-  var totalUnchecked = 0, totalChecked = 0;
-
-  page.querySelectorAll('.shop-card').forEach(function(card) {
-    var titleEl = card.querySelector('.shop-card-title');
-    if (!titleEl) return;
-    var catName = titleEl.textContent.trim();
-    var emoji = '🛍️';
-    var lower = catName.toLowerCase();
-    Object.keys(catEmojis).forEach(function(k){ if (lower.indexOf(k) > -1) emoji = catEmojis[k]; });
-
-    var toBuy = [], got = [];
-    card.querySelectorAll('.check-row').forEach(function(row) {
-      if (row.style.display === 'none') return;
-      if (row.classList.contains('pantry')) return;
-      var lbl = row.querySelector('.check-label');
-      var pr  = row.querySelector('.check-price');
-      if (!lbl) return;
-      var name = lbl.textContent.trim();
-      var prTxt = pr ? pr.textContent.replace(/VERIFIED|ACTUAL|est\./gi,'').replace(/\s+/g,' ').trim() : '';
-      var line = name + (prTxt ? '  _' + prTxt + '_' : '');
-      if (row.classList.contains('done')) { got.push('✅ ' + line); totalChecked++; }
-      else { toBuy.push('⬜ ' + line); totalUnchecked++; }
-    });
-
-    if (toBuy.length || got.length) {
-      lines.push('\n' + emoji + ' *' + catName + '*');
-      toBuy.forEach(function(i){ lines.push(i); });
-      if (got.length) {
-        lines.push('_— already in trolley —_');
-        got.forEach(function(i){ lines.push(i); });
-      }
-    }
-  });
-
-  lines.push('\n📊 *' + totalUnchecked + ' still to buy · ' + totalChecked + ' in trolley*');
-
-  // Add actual spend if sticky total is showing
-  var stickyEl = document.getElementById('sticky-shop-total');
-  if (stickyEl && stickyEl.classList.contains('on')) {
-    var amt = stickyEl.querySelector('.sticky-amount');
-    if (amt) lines.push('💰 *Running total: ' + amt.textContent.trim() + '*');
-  }
-
-  window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
-}
 
 // ── Scale notice & Budget summary ──────────────────────────────────────────
 function _injectShopExtras(pageId) {
@@ -8044,7 +7966,7 @@ function initShopList() {
     });
   });
 
-  // Inject action bar (cart counter + WhatsApp + Print + Reset) into each shopping page
+  // Inject action bar (cart counter + Print + Reset) into each shopping page
   [{id:'shop', lbl:'Week 1'}, {id:'w2-shop', lbl:'Week 2'}, {id:'w3-shop', lbl:'Week 3'}, {id:'w4-shop', lbl:'Week 4'}].forEach(function(cfg) {
     var page = document.getElementById(cfg.id);
     if (!page) return;
@@ -8067,11 +7989,6 @@ function initShopList() {
     var btns = document.createElement('div');
     btns.className = 'shop-action-btns';
 
-    var waBtn = document.createElement('button');
-    waBtn.className = 'btn-wa';
-    waBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Share';
-    waBtn.onclick = function(){ shareShopList(cfg.id); };
-
     var printBtn = document.createElement('button');
     printBtn.className = 'btn-print';
     printBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print';
@@ -8089,7 +8006,6 @@ function initShopList() {
     pantryRstBtn.title = 'Remove all \"already have this\" marks';
     pantryRstBtn.onclick = function(){ _clearAllPantry(cfg.id); };
 
-    btns.appendChild(waBtn);
     btns.appendChild(printBtn);
     btns.appendChild(pantryRstBtn);
     btns.appendChild(rstBtn);
@@ -8351,7 +8267,6 @@ function printWeekPlan() {
   setTimeout(function(){ document.body.classList.remove('print-plan'); }, 600);
 }
 
-// ── Share week on WhatsApp ─────────────────────────────────────────────────
 // ── Week calendar (.ics) export ───────────────────────────────────────
 var _CAL_BASE = new Date(2026, 5, 2); // W1 Monday = 2 June 2026
 function _exportWeekCal() {
@@ -8423,25 +8338,6 @@ function _exportWeekCal() {
   }
 }
 
-function shareWeekWhatsApp() {
-  var days  = ['mon','tue','wed','thu','fri','sat','sun'];
-  var names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  var lines = ['🍽️ *Week ' + curWeek + ' Meal Plan*'];
-  days.forEach(function(d, i) {
-    var id   = curWeek === 1 ? d : 'w' + curWeek + '-' + d;
-    var page = document.getElementById(id);
-    if (!page) return;
-    var meals = [];
-    page.querySelectorAll('.meal-block').forEach(function(mb) {
-      var pill = mb.querySelector('.type-pill');
-      var name = mb.querySelector('.meal-head-name');
-      if (name) meals.push('• ' + (pill ? pill.textContent.trim() + ': ' : '') + name.textContent.trim());
-    });
-    if (meals.length) lines.push('*' + names[i] + '*\n' + meals.join('\n'));
-  });
-  var text = lines.join('\n\n');
-  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-}
 
 // ── Meal ratings & Favourites ──────────────────────────────────────────────
 var RATINGS_KEY = 'mealplan_ratings_v1';
@@ -10087,55 +9983,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ══ v26 NEW FEATURES: Meal sharing · Surprise Me · Budget overview ══ -->
 <script>
-/* ── Individual meal share via WhatsApp ─────────────────────────────── */
-function _shareMealWA(btn) {
-  var block = btn;
-  while (block && !block.classList.contains('meal-block')) block = block.parentElement;
-  if (!block) return;
-  var title  = (block.querySelector('.rcard-title,.card-title') || {}).textContent || 'Meal';
-  var desc   = (block.querySelector('.rcard-desc') || {}).textContent || '';
-  var steps  = Array.from(block.querySelectorAll('.steps-list li,.method-list li'))
-                    .map(function(li, i){ return (i+1) + '. ' + li.textContent.trim(); })
-                    .join('\n');
-  var ings   = Array.from(block.querySelectorAll('.rcard-chips .chip'))
-                    .map(function(c){ return '\u2022 ' + c.textContent.trim(); })
-                    .join('\n');
-  var tpEl   = block.querySelector('.tp-b,.tp-l,.tp-d');
-  var type   = !tpEl ? '' :
-               tpEl.classList.contains('tp-b') ? '\uD83C\uDF05 Breakfast: ' :
-               tpEl.classList.contains('tp-l') ? '\u2600\uFE0F Lunch: '     : '\uD83C\uDF19 Dinner: ';
-  var msg = type + '*' + title.trim() + '*\n\n';
-  if (desc.trim())  msg += desc.trim() + '\n\n';
-  if (ings)         msg += '*Ingredients:*\n' + ings + '\n\n';
-  if (steps)        msg += '*Steps:*\n' + steps;
-  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-}
 
-/* Inject share button into every meal-block at DOMContentLoaded */
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.meal-block').forEach(function(block) {
-    if (block.querySelector('.meal-share-btn')) return;
-    var body = block.querySelector('.rcard-body');
-    if (!body) return;
-    var btn = document.createElement('button');
-    btn.className = 'meal-share-btn';
-    btn.title = 'Share recipe on WhatsApp';
-    btn.setAttribute('aria-label', 'Share recipe via WhatsApp');
-    btn.innerHTML =
-      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-      ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
-      '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07' +
-      'A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.77 1.2h3' +
-      'a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91' +
-      'a16 16 0 0 0 6.72 6.72l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7' +
-      'A2 2 0 0 1 22 16.92z"/></svg> Share recipe';
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      _shareMealWA(btn);
-    });
-    body.appendChild(btn);
-  });
-});
 
 /* ── Surprise Me — random day picker ────────────────────────────────── */
 function _surpriseMe() {
@@ -10273,11 +10121,19 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* === v39 — "What's new" changelog modal === */
 (function(){
-  var MP_VERSION = 'v59';
+  var MP_VERSION = 'v60';
   var SEEN_KEY   = 'mealplan_seen_version';
 
   /* CHANGELOG: newest first. Add a new entry at the top of this array on each deploy. */
   var CHANGELOG = [
+    {
+      v: 'v60', date: '2026-06-20',
+      title: 'Removed WhatsApp sharing',
+      items: [
+        'Removed the WhatsApp share buttons from recipes, the shopping list, the week bar and the Chef finder',
+        'Print and Add-to-Calendar are unchanged'
+      ]
+    },
     {
       v: 'v59', date: '2026-06-19',
       title: 'Lighter look in light mode',

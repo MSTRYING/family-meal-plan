@@ -209,15 +209,6 @@ function ffBuildCard(item) {
     btns.appendChild(addBtn);
   }
 
-  var waBtn = document.createElement('button');
-  waBtn.className = 'ff-btn ff-btn-wa';
-  waBtn.textContent = '📤 Share on WhatsApp';
-  waBtn.onclick = function(e) {
-    e.stopPropagation();
-    ffShareWhatsApp(r);
-  };
-  btns.appendChild(waBtn);
-
   var aiBtn = document.createElement('button');
   aiBtn.className = 'ff-btn';
   aiBtn.textContent = '🤖 Ask Claude AI';
@@ -326,15 +317,6 @@ function ffClearExtras() {
   if (card) card.remove();
 }
 
-// ── WhatsApp share ──────────────────────────────────────────────────
-function ffShareWhatsApp(r) {
-  var msg = '🍽 *' + r.n + '*\n';
-  msg += '⏱ ' + r.t + ' min | Serves ' + r.s + '\n\n';
-  msg += '*Ingredients:*\n' + r.ing.map(function(i){ return '• ' + i; }).join('\n');
-  msg += '\n\n*Method:*\n' + r.steps.map(function(s,i){ return (i+1)+'. '+s; }).join('\n');
-  msg += '\n\n_From the Family Meal Plan app_';
-  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-}
 
 // ── Toast ───────────────────────────────────────────────────────────
 function ffShowToast(msg) {
